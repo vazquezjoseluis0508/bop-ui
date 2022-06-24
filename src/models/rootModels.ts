@@ -1,13 +1,10 @@
-import { Models } from '@rematch/core'
-import { usuarios } from './usuarios'
-
-
+import { Models } from "@rematch/core";
+import { usuarios } from "./usuarios";
 
 export interface RootModel extends Models<RootModel> {
-  usuarios: typeof usuarios
-  
+  usuarios: typeof usuarios;
 }
 
 export const models: RootModel = {
-  usuarios
-}
+  usuarios,
+};
