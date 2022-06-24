@@ -12,7 +12,6 @@ export const App: React.FC = () => {
     usuarios.fetch()
   }, [])
 
-  console.log({lista_usuarios})
 
   return (
     <div >

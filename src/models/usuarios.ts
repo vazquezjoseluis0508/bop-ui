@@ -3,8 +3,9 @@ import axios from 'axios'
 import { REST_API } from '../constants'
 import { RootModel } from './rootModels'
 
+type params = { [key: string]: any }
 
-export type IUsuariosState = {
+interface IUsuariosState  {
   email?: string // user.id
   clave?: string
 }
@@ -22,9 +23,7 @@ export const usuarios = createModel<RootModel>()({
             const usuarios =  await axios.get(`${REST_API}/usuarios`,{
                 headers: {'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6MTY1NTg3NDE4MH0.mOmlzJ5MYg2-DyiypJFHdZV4mByw_Jxn9_Cik7zbvJ4'},
             })
-            console.log(usuarios.data[0].email)
             set({ email: usuarios.data[0].email, clave: usuarios.data[0].clave })
-            console.log({usuariosState})
         }
     }),
     reducers: {
