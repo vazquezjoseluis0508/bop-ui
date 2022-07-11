@@ -22,4 +22,4 @@ export const App: React.FC = () => {
   return rer
 }
 
-export default App
+export default App;

@@ -11,7 +11,7 @@ const domain = import.meta.env.VITE_AUTHO_DOMAIN || ''
 
 console.log(domain, clientId)
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   // <React.StrictMode>
   <Auth0Provider
     domain={domain}
@@ -19,11 +19,12 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     redirectUri={window.location.origin}
   >
   <Provider store={store}>
-    <HashRouter>
-      <App />
-    </HashRouter>
-    
+    <ThemeProvider theme={darkTheme}>
+      <HashRouter>
+        <App />
+      </HashRouter>
+    </ThemeProvider>
   </Provider>
   </Auth0Provider>
   // </React.StrictMode>
-)
+);
