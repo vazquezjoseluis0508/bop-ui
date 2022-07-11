@@ -1,5 +1,9 @@
-import React from "react";
+import React from 'react'
 
-export const pedidosPage = () => {
-  return <>test</>;
-};
+const PedidosPage = () => {
+  return (
+    <div>PedidosPage</div>
+  )
+}
+
+export default PedidosPage
