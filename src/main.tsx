@@ -4,14 +4,26 @@ import { HashRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import App from './App/App'
 import { store } from './store'
+import { Auth0Provider } from '@auth0/auth0-react'
+
+const clientId = import.meta.env.VITE_AUTH0 || ''
+const domain = import.meta.env.VITE_AUTHO_DOMAIN || ''
+
+console.log(domain, clientId)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <React.StrictMode>
+  <Auth0Provider
+    domain={domain}
+    clientId={clientId}
+    redirectUri={window.location.origin}
+  >
   <Provider store={store}>
     <HashRouter>
       <App />
     </HashRouter>
     
   </Provider>
+  </Auth0Provider>
   // </React.StrictMode>
 )

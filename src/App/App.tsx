@@ -1,6 +1,7 @@
 
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import NavBar from '../components/NavBar'
 import { ApplicationState, Dispatch } from '../store'
 
 export const App: React.FC = () => {
@@ -12,14 +13,13 @@ export const App: React.FC = () => {
     usuarios.fetch()
   }, [])
 
+  const isLoggin = true
+
   console.log({lista_usuarios})
 
-  return (
-    <div >
-      email: {lista_usuarios.email}<br></br>
-      clave: {lista_usuarios.clave}
-    </div>
-  )
+  const rer = isLoggin ? <NavBar /> : <> User or password invalid!</>
+
+  return rer
 }
 
 export default App
