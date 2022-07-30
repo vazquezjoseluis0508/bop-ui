@@ -5,6 +5,8 @@ import { Provider } from 'react-redux'
 import App from './App/App'
 import { store } from './store'
 import { Auth0Provider } from '@auth0/auth0-react'
+import ThemeProvider from '@mui/material/styles/ThemeProvider'
+import { darkTheme } from './styling/themeConfig'
 
 const clientId = import.meta.env.VITE_AUTH0 || ''
 const domain = import.meta.env.VITE_AUTHO_DOMAIN || ''
