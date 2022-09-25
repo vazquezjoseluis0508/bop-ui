@@ -1,7 +1,9 @@
 
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Body } from '../components/Body'
 import NavBar from '../components/NavBar'
+import { Navbar } from '../components/Navbar'
 import { ApplicationState, Dispatch } from '../store'
 
 export const App: React.FC = () => {
@@ -17,7 +19,7 @@ export const App: React.FC = () => {
 
   console.log({lista_usuarios})
 
-  const rer = isLoggin ? <NavBar /> : <> User or password invalid!</>
+  const rer = isLoggin ? <Body /> : <> User or password invalid!</>
 
   return rer
 }

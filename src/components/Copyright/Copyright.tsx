@@ -9,7 +9,7 @@ export const Copyright = (props: any) => {
       {...props}
     >
       {"Copyright © "}
-      <Link color="inherit" href="http://www.control-app.com/">
+      <Link  href="http://www.control-app.com/">
         Control App
       </Link>{" "}
       {new Date().getFullYear()}

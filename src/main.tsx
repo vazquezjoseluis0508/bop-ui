@@ -6,7 +6,7 @@ import App from './App/App'
 import { store } from './store'
 import { Auth0Provider } from '@auth0/auth0-react'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
-import { darkTheme } from './styling/themeConfig'
+import { darkTheme, theme } from './styling/themeConfig'
 
 const clientId = import.meta.env.VITE_AUTH0 || ''
 const domain = import.meta.env.VITE_AUTHO_DOMAIN || ''
@@ -21,7 +21,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
     redirectUri={window.location.origin}
   >
   <Provider store={store}>
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <HashRouter>
         <App />
       </HashRouter>
