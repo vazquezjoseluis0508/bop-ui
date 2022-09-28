@@ -5,13 +5,7 @@ import { VerticalTabs } from "../TabPanel/TabPanel";
 
 export const Body = () => {
 
-  const menuDelDia = [
-    { id: 1, name: "Milanesa con Pure."},
-    { id: 2, name: "Ensalada Vegana."},
-    { id: 3, name: "Carre de cerdo con papas al horno."},
-    { id: 4, name: "Milanesas a Caballo con ensalada Cesar."},
-    
-  ]
+  
   
   return (
     <Container >

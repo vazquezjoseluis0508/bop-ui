@@ -6,39 +6,44 @@ import ListItemText from '@mui/material/ListItemText';
 import ListItemAvatar from '@mui/material/ListItemAvatar';
 import Checkbox from '@mui/material/Checkbox';
 import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
-import { RamenDiningRounded } from '@mui/icons-material'
+import { FoodIcon } from '../FoodIcon';
+import { Radio } from '@mui/material';
+
 
 export const CheckboxListSecondary = () => {
-    const [checked, setChecked] = React.useState([1]);
+    const [checked, setChecked] = React.useState<number | null>(null);
+
+    const menuDelDia = [
+        { id: 1, name: "Pollo grillado con vegetales.", icon: 'FastfoodTwoTone'},
+        { id: 2, name: "Rissoto con champignone.", icon: 'RamenDiningRounded' },
+        { id: 3, name: "Tortilla de papa.", icon: 'LunchDiningTwoTone'},
+        { id: 4, name: "Tarta de vegetales.", icon : 'DinnerDiningTwoTone'},
+        { id: 5, name: "Empanada de espinaca y queso.", icon: 'RamenDiningRounded'},
+        { id: 6, name: "Carne al horno con papas grilladas.", icon: 'FastfoodTwoTone'},
+        
+      ]
+
 
     const handleToggle = (value: number) => () => {
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
-
-        if (currentIndex === -1) {
-            newChecked.push(value);
-        } else {
-            newChecked.splice(currentIndex, 1);
-        }
-
-        setChecked(newChecked);
+        setChecked(value);
     };
 
     return (
         <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-            {[0, 1, 2, 3].map((value) => {
-                const labelId = `checkbox-list-secondary-label-${value}`;
+            {menuDelDia.map((item, index) => {
+                const labelId = `checkbox-list-secondary-label-${index}`;
                 return (
                     <label>
                         <ListItem
-                            key={value}
+                            key={index}
                             secondaryAction={
-                                <Checkbox
+                                <Radio
                                     edge="end"
-                                    onChange={handleToggle(value)}
-                                    checked={checked.indexOf(value) !== -1}
-                                    inputProps={{ 'aria-labelledby': labelId }}
+                                    name="radio-buttons-menu"
+                                    onChange={handleToggle(item.id)}
+                                    checked={checked === item.id}
+                                    inputProps={{ 'aria-labelledby':labelId}} 
+                                    color='secondary'
                                 />
                             }
                             disablePadding
@@ -46,10 +51,10 @@ export const CheckboxListSecondary = () => {
                             <ListItemButton>
                                 <ListItemAvatar>
                                     <Avatar>
-                                        <RamenDiningRounded />
+                                        <FoodIcon icon={item.icon} />
                                     </Avatar>
                                 </ListItemAvatar>
-                                <ListItemText id={labelId} primary={`Line item ${value + 1}`} />
+                                <ListItemText id={labelId} primary={item.name} />
                             </ListItemButton>
                         </ListItem>
                     </label>
