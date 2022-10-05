@@ -212,7 +212,7 @@ export const VerticalLinearStepper = () => {
       <Divider />
 
       <Box sx={{ mb: 2 }} alignItems='flex-end'>
-        {/* <div> */}
+        <div>
           <Button
             variant="contained"
             onClick={handleNext}
@@ -223,7 +223,7 @@ export const VerticalLinearStepper = () => {
           <Button  onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Reset
           </Button>
-        {/* </div> */}
+        </div>
       </Box>
 
     </Box>
