@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client'
 import { HashRouter } from 'react-router-dom'
 import { Provider } from 'react-redux'
 import App from './App/App'
+import {Login} from './components/Login/Login'
 import { store } from './store'
 import { Auth0Provider } from '@auth0/auth0-react'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
@@ -23,7 +24,7 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
     <ThemeProvider theme={theme}>
       <HashRouter>
-        <App />
+        <Login />
       </HashRouter>
     </ThemeProvider>
   </Provider>
