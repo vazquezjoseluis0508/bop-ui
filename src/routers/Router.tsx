@@ -9,7 +9,7 @@ import { ProtectedRoutes } from "../components/ProtectedRoutes/ProtectedRoutes"
 
 export const Router = () => {
 
-  const token  = true;
+  const token  = false;
 
   return (
     <BrowserRouter>
