@@ -1,0 +1,79 @@
+
+{
+    "usuarios": [
+        {
+            "idUsuarios": 1,
+            "nombre": "Juan",
+            "usr": "juan",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 2,
+            "nombre": "Pedro",
+            "usr": "pedro",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 3,
+            "nombre": "Maria",
+            "usr": "maria",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 4,
+            "nombre": "Luis",
+            "usr": "luis",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 5,
+            "nombre": "Ana",
+            "usr": "ana",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 6,
+            "nombre": "Jose",
+            "usr": "jose",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 7,
+            "nombre": "Luisa",
+            "usr": "luisa",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 8,
+            "nombre": "Rosa",
+            "usr": "rosa",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 9,
+            "nombre": "Carlos",
+            "usr": "carlos",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 10,
+            "nombre": "Miguel",
+            "usr": "miguel",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 11,
+            "nombre": "Ramon",
+            "usr": "ramon",
+            "clave": "1234"
+        },
+        {
+            "idUsuarios": 12,
+            "nombre": "Lorena",
+            "usr": "lorena",
+            "clave": "1234"
+        }
+    ]
+
+
+}
