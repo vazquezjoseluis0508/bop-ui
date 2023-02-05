@@ -9,6 +9,7 @@ import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query'
+import { SessionProvider } from './provider/SessionProvider'
 
 const clientId = import.meta.env.VITE_AUTH0 || ''
 const domain = import.meta.env.VITE_AUTHO_DOMAIN || ''

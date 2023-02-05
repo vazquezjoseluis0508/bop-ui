@@ -1,6 +1,6 @@
 
 import axios from 'axios'
-import { IFormInput } from '../pages/LoginPage/LoginPage'
+import { IFormInput } from '../pages/login'
 
 const axios_api = axios.create({
     baseURL: 'http://localhost:3001'

@@ -1,6 +1,6 @@
 
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -13,12 +13,9 @@ import { Avatar, Checkbox, Container, TextField, Typography } from '@mui/materia
 import * as yup from "yup";
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
-import {  getUsuarios, LoginUser } from '../../services/usuarios.service'
-import { useMutation, useQuery } from '@tanstack/react-query';
-import { Snackbar } from '@material-ui/core';
-import Alert from '@material-ui/lab/Alert';
-import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
-import { Navigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hook/useAuth.hook';
+import { AlertError } from '../components/AlertError/AlertError';
 
 const darkTheme = createTheme({
   palette: {
@@ -36,7 +33,9 @@ export interface IFormInput {
 
 export const LoginPage = () =>{
   
-  const [open, setOpen] = React.useState(false);
+  const navigate = useNavigate();
+  const { handleSignIn , isAuthenticated } = useAuth()
+
 
   // create esquema de validacion
   const schema = yup.object().shape({
@@ -44,79 +43,32 @@ export const LoginPage = () =>{
     password: yup.string().required("password es requerido."),
   });
 
-  const { control, handleSubmit, formState: { errors }, register} = useForm<IFormInput>({
+  const { control, handleSubmit, formState: { errors, isSubmitting }, register} = useForm<IFormInput>({
     resolver: yupResolver(schema)
   });
 
-  const getUsuarios = async () => {
-    const {
-      data: usuariosData,
-      isLoading: usuariosLoading,
-      isError: usuariosError,
-      error: usuariosQueryError,
-    } = useQuery({
-      queryKey: ['usuarios'],
-      queryFn: getUsuarios,
-      onSuccess: (data) => {
-        console.log('data', data);
-      },
-      onError: (error) => {
-        console.log('error', error);
+
+
+  const onSubmit = async (data: IFormInput) => {
+
+      const response = await handleSignIn(data);
+      if (response.error) {
+         return <AlertError  message={response.error.status}/>
+      } 
+      if (response.data){
+        return navigate('/pedidos')
       }
-    })
-    
-    if (usuariosLoading) return <div>Loading...</div>
-    if (usuariosError) return <div>Error: {usuariosQueryError.message}</div>
-
-    return usuariosData
-  }
-
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = (event?: React.SyntheticEvent, reason?: string) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-
-  const onSubmit = async (data) => {
-    
-    try {
-      // console.log(data);
-      // auth.mutate(data.username, data.password)
-      // getUsuarios()
-      if (data.username === 'admin' && data.password === 'admin') {
-        console.log('login correcto');
-        //redire
-
-      } else {
-        console.log('login incorrecto');
-        setOpen(true);
-
+      if (isAuthenticated) {
+        return navigate('/pedidos', { replace: true })
       }
-    } catch (err) {
-      console.error(err);
-    }
   };
 
-  function Alert(props: AlertProps) {
-    return <MuiAlert elevation={6} variant="filled" {...props} />;
-  }
 
   return (
     <>
     <ThemeProvider theme={darkTheme}>
       <Container component="main" maxWidth="xs">
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-        <Alert onClose={handleClose} severity="error">
-          Usuario o contraseña incorrectos! por favor revise sus datos.
-        </Alert>
-      </Snackbar>
+      
       <CssBaseline />
           <Box
             sx={{
