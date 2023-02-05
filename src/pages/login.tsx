@@ -1,15 +1,21 @@
-import React from 'react'
+
+
+import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import { ThemeProvider, createTheme } from '@mui/material/styles';
-import Input from '@mui/material/Input';
-import InputLabel from '@mui/material/InputLabel';
 import InputAdornment from '@mui/material/InputAdornment';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import LockRoundedIcon from '@mui/icons-material/LockRounded';
-import { Avatar, Checkbox, Container, FormControlLabel, TextField, Typography } from '@mui/material';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import { Avatar, Checkbox, Container, TextField, Typography } from '@mui/material';
+
+import * as yup from "yup";
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../hook/useAuth.hook';
+import { AlertError } from '../components/AlertError/AlertError';
 
 const darkTheme = createTheme({
   palette: {
@@ -17,23 +23,52 @@ const darkTheme = createTheme({
   },
 });
 
+export interface IFormInput {
+  username: string;
+  password: string;
+}
 
 
-export const Login = () =>{
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('usuario'),
-      password: data.get('password'),
-    });
+
+export const LoginPage = () =>{
+  
+  const navigate = useNavigate();
+  const { handleSignIn , isAuthenticated } = useAuth()
+
+
+  // create esquema de validacion
+  const schema = yup.object().shape({
+    username: yup.string().required("usuario es requerido."),
+    password: yup.string().required("password es requerido."),
+  });
+
+  const { control, handleSubmit, formState: { errors, isSubmitting }, register} = useForm<IFormInput>({
+    resolver: yupResolver(schema)
+  });
+
+
+
+  const onSubmit = async (data: IFormInput) => {
+
+      const response = await handleSignIn(data);
+      if (response.error) {
+         return <AlertError  message={response.error.status}/>
+      } 
+      if (response.data){
+        return navigate('/pedidos')
+      }
+      if (isAuthenticated) {
+        return navigate('/pedidos', { replace: true })
+      }
   };
+
 
   return (
     <>
     <ThemeProvider theme={darkTheme}>
       <Container component="main" maxWidth="xs">
+      
       <CssBaseline />
           <Box
             sx={{
@@ -43,24 +78,26 @@ export const Login = () =>{
               alignItems: 'center',
               backgroundColor: '#424242'
             }}
-            padding={2}
+            padding={3}
             borderRadius={2}
 
             >
 
-          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} src='./img/logo.jpeg'  />
+          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }} src='./img/logo.jpeg'  /> */}
           <Typography component="h1" variant="h5">
             Gastronomia
           </Typography>
-          <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <form onSubmit={handleSubmit(onSubmit)} >
             
             <TextField
               margin="normal"
-              required
+              error={!!errors.username}
+              helperText={errors.username?.message}
+              {...register("username")}
               fullWidth
               id="usuario"
               label="Usuario"
-              name="usuario"
+              name="username"
               autoComplete="usuario"
               autoFocus
               InputProps={{
@@ -73,14 +110,15 @@ export const Login = () =>{
               
             />
             <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
               label="Password"
               type="password"
+              margin="normal"
+              fullWidth
+              {...register("password")}
+              name="password"
               id="password"
-              autoComplete="current-password"
+              error={!!errors.password}
+              helperText={errors.password?.message}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">
@@ -99,11 +137,10 @@ export const Login = () =>{
             </Button>
             
          
-          </Box>
+          </form>
         </Box>
       </Container>
     </ThemeProvider>
     </>
   )
 }
-
