@@ -15,6 +15,7 @@ export interface IAuthEntity {
   nombre: string
   access_token: string
   account_type: AuthRol
+  message: string
 }
 
 export enum AuthRol {

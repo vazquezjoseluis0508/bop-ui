@@ -7,8 +7,9 @@ import { LayoutAdm } from "../components/Layout/layout"
 import { ROUTES } from "../constant/routes"
 import NotFoundPage from "../pages/NotFoundPage"
 import HomePage from "../pages/HomePage"
-import PedidosPage from "../pages/pedidosPage"
 import { SessionProvider } from "../provider/SessionProvider"
+import PedidosPage from "../pages/pedidos"
+
 
 export const Router = () => {
 
@@ -20,9 +21,7 @@ export const Router = () => {
         <Routes>
           {/*Protected Routes*/ }
           <Route element={<ProtectedRoute />}>
-            <Route element={<LayoutAdm />}>
               <Route path={ROUTES.pedidos} element={<PedidosPage/>} />
-            </Route>
           </Route>
             
           <Route path={ROUTES.login} element={<LoginPage/>} />

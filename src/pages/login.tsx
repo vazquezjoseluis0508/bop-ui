@@ -37,7 +37,6 @@ export const LoginPage = () =>{
   const { handleSignIn , isAuthenticated } = useAuth()
 
 
-  // create esquema de validacion
   const schema = yup.object().shape({
     username: yup.string().required("usuario es requerido."),
     password: yup.string().required("password es requerido."),
@@ -52,12 +51,11 @@ export const LoginPage = () =>{
   const onSubmit = async (data: IFormInput) => {
 
       const response = await handleSignIn(data);
+
       if (response.error) {
          return <AlertError  message={response.error.status}/>
       } 
-      if (response.data){
-        return navigate('/pedidos')
-      }
+      
       if (isAuthenticated) {
         return navigate('/pedidos', { replace: true })
       }

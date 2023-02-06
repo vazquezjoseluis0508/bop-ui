@@ -3,9 +3,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { CheckboxListSecondary } from '../ListItem';
-import { VerticalLinearStepper } from '../StepperComponent';
 import { DIAS_SEMANA, MESES } from '../../constants';
+import { VerticalLinearStepper } from '../StepperComponent';
 
 
 const mockItemData = {
@@ -109,7 +108,7 @@ export const VerticalTabs = () => {
         
       </Tabs> 
       <TabPanel value={value} index={0}>
-        {/* <VerticalLinearStepper /> */}
+        <VerticalLinearStepper />
       </TabPanel>
       
     </Box>

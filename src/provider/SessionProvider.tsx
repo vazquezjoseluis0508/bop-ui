@@ -61,13 +61,19 @@ export const SessionProvider = ({ children }: Props) => {
                     legajo: response.data.legajo,
                     id: response.data.id,
                     account_type: response.data.account_type,
-                    password: ''
+                    password: '',
+                    message: response.data.message
                 }
                 localStorage.setItem('bop.token', JSON.stringify(response.data.access_token))
                 // navigate(ROUTES.home, { replace: true })
 
 
             } else if ( response.status === 401 ) {
+
+                userData = {
+                    status: response.status,
+                    message: response.data.message
+                }
                 console.log('Error');
             }
              return userData

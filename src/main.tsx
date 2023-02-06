@@ -21,7 +21,7 @@ const queryClient = new QueryClient()
 ReactDOM.createRoot(document.getElementById("root")!).render(
 
   <Provider store={store}>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <QueryClientProvider client={queryClient}>
         <Router />
       </QueryClientProvider>
