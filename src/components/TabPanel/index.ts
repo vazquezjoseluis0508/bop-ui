@@ -1,1 +1,0 @@
-export { VerticalTabs } from './TabPanel'

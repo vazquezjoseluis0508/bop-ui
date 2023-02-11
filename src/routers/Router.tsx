@@ -3,10 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom"
 import {LoginPage} from "../pages/login"
 
 import { ProtectedRoute } from "../components/ProtectedRoutes/protected-route"
-import { LayoutAdm } from "../components/Layout/layout"
+import Layout from "../components/Layout/layout"
 import { ROUTES } from "../constant/routes"
 import NotFoundPage from "../pages/NotFoundPage"
-import HomePage from "../pages/HomePage"
 import { SessionProvider } from "../provider/SessionProvider"
 import PedidosPage from "../pages/pedidos"
 
@@ -21,7 +20,9 @@ export const Router = () => {
         <Routes>
           {/*Protected Routes*/ }
           <Route element={<ProtectedRoute />}>
+            <Layout>
               <Route path={ROUTES.pedidos} element={<PedidosPage/>} />
+            </Layout>
           </Route>
             
           <Route path={ROUTES.login} element={<LoginPage/>} />

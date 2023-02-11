@@ -33,9 +33,9 @@ export const CheckboxListSecondary = () => {
             {menuDelDia.map((item, index) => {
                 const labelId = `checkbox-list-secondary-label-${index}`;
                 return (
-                    <label>
-                        <ListItem
-                            key={index}
+                    <label key={index}>
+                        {/* <ListItem
+                            key={item.id}
                             secondaryAction={
                                 <Radio
                                     edge="end"
@@ -44,19 +44,20 @@ export const CheckboxListSecondary = () => {
                                     checked={checked === item.id}
                                     inputProps={{ 'aria-labelledby':labelId}} 
                                     color='secondary'
+                                    key={item.id}
                                 />
                             }
                             disablePadding
-                        >
-                            <ListItemButton>
+                        > */}
+                            {/* <ListItemButton>
                                 <ListItemAvatar>
                                     <Avatar>
                                         <FoodIcon icon={item.icon} />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText id={labelId} primary={item.name} />
-                            </ListItemButton>
-                        </ListItem>
+                            </ListItemButton> */}
+                        {/* </ListItem> */}
                     </label>
                 );
             })}

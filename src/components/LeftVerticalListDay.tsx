@@ -3,8 +3,8 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { DIAS_SEMANA, MESES } from '../../constants';
-import { VerticalLinearStepper } from '../StepperComponent';
+import { DIAS_SEMANA, MESES } from '../constants';
+import { VerticalLinearStepper } from './StepperComponent';
 
 
 const mockItemData = {
@@ -44,7 +44,7 @@ const a11yProps = (index: number) => {
   };
 }
 
-export const VerticalTabs = () => {
+export const LeftVerticalListDay = () => {
 
   const diasAntesYDespues = 6
 
@@ -70,6 +70,7 @@ export const VerticalTabs = () => {
     fecha.setDate(fecha.getDate() + dias);
     return fecha;
   }
+
   const restarDias  = (fecha, dias): Date =>{
     fecha.setDate(fecha.getDate() - dias);
     return fecha;
@@ -102,7 +103,7 @@ export const VerticalTabs = () => {
       >
         
           { dias.map( (element, index) => { 
-              return (<Tab label={element.toString()} {...a11yProps(index)} />)
+              return (<Tab key={index} label={element.toString()} {...a11yProps(index)} />)
             })
           }
         
