@@ -1,8 +1,4 @@
 
-type OmitAuthEntityValues = Omit<
-IAuthEntity,
-'password'
->
 
 export interface IAuthEntity {
   readonly id: string

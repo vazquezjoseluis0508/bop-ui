@@ -12,8 +12,8 @@
     "preview": "vite preview",
     "start": "vite",
     "serve": "json-server --watch db/usuarios.json --port 3001 ",
-    "lint": "eslint --ignore-path .gitignore . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "npm run lint -- --fix ."
+    "lint": "eslint --ignore-path .gitignore vite.config.ts . --ext .js,.jsx,.ts,.tsx",
+    "lint:fix": "npm run lint --fix ."
   },
   "dependencies": {
     "@auth0/auth0-react": "^1.10.2",

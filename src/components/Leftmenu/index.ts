@@ -1,1 +1,0 @@
-export { Leftmenu } from './Leftmenu'
