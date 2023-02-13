@@ -1,1 +1,1 @@
-export { Leftmenu } from "./Leftmenu";
+export { Leftmenu } from './Leftmenu'

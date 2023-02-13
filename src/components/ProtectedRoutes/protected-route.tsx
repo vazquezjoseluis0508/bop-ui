@@ -3,16 +3,16 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../constant/routes'
 import { useAuth } from '../../hook/useAuth.hook'
 import { useCheckTokenExpiration } from '../../hook/useTokenExpiration'
+import { Layout } from '../Layout/layout'
 
-export const ProtectedRoute = () => {
+export const ProtectedRoute = ({ children }) => {
   const { isLoading, isAuthenticated } = useAuth()
-  const { pathname } = useLocation()
-  const checkTokenExpiration = useCheckTokenExpiration();
+  const checkTokenExpiration = useCheckTokenExpiration()
 
   useEffect(() => {
-    checkTokenExpiration();
+    checkTokenExpiration()
     console.log('ProtectedRoute')
-  });
+  })
 
   if (isLoading) {
     return (
@@ -24,9 +24,5 @@ export const ProtectedRoute = () => {
     return <Navigate replace to={ROUTES.login} />
   }
 
-  if (pathname === ROUTES.home) {
-    return <Navigate to={ROUTES.pedidos} replace />
-  }
-
-  return <Outlet />
+  return children ? <Layout>{children}</Layout> : <Outlet />
 }

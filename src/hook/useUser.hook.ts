@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { UserAuth } from '../controller/user.controller'
-import { ApplicationState, Dispatch } from '../store'
-import { AuthFormLoginValue } from '../types/auth.type'
+import { type UserAuth } from '../controller/user.controller'
+import { type ApplicationState, type Dispatch } from '../store'
+import { type AuthFormLoginValue } from '../types/auth.type'
 
 export const useUser = () => {
   const dispatch = useDispatch<Dispatch>()
@@ -28,6 +28,6 @@ export const useUser = () => {
     setUserData,
     handleGetMyData,
     handleLogout,
-    handleLogin,
+    handleLogin
   }
 }

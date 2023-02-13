@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { ReactNode, useEffect, useState } from 'react'
+import { type ReactNode, useEffect, useState } from 'react'
 
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../constant/routes'
@@ -7,7 +7,7 @@ import { REST_API } from '../constants'
 import { SessionContext } from '../context/SessionContext'
 import { AuthEvent } from '../event/auth.event'
 import { useDomainEvent } from '../hook/useDomainEvent.hook'
-import { AuthFormLoginValue, IAuthEntity } from '../types/auth.type'
+import { type AuthFormLoginValue, type IAuthEntity } from '../types/auth.type'
 
 export interface FormLogin {
   user_email: string
@@ -30,7 +30,7 @@ export const SessionProvider = ({ children }: Props) => {
       const tokenString = localStorage.getItem('bop.token')
       if (!tokenString) {
         setIsAuthenticated(false)
-        return setIsLoading(false)
+        setIsLoading(false); return
       }
       const userParse = JSON.parse(tokenString)
       setUser(userParse)
@@ -47,41 +47,37 @@ export const SessionProvider = ({ children }: Props) => {
   }
 
   const handleSignIn = async (params: AuthFormLoginValue) => {
-        let userData : IAuthEntity | any = null
-        try {
-            const response = await axios.post(`${REST_API}/auth/signin`, 
-                { usuario: params.username, password: params.password }
-            );
+    let userData: IAuthEntity | any = null
+    try {
+      const response = await axios.post(`${REST_API}/auth/signin`,
+        { usuario: params.username, password: params.password }
+      )
 
-            if( response.status === 200 ) {
-                userData = {
-                    access_token: response.data.access_token,
-                    usr: response.data.usr,
-                    nombre: response.data.nombre,
-                    legajo: response.data.legajo,
-                    id: response.data.id,
-                    account_type: response.data.account_type,
-                    password: '',
-                    message: response.data.message
-                }
-                localStorage.setItem('bop.token', JSON.stringify(response.data.access_token))
-                // navigate(ROUTES.home, { replace: true })
-
-
-            } else if ( response.status === 401 ) {
-
-                userData = {
-                    status: response.status,
-                    message: response.data.message
-                }
-                console.log('Error');
-            }
-             return userData
-
-        } catch (error) {
-            console.log("auth error server : ", error);
-            // return null
+      if (response.status === 200) {
+        userData = {
+          access_token: response.data.access_token,
+          usr: response.data.usr,
+          nombre: response.data.nombre,
+          legajo: response.data.legajo,
+          id: response.data.id,
+          account_type: response.data.account_type,
+          password: '',
+          message: response.data.message
         }
+        localStorage.setItem('bop.token', JSON.stringify(response.data.access_token))
+        setIsAuthenticated(true)
+      } else if (response.status === 401) {
+        userData = {
+          status: response.status,
+          message: response.data.message
+        }
+        setIsAuthenticated(false)
+      }
+      return userData
+    } catch (error) {
+      console.log('auth error server : ', error)
+      // return null
+    }
   }
 
   const handleSignOut = async () => {
@@ -95,9 +91,9 @@ export const SessionProvider = ({ children }: Props) => {
   }, [])
 
   useDomainEvent({
-    handler: () =>
+    handler: () => {
       AuthEvent.onAuthStateChange((event, session) => {
-        if (event === 'TOKEN_REFRESHED' && session) {
+        if (event === 'TOKEN_REFRESHED' && (session != null)) {
           localStorage.setItem('bop.token', JSON.stringify(session))
         }
 
@@ -105,7 +101,8 @@ export const SessionProvider = ({ children }: Props) => {
           localStorage.removeItem('bop.token')
           location.reload()
         }
-      }),
+      })
+    }
   })
 
   return (
@@ -115,7 +112,7 @@ export const SessionProvider = ({ children }: Props) => {
         isLoading,
         handleSignOut,
         handleSignIn,
-        handleIsAuthenticated,
+        handleIsAuthenticated
       }}
     >
       {children}

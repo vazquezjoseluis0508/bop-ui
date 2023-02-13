@@ -1,1 +1,1 @@
-export { FoodIcon } from './FoodIcon' 
+export { FoodIcon } from './FoodIcon'

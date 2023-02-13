@@ -1,19 +1,31 @@
-import React from 'react';
-import { AppBar, Toolbar, Typography, Container } from '@material-ui/core';
-import { Footer } from './footer';
+import { makeStyles } from '@material-ui/core/styles'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Button from '@material-ui/core/Button'
+import { CssBaseline } from '@mui/material'
+import { Header } from '../header'
 
-const Layout = ({ children }) => (
-  <>
-    <AppBar position="static">
-      <Toolbar>
-        <Typography variant="h6">Mi aplicación</Typography>
-      </Toolbar>
-    </AppBar>
-    <Container>
-      {children}
-    </Container>
-    <Footer />
-  </>
-);
+const useStyles = makeStyles({
+  root: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    // justifyContent: 'center',
+    height: '100vh'
+  }
+})
 
-export default Layout;
+export const Layout = ({ children }) => {
+  const classes = useStyles()
+
+  return (
+    <>
+    <CssBaseline />
+      <Header />
+
+      <div className={classes.root}>
+        {children}
+      </div>
+    </>
+  )
+}

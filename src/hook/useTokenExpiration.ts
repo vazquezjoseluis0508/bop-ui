@@ -1,21 +1,21 @@
-import { useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useEffect, useCallback } from 'react'
+import { useNavigate } from 'react-router-dom'
 
-export function useCheckTokenExpiration() {
-  const history = useNavigate();
+export function useCheckTokenExpiration () {
+  const history = useNavigate()
 
   const checkTokenExpiration = useCallback(() => {
-    const tokenExpiration = parseInt(localStorage.getItem('tokenExpiration') || '0' );
+    const tokenExpiration = parseInt(localStorage.getItem('tokenExpiration') || '0')
 
     if (tokenExpiration && new Date().getTime() > tokenExpiration) {
-      localStorage.removeItem('tokenExpiration');
-      history('/login', { replace: true });
+      localStorage.removeItem('tokenExpiration')
+      history('/login', { replace: true })
     }
-  }, [history]);
+  }, [history])
 
   useEffect(() => {
-    checkTokenExpiration();
-  });
+    checkTokenExpiration()
+  })
 
-  return checkTokenExpiration;
+  return checkTokenExpiration
 }

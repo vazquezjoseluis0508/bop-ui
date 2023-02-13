@@ -1,4 +1,4 @@
-import { Link, Typography } from "@mui/material";
+import { Link, Typography } from '@mui/material'
 
 export const Copyright = (props: any) => {
   return (
@@ -8,12 +8,12 @@ export const Copyright = (props: any) => {
       align="center"
       {...props}
     >
-      {"Copyright © "}
-      <Link  href="http://www.control-app.com/">
+      {'Copyright © '}
+      <Link href="http://www.control-app.com/">
         Control App
-      </Link>{" "}
+      </Link>{' '}
       {new Date().getFullYear()}
-      {"."}
+      {'.'}
     </Typography>
-  );
-};
+  )
+}

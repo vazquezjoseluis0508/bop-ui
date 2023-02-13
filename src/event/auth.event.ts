@@ -1,7 +1,7 @@
-import { Socket } from 'socket.io-client'
-import { IAuthEntity } from '../types/auth.type'
+import { type Socket } from 'socket.io-client'
+import { type IAuthEntity } from '../types/auth.type'
 
-export type AuthCode = {
+export interface AuthCode {
   code: number
   user_email: string
   expired_at: Date
@@ -18,17 +18,17 @@ interface IOnAuthStateChange {
 export class AuthEvent {
   socket: Socket | undefined
 
-  static setSocket(socket: Socket) {
+  static setSocket (socket: Socket) {
     this.prototype.socket = socket
   }
 
-  static onAuthStateChange(
+  static onAuthStateChange (
     cb: (event: IAuthChangeType, session: IAuthUserType | null) => void
   ) {
     try {
       const socket = this.prototype.socket
       const userToken = localStorage.getItem('clinia.token')
-      if (!socket) return
+      if (socket == null) return
 
       if (userToken) {
         const userParse = JSON.parse(userToken)

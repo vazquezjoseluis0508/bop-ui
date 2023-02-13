@@ -3,19 +3,19 @@ import {
   Box,
   Button,
   IconButton,
-  Theme,
+  type Theme,
   Toolbar,
-  Typography,
-} from "@mui/material";
-import { makeStyles } from "@mui/styles";
-import { Menu } from "@mui/icons-material";
+  Typography
+} from '@mui/material'
+import { makeStyles } from '@mui/styles'
+import { Menu } from '@mui/icons-material'
 
 const useStyles = makeStyles((theme: Theme) => ({
-  offset: theme.mixins.toolbar,
-}));
+  offset: theme.mixins.toolbar
+}))
 
 export const Navbar = () => {
-  const classes = useStyles();
+  const classes = useStyles()
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="fixed">
@@ -37,5 +37,5 @@ export const Navbar = () => {
       </AppBar>
       <div className={classes.offset}></div>
     </Box>
-  );
-};
+  )
+}

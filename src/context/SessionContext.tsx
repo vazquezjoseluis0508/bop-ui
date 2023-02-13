@@ -1,7 +1,7 @@
 import { createContext } from 'react'
-import { ApiResponse } from '../types/api-response'
+import { type ApiResponse } from '../types/api-response'
 
-import { AuthFormLoginValue, IAuthEntity } from '../types/auth.type'
+import { type AuthFormLoginValue, type IAuthEntity } from '../types/auth.type'
 
 interface SessionContextProps {
   handleSignOut: () => Promise<void>
@@ -14,12 +14,11 @@ interface SessionContextProps {
 }
 
 const defaultContext: SessionContextProps = {
-  handleSignIn: () => Promise.resolve({}),
-  handleSignOut: () => Promise.resolve(),
+  handleSignIn: async () => await Promise.resolve({}),
+  handleSignOut: async () => { await Promise.resolve() },
   isAuthenticated: false,
   isLoading: true,
-  handleIsAuthenticated: () => null,
+  handleIsAuthenticated: () => null
 }
-
 
 export const SessionContext = createContext<SessionContextProps>(defaultContext)

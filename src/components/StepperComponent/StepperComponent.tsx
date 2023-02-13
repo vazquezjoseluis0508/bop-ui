@@ -1,110 +1,111 @@
-import { Box, Button, Divider, FormControlLabel, Paper, Radio, RadioGroup, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material';
-import { Theme } from '@mui/material/styles';
-import { createStyles, makeStyles } from '@mui/styles';
-import React from 'react';
-import { CheckboxListSecondary } from '../ListItem';
+import { Box, Button, Divider, FormControlLabel, Paper, Radio, RadioGroup, Step, StepContent, StepLabel, Stepper, Typography } from '@mui/material'
+import { type Theme } from '@mui/material/styles'
+import { createStyles, makeStyles } from '@mui/styles'
+import React from 'react'
+import { CheckboxListSecondary } from '../ListItem'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      width: '100%',
+      width: '100%'
     },
     button: {
-      marginRight: theme.spacing(1),
+      marginRight: theme.spacing(1)
     },
     instructions: {
       marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(1),
-    },
-  }),
-);
+      marginBottom: theme.spacing(1)
+    }
+  })
+)
 
-function getSteps() {
-  return ['Select campaign settings', 'Create an ad group', 'Create an ad'];
+function getSteps () {
+  return ['Select campaign settings', 'Create an ad group', 'Create an ad']
 }
 
-function getStepContent(step: number) {
+function getStepContent (step: number) {
   switch (step) {
     case 0:
-      return 'Select campaign settings...';
+      return 'Select campaign settings...'
     case 1:
-      return 'What is an ad group anyways?';
+      return 'What is an ad group anyways?'
     case 2:
-      return 'This is the bit I really care about!';
+      return 'This is the bit I really care about!'
     default:
-      return 'Unknown step';
+      return 'Unknown step'
   }
 }
 
 export const StepperComponent = () => {
-  const classes = useStyles();
-  const [activeStep, setActiveStep] = React.useState(0);
-  const [skipped, setSkipped] = React.useState(new Set<number>());
-  const steps = getSteps();
+  const classes = useStyles()
+  const [activeStep, setActiveStep] = React.useState(0)
+  const [skipped, setSkipped] = React.useState(new Set<number>())
+  const steps = getSteps()
 
   const isStepOptional = (step: number) => {
-    return step === 1;
-  };
+    return step === 1
+  }
 
   const isStepSkipped = (step: number) => {
-    return skipped.has(step);
-  };
+    return skipped.has(step)
+  }
 
   const handleNext = () => {
-    let newSkipped = skipped;
+    let newSkipped = skipped
     if (isStepSkipped(activeStep)) {
-      newSkipped = new Set(newSkipped.values());
-      newSkipped.delete(activeStep);
+      newSkipped = new Set(newSkipped.values())
+      newSkipped.delete(activeStep)
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-    setSkipped(newSkipped);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+    setSkipped(newSkipped)
+  }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const handleSkip = () => {
     if (!isStepOptional(activeStep)) {
       // You probably want to guard against something like this,
       // it should never occur unless someone's actively trying to break something.
-      throw new Error("You can't skip a step that isn't optional.");
+      throw new Error("You can't skip a step that isn't optional.")
     }
 
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
     setSkipped((prevSkipped) => {
-      const newSkipped = new Set(prevSkipped.values());
-      newSkipped.add(activeStep);
-      return newSkipped;
-    });
-  };
+      const newSkipped = new Set(prevSkipped.values())
+      newSkipped.add(activeStep)
+      return newSkipped
+    })
+  }
 
   const handleReset = () => {
-    setActiveStep(0);
-  };
+    setActiveStep(0)
+  }
 
   return (
     <div className={classes.root}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
-          const stepProps: { completed?: boolean } = {};
-          const labelProps: { optional?: React.ReactNode } = {};
+          const stepProps: { completed?: boolean } = {}
+          const labelProps: { optional?: React.ReactNode } = {}
           if (isStepOptional(index)) {
-            labelProps.optional = <Typography variant="caption">Optional</Typography>;
+            labelProps.optional = <Typography variant="caption">Optional</Typography>
           }
           if (isStepSkipped(index)) {
-            stepProps.completed = false;
+            stepProps.completed = false
           }
           return (
             <Step key={label} {...stepProps}>
               <StepLabel {...labelProps}>{label}</StepLabel>
             </Step>
-          );
+          )
         })}
       </Stepper>
       <div>
-        {activeStep === steps.length ? (
+        {activeStep === steps.length
+          ? (
           <div>
             <Typography className={classes.instructions}>
               All steps completed - you&apos;re finished
@@ -113,7 +114,8 @@ export const StepperComponent = () => {
               Reset
             </Button>
           </div>
-        ) : (
+            )
+          : (
           <div>
             <Typography className={classes.instructions}>{getStepContent(activeStep)}</Typography>
             <div>
@@ -140,50 +142,47 @@ export const StepperComponent = () => {
               </Button>
             </div>
           </div>
-        )}
+            )}
       </div>
     </div>
-  );
+  )
 }
 
-
-
 export const VerticalLinearStepper = () => {
-
   const steps = [
     {
       id: 1,
-      label: 'Porfavor seleccione el turno.',
+      label: 'Porfavor seleccione el turno.'
     },
     {
       id: 2,
-      label: 'Seleccione el menu del dia.',
+      label: 'Seleccione el menu del dia.'
     },
     {
       id: 3,
-      label: 'Guardar los cambios.',
-    },
-  ];
+      label: 'Guardar los cambios.'
+    }
+  ]
 
-  const [activeStep, setActiveStep] = React.useState(0);
+  const [activeStep, setActiveStep] = React.useState(0)
 
-  const [value, setValue] = React.useState('female');
+  const [value, setValue] = React.useState('female')
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setValue((event.target as HTMLInputElement).value);
-  };
+    setValue((event.target as HTMLInputElement).value)
+  }
 
   const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep + 1)
+  }
 
   const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
+    setActiveStep((prevActiveStep) => prevActiveStep - 1)
+  }
 
   const handleReset = () => {
-    setActiveStep(0);
-  };
+    setActiveStep(0)
+  }
 
   return (
     <Box sx={{ maxWidth: 800 }} ml={3}>
@@ -205,10 +204,10 @@ export const VerticalLinearStepper = () => {
 
       <Divider />
 
-      <Box sx={{mb: 2}}>
+      <Box sx={{ mb: 2 }}>
         <CheckboxListSecondary />
       </Box>
-      
+
       <Divider />
 
       <Box sx={{ mb: 2 }} alignItems='flex-end'>
@@ -220,13 +219,12 @@ export const VerticalLinearStepper = () => {
           >
             Guardar
           </Button>
-          <Button  onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Reset
           </Button>
         </div>
       </Box>
 
     </Box>
-  );
+  )
 }
-

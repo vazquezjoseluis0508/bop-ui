@@ -1,14 +1,19 @@
 // crear un header con material UI
-import { AppBar, Toolbar, Typography } from "@mui/material";
+import { AppBar, Button, Toolbar, Typography } from '@mui/material'
 
 export const Header = () => {
-    return (
+  const handleLogOut = () => {
+    // Handle log out logic here
+  }
+
+  return (
+
         <AppBar position="static">
         <Toolbar>
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            News
-            </Typography>
+        <Button color="inherit" onClick={handleLogOut}>
+            Log Out
+        </Button>
         </Toolbar>
         </AppBar>
-    );
-    };
+  )
+}
