@@ -1,11 +1,13 @@
 
-import { Layout } from '../components/Layout/layout'
-import { LeftVerticalListDay } from '../components/LeftVerticalListDay'
+import { Calendar } from '../components/Calendar'
+import { ContainerApp } from '../components/container'
 
 const PedidosPage = () => {
   return (
     <>
-      <LeftVerticalListDay/>
+    <ContainerApp>
+       <Calendar />
+    </ContainerApp>
     </>
   )
 }

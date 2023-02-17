@@ -5,36 +5,9 @@ import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { DIAS_SEMANA, MESES } from '../constants'
 import { VerticalLinearStepper } from './StepperComponent'
+import { TabPanel } from './tabPanel'
 
-const mockItemData = {
 
-}
-
-interface TabPanelProps {
-  children?: React.ReactNode
-  index: number
-  value: number
-}
-
-const TabPanel = (props: TabPanelProps) => {
-  const { children, value, index, ...other } = props
-
-  return (
-    <div
-      role="tabpanel"
-      hidden={value !== index}
-      id={`vertical-tabpanel-${index}`}
-      aria-labelledby={`vertical-tab-${index}`}
-      {...other}
-    >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
-        </Box>
-      )}
-    </div>
-  )
-}
 
 const a11yProps = (index: number) => {
   return {
@@ -43,8 +16,8 @@ const a11yProps = (index: number) => {
   }
 }
 
-export const LeftVerticalListDay = () => {
-  const diasAntesYDespues = 6
+export const Calendar = () => {
+  const diasAntesYDespues = 10
 
   const obtenerDias = (diasAntesYDespues: number): any => {
     const dias = diasAntesYDespues / 2
@@ -88,19 +61,43 @@ export const LeftVerticalListDay = () => {
 
   return (
     <Box
-      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 624 }}
+      sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex', height: 500 }}
     >
       <Tabs
-        orientation="vertical"
-        variant="scrollable"
-        value={value}
-        onChange={handleChange}
-        aria-label="Vertical tabs example"
-        sx={{ borderRight: 1, borderColor: 'divider' }}
+         orientation="vertical"
+         variant="scrollable"
+         value={value}
+         onChange={handleChange}
+         aria-label="Vertical tabs example"
+         sx={{ borderRight: 1, borderColor: 'divider' }}
       >
 
           { dias.map((element, index) => {
-            return (<Tab key={index} label={element.toString()} {...a11yProps(index)} />)
+            return (
+              <Tab 
+                key={index} 
+                label={element.toString()} 
+                {...a11yProps(index)} 
+                
+                sx={{
+                  border: 0.5,
+                  borderColor: 'primary.dark',
+                  borderRadius: 1,
+                  alignItems: 'start',
+                  textAlign: 'start',
+                  m: 0.2,
+                  '&:hover': {
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                  },
+                  '&.Mui-selected': {
+                    backgroundColor: 'primary.dark',
+                    color: 'primary.contrastText',
+                  },
+
+                }}
+                />
+              )
           })
           }
 

@@ -32,7 +32,7 @@ export const CheckboxListSecondary = () => {
               const labelId = `checkbox-list-secondary-label-${index}`
               return (
                     <label key={index}>
-                        {/* <ListItem
+                        <ListItem
                             key={item.id}
                             secondaryAction={
                                 <Radio
@@ -46,16 +46,16 @@ export const CheckboxListSecondary = () => {
                                 />
                             }
                             disablePadding
-                        > */}
-                            {/* <ListItemButton>
+                        >
+                            <ListItemButton>
                                 <ListItemAvatar>
-                                    <Avatar>
-                                        <FoodIcon icon={item.icon} />
+                                    <Avatar >
+                                        <FoodIcon icon={item.icon}  />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText id={labelId} primary={item.name} />
-                            </ListItemButton> */}
-                        {/* </ListItem> */}
+                            </ListItemButton>
+                        </ListItem>
                     </label>
               )
             })}

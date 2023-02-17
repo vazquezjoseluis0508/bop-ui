@@ -213,13 +213,16 @@ export const VerticalLinearStepper = () => {
       <Box sx={{ mb: 2 }} alignItems='flex-end'>
         <div>
           <Button
-            variant="contained"
+            variant="outlined"
+            color='secondary'
             onClick={handleNext}
             sx={{ mt: 1, mr: 1 }}
           >
             Guardar
           </Button>
-          <Button onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
+          <Button
+            color='secondary' 
+            onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Reset
           </Button>
         </div>

@@ -24,7 +24,20 @@ export const darkTheme = createTheme({
     mode: 'dark',
     background: { // Aquí puedes agregar el color de fondo que desees para tu layout.  Por ejemplo, un color gris oscuro.
       default: '#282c34' // Esta es la paleta de colores por defecto para un tema oscuro.  Puedes cambiarla si lo deseas.
+    },
+    primary: {
+      light: '#ffd149',
+      main: '#ffa000',
+      dark: '#c67100',
+      contrastText: '#fff'
+    },
+    secondary: {
+      main: '#fdd835',
+      light: '#ffff6b',
+      dark: '#c6a700',
+      contrastText: '#fff'
     }
+    
   }
 
 })
