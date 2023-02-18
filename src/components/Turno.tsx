@@ -1,5 +1,5 @@
 
-import { Box, FormControlLabel, Radio, RadioGroup } from '@mui/material'
+import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
 import React from 'react'
 
 
@@ -8,21 +8,61 @@ export const Turno = () => {
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setValue((event.target as HTMLInputElement).value)
       }
+
+    const turnos = [
+        {
+            id: 1,
+            turno: 'Turno 11:00'
+        },
+        {
+            id: 2,
+            turno: 'Turno 14:00'
+        },
+        {
+            id: 3,
+            turno: 'Turno 20:00'
+        },
+      ]
     
   return (
     
-    <Box sx={{ mb: 2 }} m={2}>
+    <Box  m={2}  alignContent="center" alignItems="center">
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={value}
             onChange={handleChange}
+            
             row
+            sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                justifyContent: 'space-evenly',
+                backgroundColor: 'transparent',
+              }}
 
           >
-            <FormControlLabel value="Turno 11:00" control={<Radio />} label="Turno 11:00" />
-            <FormControlLabel value="Turno 14:00" control={<Radio />} label="Turno 14:00" />
-            <FormControlLabel value="Turno 20:00" control={<Radio />} label="Turno 20:00" />
+            {turnos.map((turno) => (
+              
+                <Box 
+                  border={1} 
+                  borderRadius={2} 
+                  // borderColor='darkred'   
+                  padding={0.5} 
+                  margin={1}
+                  sx={{
+                    borderRadius: 10,
+                    // boxShadow: '1px 0.5px 0.5px 0.5px darkRed',
+                    // bgcolor: 'background.paper',
+                    paddingLeft: 2,
+
+                }}>
+                    <FormControlLabel value={turno.id} control={<Radio />} label={turno.turno} />
+                  
+                </Box>
+              )
+            )}
+
           </RadioGroup>
 
       </Box>

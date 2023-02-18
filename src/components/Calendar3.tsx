@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers';
-import { Box } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 
 export default function StaticDateTimePickerDemo() {
 
@@ -22,6 +22,7 @@ export default function StaticDateTimePickerDemo() {
         margin={2}
         borderRadius={4}
       >
+        <Paper elevation={1} >
         <StaticDatePicker
           displayStaticWrapperAs="desktop"
           value={value}
@@ -30,6 +31,7 @@ export default function StaticDateTimePickerDemo() {
           }}
           renderInput={(params) => <TextField  {...params} />}
       />
+      </Paper>
       </Box>
     </LocalizationProvider>
   );

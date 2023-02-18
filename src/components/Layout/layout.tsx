@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import { CssBaseline } from '@mui/material'
-import { Header } from '../Header'
+import { Header } from '../header'
 
 const useStyles = makeStyles({
   root: {

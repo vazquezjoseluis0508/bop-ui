@@ -3,7 +3,7 @@ import { Grid } from '@material-ui/core'
 import { Box } from '@mui/material'
 import { Calendar } from '../components/Calendar'
 import Calendar3 from '../components/Calendar3'
-import { ContainerApp } from '../components/Container'
+import { ContainerApp } from '../components/container'
 import { MenuDelDia } from '../components/MenuDelDia'
 import { Turno } from '../components/Turno'
 
@@ -22,21 +22,19 @@ const PedidosPage = () => {
   return (
     <>
     <ContainerApp>
-       <Grid container>
-            <Grid item xs={6} sm={12} md={6}>
+      <Box border={1} borderRadius={2} borderColor='grey' sx={{ width: '100%'}}>
+       <Grid container >
+            <Grid item xs={4} sm={12} md={4} >
                 <Calendar3 />
             </Grid>
-            <Grid item xs={6} sm={12} md={6}>
-              <Turno />
-
-              <Box sx={{ width: '100%' }} m={1}>
+            <Grid item xs={8} sm={12} md={8} >
+              <Box  m={1} paddingLeft={2}>
+                <Turno />
                 <MenuDelDia />
               </Box>
             </Grid>
-
        </Grid>
-       
-
+       </Box>
     </ContainerApp>
     </>
   )
