@@ -3,7 +3,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { ROUTES } from '../../constant/routes'
 import { useAuth } from '../../hook/useAuth.hook'
 import { useCheckTokenExpiration } from '../../hook/useTokenExpiration'
-import { Layout } from '../Layout/layout'
+import { Layout } from '../Layout/Layout'
 
 export const ProtectedRoute = ({ children }) => {
   const { isLoading, isAuthenticated } = useAuth()

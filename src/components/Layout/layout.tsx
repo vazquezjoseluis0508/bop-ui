@@ -1,16 +1,12 @@
 import { makeStyles } from '@material-ui/core/styles'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Button from '@material-ui/core/Button'
 import { CssBaseline } from '@mui/material'
-import { Header } from '../header'
+import { Header } from '../Header'
 
 const useStyles = makeStyles({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    // justifyContent: 'center',
     height: '100vh'
   }
 })

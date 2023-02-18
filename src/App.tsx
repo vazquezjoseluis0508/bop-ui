@@ -5,13 +5,13 @@ import {
   useLocation,
   Navigate
 } from 'react-router-dom'
-import { ProtectedRoute } from './components/ProtectedRoutes/protected-route'
+import { ProtectedRoute } from './components/ProtectedRoutes/Protected-route'
 import { ROUTES } from './constant/routes'
 import { useAuth } from './hook/useAuth.hook'
 import { useCheckTokenExpiration } from './hook/useTokenExpiration'
-import { LoginPage } from './pages/login'
+import { LoginPage } from './pages/Login'
 import NotFoundPage from './pages/NotFoundPage'
-import PedidosPage from './pages/pedidos'
+import PedidosPage from './pages/PedidosPage'
 import { SessionProvider } from './provider/SessionProvider'
 
 export default function App () {

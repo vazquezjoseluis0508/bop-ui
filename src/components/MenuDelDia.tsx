@@ -6,10 +6,10 @@ import ListItemText from '@mui/material/ListItemText'
 import ListItemAvatar from '@mui/material/ListItemAvatar'
 import Checkbox from '@mui/material/Checkbox'
 import Avatar from '@mui/material/Avatar'
-import { FoodIcon } from '../FoodIcon'
+import { FoodIcon } from './FoodIcon'
 import { Radio } from '@mui/material'
 
-export const CheckboxListSecondary = () => {
+export const MenuDelDia = () => {
   const [checked, setChecked] = React.useState<number | null>(null)
 
   const menuDelDia = [

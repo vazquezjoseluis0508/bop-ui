@@ -2,7 +2,7 @@ import { Box, Button, Divider, FormControlLabel, Paper, Radio, RadioGroup, Step,
 import { type Theme } from '@mui/material/styles'
 import { createStyles, makeStyles } from '@mui/styles'
 import React from 'react'
-import { CheckboxListSecondary } from '../ListItem'
+import { MenuDelDia } from '../MenuDelDia'
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -205,7 +205,7 @@ export const VerticalLinearStepper = () => {
       <Divider />
 
       <Box sx={{ mb: 2 }}>
-        <CheckboxListSecondary />
+        <MenuDelDia />
       </Box>
 
       <Divider />
@@ -221,7 +221,7 @@ export const VerticalLinearStepper = () => {
             Guardar
           </Button>
           <Button
-            color='secondary' 
+            color='secondary'
             onClick={handleReset} sx={{ mt: 1, mr: 1 }}>
             Reset
           </Button>
