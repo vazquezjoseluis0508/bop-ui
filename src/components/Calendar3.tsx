@@ -22,13 +22,14 @@ export default function StaticDateTimePickerDemo() {
         margin={2}
         borderRadius={4}
       >
-        <Paper elevation={1} >
+        <Paper elevation={24}   >
         <StaticDatePicker
           displayStaticWrapperAs="desktop"
           value={value}
           onChange={(newValue) => {
           setValue(newValue);
           }}
+          
           renderInput={(params) => <TextField  {...params} />}
       />
       </Paper>

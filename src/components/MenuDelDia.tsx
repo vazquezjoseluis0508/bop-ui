@@ -12,16 +12,6 @@
 // export const MenuDelDia = () => {
 //   const [checked, setChecked] = React.useState<number | null>(null)
 
-  const menuDelDia = [
-    { id: 1, name: 'Pollo grillado con vegetales.', icon: 'FastfoodTwoTone', image:'https://www.cardamomo.news/__export/1619467998593/sites/debate/img/2021/04/26/ensalada_de_pollo_a_la_plancha_crop1619464936823.jpeg_554688468.jpeg' },
-    { id: 2, name: 'Rissoto con champignone.', icon: 'RamenDiningRounded' , image:'https://cdn0.recetasgratis.net/es/posts/9/0/9/risotto_de_champinones_74909_orig.jpg'},
-    { id: 3, name: 'Tortilla de papa.', icon: 'LunchDiningTwoTone', image: 'https://locosxlaparrilla.com/wp-content/uploads/2015/02/Receta-recetas-locos-x-la-parrilla-locosxlaparrilla-tortilla-tortilla-de-papa.png' },
-    { id: 4, name: 'Tarta de vegetales.', icon: 'DinnerDiningTwoTone', image:'https://www.hazteveg.com/img/recipes/full/201601/R21-29305.jpg' },
-    { id: 5, name: 'Empanada de espinaca y queso.', icon: 'RamenDiningRounded', image:'https://www.johaprato.com/files/styles/flexslider_full/public/empanadas_espinaca.png?itok=4mYQtPJz' },
-    { id: 6, name: 'Carne al horno con papas grilladas.', icon: 'FastfoodTwoTone', image: 'https://unareceta.com/wp-content/uploads/2018/04/receta-de-lomo-al-horno-con-verduras.jpg' }
-
-  ]
-
 //   const handleToggle = (value: number) => () => {
 //     setChecked(value)
 //   }
@@ -73,36 +63,111 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { Grid } from '@mui/material';
+import { Box, Grid, IconButton } from '@mui/material';
+import { menuDelDia, unsplash_ACCESS_KEY, unsplash_API_URL } from '../constants';
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
+import axios from 'axios';
+
+
+
+interface ImageResult {
+  link: string;
+}
+
+
 
 export const  MenuDelDia = () => {
+
+    const accessKey = unsplash_ACCESS_KEY; // Reemplaza con tu clave de acceso a la API de Unsplash
+    const unsplash_URL = unsplash_API_URL;
+
+    const get_image = async (query: string): Promise<string> => {
+        try {
+        const url = `${unsplash_URL}/search/photos?query=${query}&client_id=${accessKey}`;
+        const response = await axios.get(url)
+        console.log("results: ",response.data.results)
+        const image = response.data.results[0].urls.small
+        return image.toString()
+        } catch (error) {
+            console.log(error)
+            return ''
+        }
+
+    }
+
+
+    // obtener data 
+    const getData = async () => {
+        const data = await Promise.all(menuDelDia.map(async (item, index) => {
+            const image = await get_image(item.name)
+            return {
+                ...item,
+                image: image
+            }
+        }))
+        return data
+    }
+
+    const [data, setData] = React.useState<any>([])
+
+    React.useEffect(() => {
+        getData().then((data) => {
+            setData(data)
+        })
+    }, [])
+
+
+
+
   return (
 
     <>
-    <Grid container spacing={2}>
-    {menuDelDia.map((item, index) => (
-        <Grid item xs={12} sm={6} md={4} key={index}>
-            <Card sx={{ maxWidth: 400 }} key={item.id}>
-                <CardMedia
-                    component="img"
-                    alt="green iguana"
-                    height="100"
-                    width="50"
-                    image={item.image}
-                />
-                <CardContent>
-                    
-                    <Typography variant="body2" color="text.secondary">
-                    {item.name}
-                    </Typography>
-                </CardContent>
-                <CardActions>
-                    <Button size="small">Seleccionar Este!</Button>
-                </CardActions>
-            </Card>
+    <Box margin={2} >
+        <Grid container spacing={2}>
+        {data.map((item, index) => {
+            return (
+            <Grid item xs={12} sm={6} md={4} key={index}>
+                <Card sx={{ maxWidth: 400 }} key={item.id} elevation={24}>
+                    <CardMedia
+                        component="img"
+                        alt="green iguana"
+                        height="100"
+                        width="50"
+                        image={item.image}
+                    />
+                    <CardContent
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                            height: '80px',
+                        }}
+                    >
+                        
+                        <Typography variant="body2" color="text.secondary">
+                        {item.name}
+                        </Typography>
+                    </CardContent>
+                    <CardActions>
+                        <IconButton aria-label="add to favorites">
+                            {/* <CheckCircleOutlineIcon /> */}
+                            {/* <FavoriteTwoToneIcon /> */}
+                            <FavoriteSharpIcon sx={{
+                                color: 'grey.500',
+                            }}/>
+                        </IconButton>
+                    </CardActions>
+                </Card>
+            </Grid>
+            )
+        }
+        )}
         </Grid>
-    ))}
-    </Grid>
+
+    </Box>
     
 
     

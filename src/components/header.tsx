@@ -12,9 +12,9 @@ export const Header = () => {
         <AppBar position="static" >
           <Toolbar>
             <Button 
-              color="inherit" 
+              color="secondary" 
               variant='outlined' 
-              onClick={handleLogOut} 
+              // onClick={handleLogOut} 
               startIcon={ <ExitToAppIcon />}
               sx={{ ml: 'auto' }}
               >

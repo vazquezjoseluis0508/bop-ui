@@ -33,7 +33,7 @@ export const Turno = () => {
             value={value}
             onChange={handleChange}
             
-            row
+            // row
             sx={{
                 display: 'flex',
                 flexDirection: 'row',
@@ -45,19 +45,29 @@ export const Turno = () => {
             {turnos.map((turno) => (
               
                 <Box 
-                  border={1} 
                   borderRadius={2} 
-                  // borderColor='darkred'   
                   padding={0.5} 
                   margin={1}
-                  sx={{
-                    borderRadius: 10,
-                    // boxShadow: '1px 0.5px 0.5px 0.5px darkRed',
-                    // bgcolor: 'background.paper',
-                    paddingLeft: 2,
-
-                }}>
-                    <FormControlLabel value={turno.id} control={<Radio />} label={turno.turno} />
+                    sx={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        justifyContent: 'space-evenly',
+                        backgroundColor: 'transparent',
+                        width: '100%',
+                        }}
+                  >
+                    <FormControlLabel 
+                        value={turno.id} 
+                        control={<Radio />} 
+                        label={turno.turno} 
+                        sx={{
+                            borderRadius: 10,
+                            border: 1,
+                            borderColor:'primary.main',
+                            paddingLeft: 2,
+                            width: '100%',
+                        }}
+                        />
                   
                 </Box>
               )

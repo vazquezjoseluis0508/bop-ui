@@ -1,39 +1,49 @@
 
-import { Grid } from '@material-ui/core'
-import { Box } from '@mui/material'
+import { Grid, Typography } from '@material-ui/core'
+import { Box, Divider } from '@mui/material'
+import { ActionButton } from '../components/ActionButton'
 import { Calendar } from '../components/Calendar'
 import Calendar3 from '../components/Calendar3'
 import { ContainerApp } from '../components/container'
 import { MenuDelDia } from '../components/MenuDelDia'
+import HorizontalLinearStepper from '../components/Stepper/Stepper2'
 import { Turno } from '../components/Turno'
 
-// "Nuestro Menú"
-// "Explora nuestros platos"
-// "Delicias culinarias"
-// "El sabor de la buena comida"
-// "Comida fresca y deliciosa"
-// "Sabores auténticos"
-// "Platos exquisitos para ti"
-// "Nuestras especialidades"
-// "Variedad de sabores"
-// "¡Buen provecho!"
-
 const PedidosPage = () => {
+
+
   return (
     <>
     <ContainerApp>
-      <Box border={1} borderRadius={2} borderColor='grey' sx={{ width: '100%'}}>
+      
+      <Box border={0} borderColor='primary.main' borderRadius={2}  sx={{ width: '100%'}}>
+      <HorizontalLinearStepper />
        <Grid container >
             <Grid item xs={4} sm={12} md={4} >
                 <Calendar3 />
+                <Turno />
             </Grid>
             <Grid item xs={8} sm={12} md={8} >
               <Box  m={1} paddingLeft={2}>
-                <Turno />
                 <MenuDelDia />
+                <Divider  sx={{ marginTop: 5}}/>
+                <Box mt={5} pr={5}>
+                  <ActionButton />
+                </Box>
               </Box>
             </Grid>
        </Grid>
+       <Box 
+        sx= {{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'right',
+            backgroundColor: 'transparent',
+            width: '100%',
+            padding: 2,
+        }}
+        >
+       </Box>
        </Box>
     </ContainerApp>
     </>

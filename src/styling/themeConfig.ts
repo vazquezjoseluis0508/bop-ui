@@ -26,15 +26,15 @@ export const darkTheme = createTheme({
       default: '#282c34' // Esta es la paleta de colores por defecto para un tema oscuro.  Puedes cambiarla si lo deseas.
     },
     primary: {
-      light: '#ffd149',
-      main: '#ffa000',
-      dark: '#340900',
+      light: '#ffa040',
+      main: '#ff6f00',
+      dark: '#c43e00',
       contrastText: '#fff'
     },
     secondary: {
-      main: '#fdd835',
-      light: '#ffff6b',
-      dark: '#c6a700',
+      main: '#fbc02d',
+      light: '#fff263',
+      dark: '#c49000',
       contrastText: '#fff'
     }
     
