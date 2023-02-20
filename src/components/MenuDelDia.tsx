@@ -1,61 +1,3 @@
-// import * as React from 'react'
-// import List from '@mui/material/List'
-// import ListItem from '@mui/material/ListItem'
-// import ListItemButton from '@mui/material/ListItemButton'
-// import ListItemText from '@mui/material/ListItemText'
-// import ListItemAvatar from '@mui/material/ListItemAvatar'
-// import Checkbox from '@mui/material/Checkbox'
-// import Avatar from '@mui/material/Avatar'
-// import { FoodIcon } from './FoodIcon'
-// import { Box, Radio } from '@mui/material'
-
-// export const MenuDelDia = () => {
-//   const [checked, setChecked] = React.useState<number | null>(null)
-
-//   const handleToggle = (value: number) => () => {
-//     setChecked(value)
-//   }
-
-//   return (
-//     <Box margin={1} padding={2}>
-//         <List dense sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
-//             {menuDelDia.map((item, index) => {
-//               const labelId = `checkbox-list-secondary-label-${index}`
-//               return (
-//                     <label key={index}>
-//                         <ListItem
-//                             key={item.id}
-//                             secondaryAction={
-//                                 <Radio
-//                                     edge="end"
-//                                     name="radio-buttons-menu"
-//                                     onChange={handleToggle(item.id)}
-//                                     checked={checked === item.id}
-//                                     inputProps={{ 'aria-labelledby':labelId}}
-//                                     color='secondary'
-//                                     key={item.id}
-//                                 />
-//                             }
-//                             disablePadding
-//                         >
-//                             <ListItemButton>
-//                                 <ListItemAvatar>
-//                                     <Avatar >
-//                                         <FoodIcon icon={item.icon}  />
-//                                     </Avatar>
-//                                 </ListItemAvatar>
-//                                 <ListItemText id={labelId} primary={item.name} />
-//                             </ListItemButton>
-//                         </ListItem>
-//                     </label>
-//               )
-//             })}
-//         </List>
-//         </Box>
-//   )
-// }
-
-
 import * as React from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
@@ -74,15 +16,17 @@ import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.serv
 
 
 export const  MenuDelDia = () => {
-    const [query, setQuery] = React.useState('');
-    const [images, setImages] = React.useState([]);
     const [ data, setData ] = React.useState<any>([])
+    const [seleccionado, setSeleccionado] = React.useState(null);
 
-
-    // Ejemplo de uso
-  
-    
-  
+    const handleSeleccionar = (id) => {
+        if (id === seleccionado) {
+          setSeleccionado(null); // deseleccionar si se hace clic en una tarjeta ya seleccionada
+        } else {
+          setSeleccionado(id); // seleccionar la tarjeta que se hace clic
+        }
+        console.log(id)
+      };
     
 
 
@@ -110,7 +54,9 @@ export const  MenuDelDia = () => {
 
                 }
 
-                console.log('image', image)
+                if (image === '') {
+                    image = './img/menu22.png'
+                }
 
                 return {
                     ...item,
@@ -144,7 +90,15 @@ export const  MenuDelDia = () => {
         {data.map((item, index) => {
             return (
             <Grid item xs={12} sm={6} md={4} key={index}>
-                <Card sx={{ maxWidth: 400 }} key={item.id} elevation={24}>
+                <Card 
+                    key={item.id} 
+                    onClick={() => handleSeleccionar(item.id)}
+                    elevation={seleccionado === item.id ? 10 : 24}
+                    sx={{
+                        border: seleccionado === item.id ? '4px solid' : 'none' ,
+                        borderColor: seleccionado === item.id ? 'primary.light' : 'default',
+                    }}
+                >
                     <CardMedia
                         component="img"
                         alt="green iguana"
@@ -168,11 +122,12 @@ export const  MenuDelDia = () => {
                     </CardContent>
                     <CardActions>
                         <IconButton aria-label="add to favorites">
-                            {/* <CheckCircleOutlineIcon /> */}
-                            {/* <FavoriteTwoToneIcon /> */}
-                            <FavoriteSharpIcon sx={{
-                                color: 'grey.500',
-                            }}/>
+                            {
+                                seleccionado === item.id ?
+                                <FavoriteSharpIcon sx={{color: 'primary.main' }}/>
+                                :
+                                <FavoriteSharpIcon sx={{color: 'grey.500' }}/>
+                            }
                         </IconButton>
                     </CardActions>
                 </Card>
