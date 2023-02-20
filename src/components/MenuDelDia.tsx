@@ -64,53 +64,68 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, Grid, IconButton } from '@mui/material';
-import { menuDelDia, unsplash_ACCESS_KEY, unsplash_API_URL } from '../constants';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import FavoriteTwoToneIcon from '@mui/icons-material/FavoriteTwoTone';
+import { menuDelDia } from '../constants';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
-import axios from 'axios';
+import { searchImages } from '../services/google.service';
+import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.service';
 
 
-
-interface ImageResult {
-  link: string;
-}
 
 
 
 export const  MenuDelDia = () => {
+    const [query, setQuery] = React.useState('');
+    const [images, setImages] = React.useState([]);
+    const [ data, setData ] = React.useState<any>([])
 
-    const accessKey = unsplash_ACCESS_KEY; // Reemplaza con tu clave de acceso a la API de Unsplash
-    const unsplash_URL = unsplash_API_URL;
 
-    const get_image = async (query: string): Promise<string> => {
-        try {
-        const url = `${unsplash_URL}/search/photos?query=${query}&client_id=${accessKey}`;
-        const response = await axios.get(url)
-        console.log("results: ",response.data.results)
-        const image = response.data.results[0].urls.small
-        return image.toString()
-        } catch (error) {
-            console.log(error)
-            return ''
-        }
-
-    }
+    // Ejemplo de uso
+  
+    
+  
+    
 
 
     // obtener data 
     const getData = async () => {
         const data = await Promise.all(menuDelDia.map(async (item, index) => {
-            const image = await get_image(item.name)
-            return {
-                ...item,
-                image: image
+            try {
+               
+                const cachedResults = getFromLocalStorage(item.name);
+
+                let image = ''
+    
+                if (cachedResults) {
+                    console.log("Resultados obtenidos del caché:", cachedResults);
+                    image = cachedResults
+                } else {
+                    // Hacer una nueva solicitud a la API de búsqueda
+                    const results = await searchImages(item.name);
+                
+                    // Almacenar los resultados en el caché
+                    storeInLocalStorage(item.name, results);
+                
+                    console.log("Resultados obtenidos de la API:", results);
+                    image = results
+
+                }
+
+                console.log('image', image)
+
+                return {
+                    ...item,
+                    image: image
+                }
+
+
+            } catch (error) {
+                console.log(error)
             }
+            
         }))
         return data
     }
 
-    const [data, setData] = React.useState<any>([])
 
     React.useEffect(() => {
         getData().then((data) => {

@@ -6,6 +6,12 @@ export const unsplash_ACCESS_KEY = 'Vg6WVzkatagZYf8eNXuXqW6D83DHSoKs6muUxn_-nec'
 export const unsplash_API_URL = 'https://api.unsplash.com/'
 export const unsplash_SECRET_KEY = 'VFrtzkjQxkBbCLyrRUmrt8vDOSaiUNwKZ_RotB-HtBE'
 
+// export const google_search_api_key = `AIzaSyCt4X-QrRKAWxLFlcrLXtRE_DsmlGcB7Xs`// jose
+export const google_search_api_key =`AIzaSyA0mEcoAzyYh-UH7-N4O37W9IkjcPXFcTs` // jamesson
+export const google_search_url = `https://www.googleapis.com/customsearch/v1`
+export const google_search_cx = `b053cda8ca5e64613`// jamesson
+
+
 export const menuDelDia = [
     { id: 1, name: 'Pollo grillado con vegetales.', icon: 'FastfoodTwoTone', image:'https://www.cardamomo.news/__export/1619467998593/sites/debate/img/2021/04/26/ensalada_de_pollo_a_la_plancha_crop1619464936823.jpeg_554688468.jpeg' },
     { id: 2, name: 'Rissoto con champignone.', icon: 'RamenDiningRounded' , image:'https://cdn0.recetasgratis.net/es/posts/9/0/9/risotto_de_champinones_74909_orig.jpg'},

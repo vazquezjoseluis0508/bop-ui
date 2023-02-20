@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "bingo-oasis-pilar",
+  "private_key_id": "889f05494c8392d520e06e0fc5bdca086ddbee30",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCvSZBvl/NIW8I0\nD9asNytEk5Xocr8ib3qUgZiRkDVzeyuc5ZiusTd+OyM3TViGxCN1hmHIJ6SfPptz\n7DUDzu0KlkeuUHO0LjXan+/4HOFrl0ptQp9IozrwyrqLuPVGfU4QlogJhwSqn98p\nbn7y6aTzapa168pj0vNbRWskZ8dBOFLRNM33nKbvzuOGnNCN7duoasOxmPi3TzeI\nK1NlCQYDeCaVd60ZdwuXmIelhcRh3iZ3jXrHAHSa+83XkYxROF3R6Ckf3hCLT2gb\n/MGjlTCh/2+Ic7gn5YQ++OVChqM+lgl6vfNXYWebtATjJegJfgjw9TLYlwc4473d\n31vAR5XXAgMBAAECggEATCU7WtbZ5t2BhCc7PM2sfJpWPUeXk0h1Kg0QL2/DYHqp\nq/srM/wlHK9o8W2mnsiWlMe/M3lRMKI8WoPKVfCulXJKCkXFtYh7eZEP6Cr3m8r5\nmHQgCKhsAs02c1ryJeBqKJeT2fuuwcY4ZeGrwS9RKjLr7HRVE79AWy5RSFvSuZgb\ndgUoPh9GWXnZcPXtMb/7TYz6RZpOEnppTxnq/k8XkOLmifnb0pRPA8ekmIFjx2Y3\nuvtAR2CqTkJ/haSezle9XFoXx9vGPsZc7bvKQ/Sg73MbNeq0F3W3xNhO3SjRT7Iv\ndBn99Uz+4FmMVXn+jOW2hXHZD/tJuFrZMgY/jt47BQKBgQDaIqQtZaPo+G6ywSwu\nGqCjGJEgfRLsK5g3MlcYOxuFbnRsq1GmpMYrT8vRQ6dnMgY6E8jYceWQuvdhLBN2\nArvb42NXv2/ZsTEVPHg0St4TZ2fRU9ZI1K4Bi2ShD32vYjX9UFmmWxUw0v9TUqxl\nZhjkC6wb8MTzl+8szrp4gAS6rQKBgQDNtt9go3TjD5XLBMJG2drPS7yz3eSrzCSr\nreHFt1hseLQLKMCXhWbKHTv2q3pXsdLwzG1VCQ4WmHbufL3OMw48YI1i2dmehXGN\ndcvCqthr/Dx+zOxwbyJsDMQziGd1qCmnMOJzN5whJ6rYe1qSpAESbvkwtt+iid8+\n95Sy738HEwKBgQCh+ztjIqjW5TR+tQezrL5AnouWTopwqea8hjs6mRnUubLmx0k4\nr/8gRn8ZhF2ZOgJ5uhtY7ysDkHMGy44gAeOyY2Zv0I6kXvoNxPuWCUpjqlPjk5f6\nOUSFjRdKqpAwXoOs+a+44sYXnXdQToIKQgiVvz0s+lumb9qBsXmy5Y2deQKBgQC/\nbERAcNn70CzbVfpSY7aw3xEhboGzO6uD9bH5gbrOdSNUnv9X/9K+kKWTy810fQyE\n9jVmw55QeF9zXLBiiC/fDxmBuqY+VH5t3AdXhhMNqRHCDH6XwVKOqPKJ4Ywkd+8K\nnPqbrEukrnzUJTUK74Hv3UQUiJdhcFpFBa1hNGtH8QKBgH3XR6TF32ZyC4V1JraM\nBHLd7RS5JRpqJm7/VfvJjlPYK9TLhPaTV7WWdksIFbeS5AQIrxa+xVkN7IyRZJ54\nEvdl/C838Hj3dJGuJy4MRBcO1xZmnhhPB0rB5ugdvSc6zzJinCBs5qVSyM5C3Iuc\nePTunRFNcj4kyVzta/e/GVBX\n-----END PRIVATE KEY-----\n",
+  "client_email": "bingo-152@bingo-oasis-pilar.iam.gserviceaccount.com",
+  "client_id": "115201093293393298909",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/bingo-152%40bingo-oasis-pilar.iam.gserviceaccount.com"
+}
