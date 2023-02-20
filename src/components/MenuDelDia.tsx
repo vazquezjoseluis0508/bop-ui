@@ -3,7 +3,6 @@ import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import { Box, Grid, IconButton } from '@mui/material';
 import { menuDelDia } from '../constants';
@@ -15,7 +14,8 @@ import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.serv
 
 
 
-export const  MenuDelDia = ({menuDelDia}) => {
+export const  MenuDelDia = ({ date }) => {
+
     const [ data, setData ] = React.useState<any>([])
     const [seleccionado, setSeleccionado] = React.useState(null);
 
@@ -27,12 +27,27 @@ export const  MenuDelDia = ({menuDelDia}) => {
         }
         console.log(id)
       };
-    
+
+    const convertDate = (date) => {
+        const fecha = new Date(date)
+        return fecha.toISOString().substring(0, 10)
+    }
+
+    //filtrar menu del dia
+    const menuDelDiaSeleccionado = menuDelDia.filter((item) => {
+        const fecha = new Date(item.dia)
+        console.log(fecha.toISOString().substring(0, 10), date.toISOString().substring(0, 10))
+        if (fecha.toISOString().substring(0, 10) === date.toISOString().substring(0, 10)) {
+            console.log(item.opciones)
+            return item.opciones
+        }
+
+    })
 
 
     // obtener data 
     const getData = async () => {
-        const data = await Promise.all(menuDelDia.map(async (item, index) => {
+        const data = await Promise.all(menuDelDiaSeleccionado.map(async (item, index) => {
             try {
                
                 const cachedResults = getFromLocalStorage(item.name);
@@ -138,9 +153,6 @@ export const  MenuDelDia = ({menuDelDia}) => {
         </Grid>
 
     </Box>
-    
-
-    
     </>
   );
 }

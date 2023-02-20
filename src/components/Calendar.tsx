@@ -6,14 +6,9 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers';
 import { Box, Paper } from '@mui/material';
 
-export default function Calendar() {
-  const [fechaSeleccionada, setFechaSeleccionada] = React.useState(null);
-  const handleSeleccionarFecha = (fecha) => {
-    setFechaSeleccionada(fecha.toISOString().substring(0, 10));
-  };
+export default function Calendar( { onDateChange, dateSelected }) {
 
 
-  const [value, setValue] = React.useState<Dayjs | null>(dayjs('2023-02-17'));
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -29,12 +24,9 @@ export default function Calendar() {
       >
         <Paper elevation={24}   >
         <StaticDatePicker
+          value={dateSelected}
           displayStaticWrapperAs="desktop"
-          value={value}
-          onChange={(newValue) => {
-          setValue(newValue);
-          }}
-          
+          onChange={onDateChange}
           renderInput={(params) => <TextField  {...params} />}
       />
       </Paper>
