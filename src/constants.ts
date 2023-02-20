@@ -13,11 +13,35 @@ export const google_search_cx = `b053cda8ca5e64613`// jamesson
 
 
 export const menuDelDia = [
-    { id: 1, name: 'Pollo grillado con vegetales.', icon: 'FastfoodTwoTone', image:'https://www.cardamomo.news/__export/1619467998593/sites/debate/img/2021/04/26/ensalada_de_pollo_a_la_plancha_crop1619464936823.jpeg_554688468.jpeg' },
-    { id: 2, name: 'Rissoto con champignone.', icon: 'RamenDiningRounded' , image:'https://cdn0.recetasgratis.net/es/posts/9/0/9/risotto_de_champinones_74909_orig.jpg'},
-    { id: 3, name: 'Tortilla de papa.', icon: 'LunchDiningTwoTone', image: 'https://locosxlaparrilla.com/wp-content/uploads/2015/02/Receta-recetas-locos-x-la-parrilla-locosxlaparrilla-tortilla-tortilla-de-papa.png' },
-    { id: 4, name: 'Tarta de vegetales.', icon: 'DinnerDiningTwoTone', image:'https://www.hazteveg.com/img/recipes/full/201601/R21-29305.jpg' },
-    { id: 5, name: 'Empanada de espinaca y queso.', icon: 'RamenDiningRounded', image:'https://www.johaprato.com/files/styles/flexslider_full/public/empanadas_espinaca.png?itok=4mYQtPJz' },
-    { id: 6, name: 'Carne al horno con papas grilladas.', icon: 'FastfoodTwoTone', image: 'https://unareceta.com/wp-content/uploads/2018/04/receta-de-lomo-al-horno-con-verduras.jpg' }
+    {
+      dia: '2023-02-20', opciones: [
+        { id: 1, name: 'VEGETARIANA', icon: 'FastfoodTwoTone', image:'https://www.cardamomo.news/__export/1619467998593/sites/debate/img/2021/04/26/ensalada_de_pollo_a_la_plancha_crop1619464936823.jpeg_554688468.jpeg' },
+        { id: 2, name: 'TARTA DE JAMON Y QUESO CON ENS AMERICANA', icon: 'RamenDiningRounded' , image:'https://cdn0.recetasgratis.net/es/posts/9/0/9/risotto_de_champinones_74909_orig.jpg'},
+        { id: 3, name: 'GUISO DE LENTEJAS', icon: 'LunchDiningTwoTone', image: 'https://locosxlaparrilla.com/wp-content/uploads/2015/02/Receta-recetas-locos-x-la-parrilla-locosxlaparrilla-tortilla-tortilla-de-papa.png' },
+        { id: 4, name: 'SORRENTINOS CON SALSA BOLOGNESA', icon: 'DinnerDiningTwoTone', image:'https://www.hazteveg.com/img/recipes/full/201601/R21-29305.jpg' },
+        { id: 5, name: 'SANDWICH DE JAMON CRUDO Y QUESO', icon: 'RamenDiningRounded', image:'https://www.johaprato.com/files/styles/flexslider_full/public/empanadas_espinaca.png?itok=4mYQtPJz' },
+        { id: 6, name: 'MILANESA DE TERNERA CON PURE DE PAPAS', icon: 'FastfoodTwoTone', image: 'https://unareceta.com/wp-content/uploads/2018/04/receta-de-lomo-al-horno-con-verduras.jpg' }
+      ]
+    },
+    {
+      dia: '2023-02-21', opciones: [
+        { id: 7, name: 'BONDIOLA A LA BARBACOA CON PAPAS AL ROMERO', icon: 'FastfoodTwoTone', image:'https://www.cardamomo.news/__export/1619467998593/sites/debate/img/2021/04/26/ensalada_de_pollo_a_la_plancha_crop1619464936823.jpeg_554688468.jpeg' },
+        { id: 8, name: 'ÑOQUIS CON ESTOFADO DE TERNERA', icon: 'RamenDiningRounded' , image:'https://cdn0.recetasgratis.net/es/posts/9/0/9/risotto_de_champinones_74909_orig.jpg'},
+        { id: 9, name: 'SANDWICH DE JAMON CRUDO Y QUESO', icon: 'LunchDiningTwoTone', image: 'https://locosxlaparrilla.com/wp-content/uploads/2015/02/Receta-recetas-locos-x-la-parrilla-locosxlaparrilla-tortilla-tortilla-de-papa.png' },
+        { id: 10, name: 'ATUN', icon: 'DinnerDiningTwoTone', image:'https://www.hazteveg.com/img/recipes/full/201601/R21-29305.jpg' },
+        { id: 11, name: 'SANDWICH DE MILANESA', icon: 'RamenDiningRounded', image:'https://www.johaprato.com/files/styles/flexslider_full/public/empanadas_espinaca.png?itok=4mYQtPJz' },
+        { id: 12, name: 'VEGETARIANA.', icon: 'FastfoodTwoTone', image: 'https://unareceta.com/wp-content/uploads/2018/04/receta-de-lomo-al-horno-con-verduras.jpg' }
+      ]
+    },
+    {
+      dia: '2023-02-22', opciones: [
+        { id: 7, name: 'SANDWICH DE MILANESA', icon: 'FastfoodTwoTone', image:'https://www.cardamomo.news/__export/1619467998593/sites/debate/img/2021/04/26/ensalada_de_pollo_a_la_plancha_crop1619464936823.jpeg_554688468.jpeg' },
+        { id: 8, name: 'POLLO AL HORNO CON VEGETALES', icon: 'RamenDiningRounded' , image:'https://cdn0.recetasgratis.net/es/posts/9/0/9/risotto_de_champinones_74909_orig.jpg'},
+        { id: 9, name: 'SANDWICH DE SUPREMA DE POLLO', icon: 'LunchDiningTwoTone', image: 'https://locosxlaparrilla.com/wp-content/uploads/2015/02/Receta-recetas-locos-x-la-parrilla-locosxlaparrilla-tortilla-tortilla-de-papa.png' },
+        { id: 10, name: 'CARNE AL HORNO CON PAPAS', icon: 'DinnerDiningTwoTone', image:'https://www.hazteveg.com/img/recipes/full/201601/R21-29305.jpg' },
+        { id: 11, name: 'HAMBURGUESA CON QUESO', icon: 'RamenDiningRounded', image:'https://www.johaprato.com/files/styles/flexslider_full/public/empanadas_espinaca.png?itok=4mYQtPJz' },
+        { id: 12, name: 'CAPRESE CON JAMON CRUDO.', icon: 'FastfoodTwoTone', image: 'https://unareceta.com/wp-content/uploads/2018/04/receta-de-lomo-al-horno-con-verduras.jpg' }
+      ]
+    },
 
   ]

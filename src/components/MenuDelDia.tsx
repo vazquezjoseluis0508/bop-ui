@@ -15,7 +15,7 @@ import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.serv
 
 
 
-export const  MenuDelDia = () => {
+export const  MenuDelDia = ({menuDelDia}) => {
     const [ data, setData ] = React.useState<any>([])
     const [seleccionado, setSeleccionado] = React.useState(null);
 
