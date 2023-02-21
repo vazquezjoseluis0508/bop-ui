@@ -9,7 +9,6 @@ import { Box, Paper } from '@mui/material';
 export default function Calendar( { onDateChange, dateSelected }) {
 
 
-
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <Box 
@@ -28,6 +27,7 @@ export default function Calendar( { onDateChange, dateSelected }) {
           displayStaticWrapperAs="desktop"
           onChange={onDateChange}
           renderInput={(params) => <TextField  {...params} />}
+          minDate={dayjs().subtract(1, 'day')}
       />
       </Paper>
       </Box>

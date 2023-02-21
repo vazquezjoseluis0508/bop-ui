@@ -18,8 +18,6 @@ export const  MenuDelDia = ({ date }) => {
 
     const { menus, handleGetMenus } = useMenu()
 
-    
-
     const [ data, setData ] = React.useState<IMenu[]>([])
     const [seleccionado, setSeleccionado] = React.useState(null);
 
@@ -29,7 +27,6 @@ export const  MenuDelDia = ({ date }) => {
         } else {
           setSeleccionado(id); // seleccionar la tarjeta que se hace clic
         }
-        console.log(id)
       };
 
     const convertDate = (date) => {
@@ -85,10 +82,15 @@ export const  MenuDelDia = ({ date }) => {
     React.useEffect(() => {
         handleGetMenus()
 
+        
+    }, [])
+
+    React.useEffect(() => {
+        console.log("date: ", date)
         getData().then((data) => {
             setData(data)
         })
-    }, [])
+    }, [date])
 
 
 
