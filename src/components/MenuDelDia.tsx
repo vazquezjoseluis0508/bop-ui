@@ -5,18 +5,22 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Box, Grid, IconButton } from '@mui/material';
-import { menuDelDia } from '../constants';
+// import { menuDelDia } from '../constants';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import { searchImages } from '../services/google.service';
 import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.service';
-
-
+import { useMenu } from '../hook/useMenu';
+import { IMenu } from '../models/menus';
 
 
 
 export const  MenuDelDia = ({ date }) => {
 
-    const [ data, setData ] = React.useState<any>([])
+    const { menus, handleGetMenus } = useMenu()
+
+    
+
+    const [ data, setData ] = React.useState<IMenu[]>([])
     const [seleccionado, setSeleccionado] = React.useState(null);
 
     const handleSeleccionar = (id) => {
@@ -33,40 +37,28 @@ export const  MenuDelDia = ({ date }) => {
         return fecha.toISOString().substring(0, 10)
     }
 
-    //filtrar menu del dia
-    const menuDelDiaSeleccionado = menuDelDia.filter((item) => {
-        const fecha = new Date(item.dia)
-        console.log(fecha.toISOString().substring(0, 10), date.toISOString().substring(0, 10))
-        if (fecha.toISOString().substring(0, 10) === date.toISOString().substring(0, 10)) {
-            console.log(item.opciones)
-            return item.opciones
-        }
-
-    })
-
-
-    // obtener data 
     const getData = async () => {
-        const data = await Promise.all(menuDelDiaSeleccionado.map(async (item, index) => {
-            try {
-               
-                const cachedResults = getFromLocalStorage(item.name);
+        const platos_del_dia = menus.menus.filter((item) => {
+            if (convertDate(item.fecha_menu) === convertDate(date)) {
+                return item
+            }
+        })
 
+        console.log("platos_del_dia: ", platos_del_dia)
+
+        const data: IMenu[] = await Promise.all(platos_del_dia.map(async (item, index) => {
+            try {
+                const cachedResults = getFromLocalStorage(item.descripcion);
                 let image = ''
-    
                 if (cachedResults) {
                     console.log("Resultados obtenidos del caché:", cachedResults);
                     image = cachedResults
                 } else {
-                    // Hacer una nueva solicitud a la API de búsqueda
-                    const results = await searchImages(item.name);
-                
+                    const results = await searchImages(item.descripcion);
                     // Almacenar los resultados en el caché
-                    storeInLocalStorage(item.name, results);
-                
+                    storeInLocalStorage(item.descripcion, results);
                     console.log("Resultados obtenidos de la API:", results);
                     image = results
-
                 }
 
                 if (image === '') {
@@ -78,22 +70,25 @@ export const  MenuDelDia = ({ date }) => {
                     image: image
                 }
 
-
             } catch (error) {
-                console.log(error)
+                console.log("get_data: ",error)
             }
+            return item
             
         }))
+
+        console.log(data)
         return data
     }
 
 
     React.useEffect(() => {
+        handleGetMenus()
+
         getData().then((data) => {
             setData(data)
         })
     }, [])
-
 
 
 
@@ -106,12 +101,12 @@ export const  MenuDelDia = ({ date }) => {
             return (
             <Grid item xs={12} sm={6} md={4} key={index}>
                 <Card 
-                    key={item.id} 
-                    onClick={() => handleSeleccionar(item.id)}
-                    elevation={seleccionado === item.id ? 10 : 24}
+                    key={item.idMenuPersonal} 
+                    onClick={() => handleSeleccionar(item.idMenuPersonal)}
+                    elevation={seleccionado === item.idMenuPersonal ? 10 : 24}
                     sx={{
-                        border: seleccionado === item.id ? '4px solid' : 'none' ,
-                        borderColor: seleccionado === item.id ? 'primary.light' : 'default',
+                        border: seleccionado === item.idMenuPersonal ? '4px solid' : 'none' ,
+                        borderColor: seleccionado === item.idMenuPersonal ? 'primary.light' : 'default',
                     }}
                 >
                     <CardMedia
@@ -132,13 +127,13 @@ export const  MenuDelDia = ({ date }) => {
                     >
                         
                         <Typography variant="body2" color="text.secondary">
-                        {item.name}
+                        {item.descripcion}
                         </Typography>
                     </CardContent>
                     <CardActions>
                         <IconButton aria-label="add to favorites">
                             {
-                                seleccionado === item.id ?
+                                seleccionado === item.idMenuPersonal ?
                                 <FavoriteSharpIcon sx={{color: 'primary.main' }}/>
                                 :
                                 <FavoriteSharpIcon sx={{color: 'grey.500' }}/>
