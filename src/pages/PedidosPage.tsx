@@ -1,34 +1,37 @@
 
 import { Grid, Typography } from '@material-ui/core'
 import { Box, Divider } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { useDispatch } from 'react-redux'
 import { ActionButton } from '../components/ActionButton'
 import Calendar from '../components/Calendar'
-import { ContainerApp } from '../components/container'
+import { ContainerApp } from '../components/Container'
 import { MenuDelDia } from '../components/MenuDelDia'
 import HorizontalLinearStepper from '../components/Stepper/Stepper2'
 import { Turno } from '../components/Turno'
 import { convertDate } from '../helpers/data-time'
-import { useMenu } from '../hook/useMenu.hook'
-import { get_menus } from '../services/menu.service'
-import { Dispatch, ApplicationState } from '../store'
+import { IMenu } from '../hook/types'
+import { userFetchMenu } from '../hook/useMenu'
+import { userFetchPedido } from '../hook/usePedidos'
+import { useMenuStore } from '../store/menus'
+
 
 const PedidosPage = () => {
 
-  const dispatch = useDispatch<Dispatch>()
   const [fechaSeleccionada, setFechaSeleccionada] = useState<string>(convertDate(new Date()))
-  const { data: menus = [], isLoading } = useQuery(['menus', fechaSeleccionada], () =>
-    fechaSeleccionada ? get_menus() : Promise.resolve([])
-  );
+  
+  const { data: menus, isLoading: lodingMenus } = userFetchMenu()
+  const { data:reservas, isLoading: lodingReservas } = userFetchPedido()
+  const addMenus = useMenuStore( state => state.addAllMenus)
+  if (lodingMenus ) return <div>Loading...</div>
+
+  if (menus)  addMenus(menus)
+  if (reservas) console.log(reservas)
+
   
 
   const handleDateChange = (date) => {
-    setFechaSeleccionada(date);
+    setFechaSeleccionada(convertDate(date));
   };
-
 
 
   return (

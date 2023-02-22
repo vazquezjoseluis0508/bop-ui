@@ -1,17 +1,46 @@
-import { useDispatch, useSelector } from 'react-redux'
-import { type ApplicationState, type Dispatch } from '../store'
 
-export const useMenu = () => {
-  const dispatch = useDispatch<Dispatch>()
-  const menus = useSelector((state: ApplicationState) => state.menus)
-
-  const handleGetMenus = async () => {
-    return await dispatch.menus.get_menus()
-  }
+import api from "../api/bop";
+import { useQuery } from "@tanstack/react-query";
+import { IMenu } from "./types";
+import { getFromLocalStorage, storeInLocalStorage } from "../services/cache.service";
+import { searchImages } from "../services/google.service";
 
 
-  return {
-    menus,
-    handleGetMenus
+
+async function fetchMenu() {
+  try {
+    const { data } = await api.get<IMenu[]>("/menu/get-menus");
+
+    const misMenus = await Promise.all(data.map(async (menu: IMenu) => {
+
+      const cachedResults = getFromLocalStorage(menu.descripcion);
+      let image = ''
+      if (cachedResults) {
+          image = cachedResults
+      } else {
+          const results = await searchImages(menu.descripcion);
+          storeInLocalStorage(menu.descripcion, results);
+          image = results
+      }
+      if (image === '') {
+        image = './img/menu22.png'
+      }
+      return {
+        idMenuPersonal: menu.idMenuPersonal,
+        descripcion: menu.descripcion,
+        estado: menu.estado,
+        fecha_menu: menu.fecha_menu,
+        image: image
+      }
+    }))
+    return misMenus;
+  } catch (error) {
+    console.log("fetchImageMenu: ",error);
   }
 }
+
+
+export function userFetchMenu() {
+  return useQuery(["menu"], fetchMenu);  
+}
+

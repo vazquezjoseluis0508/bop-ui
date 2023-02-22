@@ -5,21 +5,17 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Box, Grid, IconButton } from '@mui/material';
-// import { menuDelDia } from '../constants';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
-import { searchImages } from '../services/google.service';
-import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.service';
-import { useMenu } from '../hook/useMenu.hook';
-import { IMenu } from '../models/menus';
-import { useSelector } from 'react-redux';
-import { ApplicationState } from '../store';
+import { useMenuStore } from '../store/menus';
 
 
 
 export const  MenuDelDia = ({ date }) => {
+    const menus = useMenuStore(state => state.menus)
+
+    const data = menus.filter((item) => item.fecha_menu.substring(0,10) === date)
 
 
-    const [ data, setData ] = React.useState<IMenu[]>([])
     const [seleccionado, setSeleccionado] = React.useState(null);
 
     const handleSeleccionar = (id) => {

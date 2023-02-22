@@ -1,5 +1,8 @@
 
 import axios, { AxiosResponse } from "axios";
+import { IMenu } from "../hook/types";
+import { getFromLocalStorage, storeInLocalStorage } from "./cache.service";
+import { searchImages } from "./google.service";
 
 const REST_API = "http://localhost:3000/api";
 
@@ -18,3 +21,7 @@ export const get_menus = async (): Promise<any> => {
         console.log("service get_menus: ", error);
     }
 };
+
+export const setImageMenus = async ( data: IMenu[] ) => {
+    
+}
