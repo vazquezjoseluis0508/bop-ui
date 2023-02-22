@@ -64,7 +64,7 @@ export const SessionProvider = ({ children }: Props) => {
           password: '',
           message: response.data.message
         }
-        localStorage.setItem('bop.token', JSON.stringify(response.data.access_token))
+        localStorage.setItem('bop.token', response.data.access_token)
         setIsAuthenticated(true)
       } else if (response.status === 401) {
         userData = {

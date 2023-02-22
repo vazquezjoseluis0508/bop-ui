@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { ROUTES } from '../../constant/routes'
 import { useAuth } from '../../hook/useAuth.hook'
 import { useCheckTokenExpiration } from '../../hook/useTokenExpiration'
@@ -11,7 +11,6 @@ export const ProtectedRoute = ({ children }) => {
 
   useEffect(() => {
     checkTokenExpiration()
-    console.log('ProtectedRoute')
   })
 
   if (isLoading) {

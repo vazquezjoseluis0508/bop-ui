@@ -1,15 +1,14 @@
 
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 
 const REST_API = "http://localhost:3000/api";
 
-export const get_menus = async () => {
+export const get_menus = async (): Promise<any> => {
     try {
         
         const response = await axios.get(`${REST_API}/menu/get-menus`, {
             headers: {
-                // Authorization: "Bearer " + localStorage.getItem("bop.token"),
-                Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOjEsImlhdCI6MTY3Njk5MDI5NSwiZXhwIjoxNjc2OTkyMDk1fQ.zY_CDGc824mEsxtCOky_jfh1UUdJJlTaNrFsmGu9Obw" 
+                Authorization: "Bearer " + localStorage.getItem("bop.token"),
             },
         });
         return response;

@@ -10,15 +10,19 @@ export async function searchImages(query: string): Promise<string> {
       );
   
       // Extrae los enlaces de las imágenes de la respuesta
+      if (!response.data.items) {
+        return "";
+      }
+
       const imageLink = response.data.items.map((item: any) => { 
           return item.pagemap.cse_image[0].src
       });
 
-      console.log("imageLink", imageLink[3]);
+      // console.log("imageLink", imageLink[3]);
   
       return imageLink[0];
     } catch (error) {
-      console.error("Error al buscar imágenes:", error);
+      // console.log("Error al buscar imágenes:", {error});
       return "";
     }
   }

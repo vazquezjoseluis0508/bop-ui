@@ -9,14 +9,15 @@ import { Box, Grid, IconButton } from '@mui/material';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import { searchImages } from '../services/google.service';
 import { getFromLocalStorage, storeInLocalStorage } from '../services/cache.service';
-import { useMenu } from '../hook/useMenu';
+import { useMenu } from '../hook/useMenu.hook';
 import { IMenu } from '../models/menus';
+import { useSelector } from 'react-redux';
+import { ApplicationState } from '../store';
 
 
 
 export const  MenuDelDia = ({ date }) => {
 
-    const { menus, handleGetMenus } = useMenu()
 
     const [ data, setData ] = React.useState<IMenu[]>([])
     const [seleccionado, setSeleccionado] = React.useState(null);
@@ -29,68 +30,7 @@ export const  MenuDelDia = ({ date }) => {
         }
       };
 
-    const convertDate = (date) => {
-        const fecha = new Date(date)
-        return fecha.toISOString().substring(0, 10)
-    }
-
-    const getData = async () => {
-        const platos_del_dia = menus.menus.filter((item) => {
-            if (convertDate(item.fecha_menu) === convertDate(date)) {
-                return item
-            }
-        })
-
-        console.log("platos_del_dia: ", platos_del_dia)
-
-        const data: IMenu[] = await Promise.all(platos_del_dia.map(async (item, index) => {
-            try {
-                const cachedResults = getFromLocalStorage(item.descripcion);
-                let image = ''
-                if (cachedResults) {
-                    console.log("Resultados obtenidos del caché:", cachedResults);
-                    image = cachedResults
-                } else {
-                    const results = await searchImages(item.descripcion);
-                    // Almacenar los resultados en el caché
-                    storeInLocalStorage(item.descripcion, results);
-                    console.log("Resultados obtenidos de la API:", results);
-                    image = results
-                }
-
-                if (image === '') {
-                    image = './img/menu22.png'
-                }
-
-                return {
-                    ...item,
-                    image: image
-                }
-
-            } catch (error) {
-                console.log("get_data: ",error)
-            }
-            return item
-            
-        }))
-
-        console.log(data)
-        return data
-    }
-
-
-    React.useEffect(() => {
-        handleGetMenus()
-
-        
-    }, [])
-
-    React.useEffect(() => {
-        console.log("date: ", date)
-        getData().then((data) => {
-            setData(data)
-        })
-    }, [date])
+    
 
 
 

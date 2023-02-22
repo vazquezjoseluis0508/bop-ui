@@ -45,6 +45,7 @@ export const Turno = () => {
             {turnos.map((turno) => (
               
                 <Box 
+                  key={turno.id}
                   borderRadius={2} 
                   padding={0.5} 
                   margin={1}
