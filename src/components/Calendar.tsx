@@ -5,9 +5,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers';
 import { Box, Paper } from '@mui/material';
+import { Controller } from 'react-hook-form';
+import { convertDate } from '../helpers/data-time';
 
-export default function Calendar( { onDateChange, dateSelected }) {
+type CalendarProps = {
+  onDateChange: (date: Dayjs | null) => void;
+  fechaSeleccionada:  string;
+};
 
+export default function Calendar( { onDateChange, fechaSeleccionada }: CalendarProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -22,13 +28,17 @@ export default function Calendar( { onDateChange, dateSelected }) {
         borderRadius={4}
       >
         <Paper elevation={24}   >
-        <StaticDatePicker
-          value={dateSelected}
-          displayStaticWrapperAs="desktop"
-          onChange={onDateChange}
-          renderInput={(params) => <TextField  {...params} />}
-          minDate={dayjs().subtract(1, 'day')}
-      />
+          
+              <StaticDatePicker
+                value={fechaSeleccionada}
+                displayStaticWrapperAs="desktop"
+                onChange={
+                  (newValue) => {
+                    onDateChange(newValue);
+                }}
+                renderInput={(params) => <TextField  {...params} />}
+                minDate={dayjs().subtract(1, 'day')}
+              />
       </Paper>
       </Box>
     </LocalizationProvider>

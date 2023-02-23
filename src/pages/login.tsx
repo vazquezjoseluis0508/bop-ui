@@ -14,6 +14,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hook/useAuth.hook'
 import { AlertError } from '../components/AlertError/AlertError'
+import { ROUTES } from '../constant/routes'
 
 export interface IFormInput {
   username: string
@@ -41,7 +42,7 @@ export const LoginPage = () => {
     }
 
     if (isAuthenticated) {
-      navigate('/pedidos', { replace: true })
+      navigate(ROUTES.pedidos, { replace: true })
     }
   }
 

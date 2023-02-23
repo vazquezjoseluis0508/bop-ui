@@ -3,7 +3,7 @@ import { Snackbar } from '@mui/material'
 import { useState } from 'react'
 
 export const AlertError = ({ message }: { message: string }) => {
-  const [open, setOpen] = useState(false)
+  const [open, setOpen] = useState(true)
 
   return (
         <div>

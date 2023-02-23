@@ -1,7 +1,12 @@
-import { Box, Button, ButtonBase } from '@mui/material'
+import { Box, Button,  } from '@mui/material'
 import React from 'react'
 
-export const ActionButton = () => {
+type actionButtonProps = {
+  onDelete: ( id_reserva: number ) => void
+
+}
+
+export const ActionButton = ( { onDelete}: actionButtonProps) => {
 
   const [disabledGuardar, setDisabledGuardar] = React.useState(false)
   const [disabledELiminar, setDisabledELiminar] = React.useState(true)
@@ -31,8 +36,8 @@ export const ActionButton = () => {
             variant="contained" 
             color="primary"
             size="large"
-            disabled={disabledGuardar}
-            
+            // disabled={disabledGuardar}
+            type="submit"
         >
             Guardar
         </Button>

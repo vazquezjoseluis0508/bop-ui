@@ -1,14 +1,19 @@
 
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect } from 'react'
+import { FieldErrors } from 'react-hook-form';
+import { IFormPedido } from '../pages/PedidosPage';
 
+type TurnoProps = {
+  register: any;
+  name: string;
+  fechaSeleccionada: string;
+  errors: string;
+}
 
-export const Turno = () => {
-    const [value, setValue] = React.useState('female')
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setValue((event.target as HTMLInputElement).value)
-      }
-
+export const Turno = ({ register, name, fechaSeleccionada, errors = '' }: TurnoProps) => {
+    const [value, setValue] = React.useState<string>('');
+   
     const turnos = [
         {
             id: 1,
@@ -24,15 +29,27 @@ export const Turno = () => {
         },
       ]
     
+      useEffect(() => {
+        if (fechaSeleccionada) {
+          setValue('');
+        }
+      }, [fechaSeleccionada]);
+
   return (
     
     <Box  m={2}  alignContent="center" alignItems="center">
+          { 
+            errors !== '' && 
+              <Typography color="error" variant="body2" component="p" align="center" >
+                {errors}
+              </Typography>  
+            }
+
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
             value={value}
-            onChange={handleChange}
-            
+            onChange={(event) => setValue(event.target.value)}
             // row
             sx={{
                 display: 'flex',
@@ -58,8 +75,12 @@ export const Turno = () => {
                         }}
                   >
                     <FormControlLabel 
-                        value={turno.id} 
-                        control={<Radio />} 
+                        value={turno.turno} 
+                        control={<Radio  
+                            {...register(name)} 
+                            value={turno.turno}
+                            
+                            />} 
                         label={turno.turno} 
                         sx={{
                             borderRadius: 10,
@@ -68,6 +89,7 @@ export const Turno = () => {
                             paddingLeft: 2,
                             width: '100%',
                         }}
+
                         />
                   
                 </Box>
