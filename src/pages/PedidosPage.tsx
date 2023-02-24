@@ -86,7 +86,7 @@ const PedidosPage = () => {
 
   const onSubmit: SubmitHandler<IFormPedido> = data => {
 
-    console.log(errors)
+    console.log({data})
    
   } 
 

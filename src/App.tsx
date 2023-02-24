@@ -10,21 +10,22 @@ import { ROUTES } from './constant/routes'
 import { LoginPage } from './pages/Login'
 import NotFoundPage from './pages/NotFoundPage'
 import PedidosPage from './pages/PedidosPage'
-import { SessionProvider } from './provider/SessionProvider'
+import { useAuthStore } from './store/auth'
 
 export default function App () {
+
+  const isAuth = useAuthStore(state => state.isAuth)
+
   return (
-    <SessionProvider>
       <Routes>
-        <Route path={ROUTES.pedidos} element={
-            <ProtectedRoute>
-                <PedidosPage />
-            </ProtectedRoute>} />
         <Route path={ROUTES.login} element={<LoginPage/>} />
         <Route index element={<LoginPage/>} />
         <Route path="*" element={<NotFoundPage/>} />
+        <Route path={ROUTES.pedidos} element={
+            <ProtectedRoute isAllowed={isAuth}>
+                <PedidosPage />
+            </ProtectedRoute>} />
       </Routes>
-    </SessionProvider>
   )
 }
 

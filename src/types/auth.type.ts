@@ -9,6 +9,7 @@ export interface IAuthEntity {
   access_token: string
   account_type: AuthRol
   message: string
+  status: number
 }
 
 export enum AuthRol {

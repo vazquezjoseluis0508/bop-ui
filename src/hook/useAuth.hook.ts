@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query'
 import { useContext } from 'react'
 import { SessionContext } from '../context/SessionContext'
 import { type ApiResponse } from '../types/api-response'
@@ -15,3 +16,17 @@ interface UseAuthResponse {
 export const useAuth = (): UseAuthResponse => {
   return useContext(SessionContext)
 }
+
+
+// async function handleSignIn2 ( data: AuthFormLoginValue) {
+//   const { data } = await api.post<IAuthEntity>('/auth/login', {
+//     email: data.username,
+//     password: data.password,
+//   })
+//   return data
+// }
+
+
+// export const useAuth2 = (): UseAuthResponse => {
+//   return useQuery(["menu"], fetchMenu);  
+// }

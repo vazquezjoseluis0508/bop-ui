@@ -20,16 +20,12 @@ console.log(domain, clientId)
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
 
-  // <Provider store={store}>
     <ThemeProvider theme={darkTheme}>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
           <App />
           <ReactQueryDevtools  initialIsOpen={false} />
-
         </BrowserRouter>
-
       </QueryClientProvider>
     </ThemeProvider>
-  // </Provider>
 )

@@ -16,7 +16,7 @@ export const Layout = ({ children }) => {
 
   return (
     <>
-    <CssBaseline />
+      <CssBaseline />
       <Header />
 
       <div className={classes.root}>

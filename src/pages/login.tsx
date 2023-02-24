@@ -15,6 +15,9 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../hook/useAuth.hook'
 import { AlertError } from '../components/AlertError/AlertError'
 import { ROUTES } from '../constant/routes'
+import { useAuthStore } from '../store/auth'
+import { handleSignIn } from '../services/auth.service'
+import { SnackbarApp } from '../components/Snackbar'
 
 export interface IFormInput {
   username: string
@@ -22,8 +25,14 @@ export interface IFormInput {
 }
 
 export const LoginPage = () => {
+
+  const setToken = useAuthStore(state => state.setToken)
+  const setProfile = useAuthStore(state => state.setProfile)
+
   const navigate = useNavigate()
-  const { handleSignIn, isAuthenticated } = useAuth()
+  const [errorMessage, setErrorMessage] = useState<string>('')
+  const [open, setOpen] = useState<boolean>(false)
+  // const { handleSignIn, isAuthenticated } = useAuth()
 
   const schema = yup.object().shape({
     username: yup.string().required('usuario es requerido.'),
@@ -35,22 +44,39 @@ export const LoginPage = () => {
   })
 
   const onSubmit = async (data: IFormInput) => {
-    const response = await handleSignIn(data)
+    // const response = await handleSignIn(data)
 
-    if (response.error != null) {
-      return <AlertError message={response.error.status}/>
-    }
+    try {
+          const response = await handleSignIn(data)
+        
+          setToken(response.data.access_token || '')
+          setProfile( { 
+              idUsuarios : response.data.idUsuarios,
+              nombre : response.data.nombre,
+              legajo : response.data.legajo,
+              usr: response.data.usr,
+              permiso_id : response.data.permiso_id
+          } || {})
 
-    if (isAuthenticated) {
-      navigate(ROUTES.pedidos, { replace: true })
-    }
+          navigate(ROUTES.pedidos, { replace: true })
+
+      } catch (error: any) {
+        setErrorMessage(error.response.data.message)
+        setOpen(true)
+          // return <SnackbarApp message={response.response.data.message || ''} type='error' open={true} /> 
+      }
   }
+
+
+
 
   return (
     <>
       <Container component="main" maxWidth="xs">
 
       <CssBaseline />
+          <SnackbarApp message="Usuario o password invallido" open={open} type='error'/>
+
           <Box
             sx={{
               marginTop: 8,

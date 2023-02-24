@@ -1,27 +1,16 @@
-import { useEffect } from 'react'
 import { Navigate, Outlet } from 'react-router-dom'
 import { ROUTES } from '../../constant/routes'
-import { useAuth } from '../../hook/useAuth.hook'
-import { useCheckTokenExpiration } from '../../hook/useTokenExpiration'
 import { Layout } from '../Layout/layout'
 
-export const ProtectedRoute = ({ children }) => {
-  const { isLoading, isAuthenticated } = useAuth()
-  const checkTokenExpiration = useCheckTokenExpiration()
+interface Props {
+  isAllowed?: boolean
+  children?: React.ReactNode
+}
 
-  useEffect(() => {
-    checkTokenExpiration()
-  })
+export const ProtectedRoute = ({ children, isAllowed} : Props) => {
 
-  if (isLoading) {
-    return (
-      <> Circular Progres....</>
-    )
-  }
+  if (!isAllowed) return <Navigate replace to={ROUTES.login} />
 
-  if (!isAuthenticated) {
-    return <Navigate replace to={ROUTES.login} />
-  }
 
   return children ? <Layout>{children}</Layout> : <Outlet />
 }
