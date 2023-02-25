@@ -6,13 +6,11 @@ import CircularProgress from '@mui/material/CircularProgress';
 type actionButtonProps = {
   onDelete: ( id_reserva: number ) => void
   isDisabled: boolean
-  isLoading : boolean
+  reserva: number
 }
 
-export const ActionButton = ( { onDelete, isDisabled, isLoading }: actionButtonProps) => {
+export const ActionButton = ( { onDelete, isDisabled, reserva }: actionButtonProps) => {
 
-  const [disabledGuardar, setDisabledGuardar] = React.useState(false)
-  const [disabledELiminar, setDisabledELiminar] = React.useState(true)
 
   return (
     <Box m={2}
@@ -29,7 +27,9 @@ export const ActionButton = ( { onDelete, isDisabled, isLoading }: actionButtonP
             variant="contained"
             color="error"
             size="large"
-            disabled={disabledELiminar}
+            disabled={reserva > 0 ? false : true}
+            onClick={ () => onDelete(reserva) }
+            
           >
           Eliminar
         </Button>

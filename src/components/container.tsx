@@ -13,6 +13,7 @@ export const ContainerApp = ({ children }) => {
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           height: '100vh',
+          width: '100%',
         }}
         margin={2}>
           

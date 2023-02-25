@@ -11,7 +11,7 @@ import { Turno } from '../components/Turno'
 import { convertDate } from '../helpers/data-time'
 import { idMenuPersonal, IMenu } from '../hook/types'
 import { userFetchMenu } from '../hook/useMenu'
-import { createReserva, userFetchPedido, } from '../hook/usePedidos'
+import { crearReserva, eliminarReserva, userFetchPedido, } from '../hook/usePedidos'
 import { useMenuStore } from '../store/menus'
 import * as yup from 'yup'
 import { SubmitHandler, useForm } from 'react-hook-form'
@@ -19,6 +19,7 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { SnackbarApp } from '../components/Snackbar'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '../store/auth'
+import EliminaReserva from '../components/EliminaReserva'
 
 
 export interface IFormPedido {
@@ -32,9 +33,12 @@ const PedidosPage = () => {
 
   const [fechaSeleccionada, setFechaSeleccionada] = useState<string>(convertDate(new Date()))
   const [openSuccess, setOpenSuccess] = useState<boolean>(false)
+  const [openDeleteSuccess, setOpenDeleteSuccess] = useState<boolean>(false)
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<number>(0)
   const [selectedTurno, setSelectedTurno] = useState<string>('')
+  const [reserva, setReserva] = useState<number>(0)
+  const [error, setError] = useState<string>('')
 
   const profile = useAuthStore(state => state.profile)
 
@@ -45,7 +49,7 @@ const PedidosPage = () => {
   } = userFetchPedido(profile.legajo)
 
   const { mutate, isLoading } = useMutation({
-    mutationFn: createReserva,
+    mutationFn: crearReserva,
     onSuccess: (data) => {
       setOpenSuccess(true)
       setIsDisabled(false)
@@ -53,8 +57,21 @@ const PedidosPage = () => {
     }
   })
 
+   const { mutate: mutateDelete, isLoading: isLoadingDelete } = useMutation({
+    mutationFn: eliminarReserva,
+    onSuccess: (data) => {
+      console.log(data)
+
+      setOpenDeleteSuccess(true)
+      setIsDisabled(false)
+      queryClient.invalidateQueries (['pedidos'])
+    },
+    onError: (error: any) => {
+      setError(error.message)
+    }
+  })
+
   const { data: menus, isLoading: lodingMenus } = userFetchMenu()
-  
 
   const addMenus = useMenuStore( state => state.addAllMenus)
 
@@ -98,7 +115,7 @@ const PedidosPage = () => {
 
 
   const onDelete = (id_reserva : number) => {
-    console.log(id_reserva)
+    mutateDelete(id_reserva)
   }
 
   const handleSetReserva = (reservas: idMenuPersonal[], date: string) => {
@@ -110,11 +127,13 @@ const PedidosPage = () => {
         setValue('form_menu', reserva.idMenu.toString())
         setSelectedTurno(reserva.turno)
         setSelectedMenu(reserva.idMenu)
+        setReserva(reserva.idCalendarioMenu)
       } else {
         setValue('form_turno', '')
         setValue('form_menu', '')
         setSelectedMenu(0)
         setSelectedTurno('')
+        setReserva(0)
       } 
     }
   }
@@ -122,7 +141,7 @@ const PedidosPage = () => {
   const handleDateChange = (date) => {
     setFechaSeleccionada(convertDate(date));
     reservas && handleSetReserva(reservas, convertDate(date))
-    
+    setValue('form_fecha', convertDate(date))
     setIsDisabled(false)
   };
 
@@ -152,6 +171,7 @@ const PedidosPage = () => {
   return (
     <>
     <ContainerApp>
+      <EliminaReserva />
       
       <Box border={0} borderColor='primary.main' borderRadius={2}  sx={{ width: '100%'}}>
       <HorizontalLinearStepper />
@@ -191,7 +211,7 @@ const PedidosPage = () => {
                   <ActionButton  
                     onDelete={onDelete}
                     isDisabled={isDisabled} 
-                    isLoading={isLoading}
+                    reserva={reserva}
                     />
                 </Box>
               </Box>
@@ -201,11 +221,23 @@ const PedidosPage = () => {
           openSuccess && (
             <SnackbarApp
               open={openSuccess}
-              message="Reserva realizada con éxito"
+              message="¡Genial! Ya tienes tu menú de comida reservado."
               type='success'
               variant='outlined'
             />
           )
+       }
+
+       {
+         openDeleteSuccess && (
+            <SnackbarApp
+              open={openDeleteSuccess}
+              message="¡Listo! Hemos eliminado el menú de comida que ya no deseabas de tu pedido" 
+              type='success'
+              variant='outlined'
+            />
+          )
+
        }
        { 
           Object.keys(errors).length > 0 && (
@@ -215,7 +247,18 @@ const PedidosPage = () => {
                 type='error'
             />
           )
+       }
+
+        { 
+          error && (
+            <SnackbarApp
+              open={true}
+              message={error}
+              type='error'
+            />
+          )
         }
+
 
        </form>
         

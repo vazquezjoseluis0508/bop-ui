@@ -2,6 +2,7 @@ import api from "../api/bop";
 import { useQuery } from "@tanstack/react-query";
 import { idMenuPersonal } from "./types";
 import { IFormPedido } from "../pages/PedidosPage";
+import { AxiosError } from "axios";
 
 
 async function fetchPedidos( legajo: string ): Promise<idMenuPersonal[]> {
@@ -20,8 +21,9 @@ async function fetchPedidos( legajo: string ): Promise<idMenuPersonal[]> {
 
 }
 
-export async function createReserva( params: IFormPedido ) {
+export async function crearReserva( params: IFormPedido ) {
     try {
+        console.log("Parametros de reserva: ", params)
 
         const { data } = await api.post<IFormPedido>("/pedidos/reservar", {
             idMenu: params.form_menu,
@@ -36,17 +38,17 @@ export async function createReserva( params: IFormPedido ) {
     }
 }
 
-async function deleteReserva( id: number ) {
+export async function eliminarReserva( id: number ) {
     try {
-        const { data } = await api.delete("/pedidos/delete-reserva", {
+        const { data } = await api.delete("/pedidos/eliminar", {
             params: {
-                id: id
+                idCalendarioMenu: id
             }
         });
         console.log("deleteReserva: ",data)
         return data;
-    } catch (error) {
-        console.log("deleteReserva: ",error);
+    } catch (error: any) {
+        throw new Error("Error en el servidor: " + error.response.data);
     }
 }
 
