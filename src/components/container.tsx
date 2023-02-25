@@ -4,7 +4,7 @@ import React from 'react'
 
 export const ContainerApp = ({ children }) => {
   return (
-    <Container fixed>
+    <Container maxWidth={false}>
       <Box 
         padding={2} 
         sx={{
@@ -13,7 +13,7 @@ export const ContainerApp = ({ children }) => {
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           height: '100vh',
-          width: '100%',
+          width: '95%',
         }}
         margin={2}>
           

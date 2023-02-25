@@ -4,7 +4,6 @@ import {  Box, Divider, Snackbar } from '@mui/material'
 import {  useEffect, useState } from 'react'
 import { ActionButton } from '../components/ActionButton'
 import Calendar from '../components/Calendar'
-import { ContainerApp } from '../components/Container'
 import { MenuDelDia } from '../components/MenuDelDia'
 import HorizontalLinearStepper from '../components/Stepper/Stepper2'
 import { Turno } from '../components/Turno'
@@ -20,6 +19,8 @@ import { SnackbarApp } from '../components/Snackbar'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '../store/auth'
 import EliminaReserva from '../components/EliminaReserva'
+import { ContainerApp } from '../components/container'
+import InsetDividers from '../components/listDivider'
 
 
 export interface IFormPedido {
@@ -171,7 +172,6 @@ const PedidosPage = () => {
   return (
     <>
     <ContainerApp>
-      <EliminaReserva />
       
       <Box border={0} borderColor='primary.main' borderRadius={2}  sx={{ width: '100%'}}>
       <HorizontalLinearStepper />
@@ -181,7 +181,7 @@ const PedidosPage = () => {
         
        
        <Grid container >
-            <Grid item xs={4} sm={12} md={4} >
+            <Grid item xs={3} sm={12} md={3} >
                 <Calendar 
                   onDateChange={handleDateChange}
                   fechaSeleccionada={fechaSeleccionada}
@@ -194,7 +194,7 @@ const PedidosPage = () => {
                   errors={errors['form_turno']?.message || ''}
                   />
             </Grid>
-            <Grid item xs={8} sm={12} md={8} >
+            <Grid item xs={6} sm={12} md={6} >
               <Box  m={1} paddingLeft={2}>
                 <MenuDelDia 
                   name="form_menu" 
@@ -214,6 +214,11 @@ const PedidosPage = () => {
                     reserva={reserva}
                     />
                 </Box>
+              </Box>
+            </Grid>
+            <Grid item xs={3} sm={12} md={3} >
+              <Box  mt={2} >
+              <InsetDividers />
               </Box>
             </Grid>
        </Grid>

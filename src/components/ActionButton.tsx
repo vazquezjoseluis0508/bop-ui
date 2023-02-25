@@ -23,7 +23,7 @@ export const ActionButton = ( { onDelete, isDisabled, reserva }: actionButtonPro
 
      }}>
       <Box m={1} >
-        <Button
+        {/* <Button
             variant="contained"
             color="error"
             size="large"
@@ -32,7 +32,7 @@ export const ActionButton = ( { onDelete, isDisabled, reserva }: actionButtonPro
             
           >
           Eliminar
-        </Button>
+        </Button> */}
         </Box>
         <Box m={1} >
         <Button  
