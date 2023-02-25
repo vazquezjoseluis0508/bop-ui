@@ -9,9 +9,10 @@ type SnackbarProps = {
     type: 'success' | 'info' | 'warning' | 'error';
     message: string;
     open: boolean;
+    variant?: 'filled' | 'outlined' | 'standard';
 }
 
-export const SnackbarApp = ({ type, message, open} : SnackbarProps) => {
+export const SnackbarApp = ({ type, message, open, variant = 'filled'} : SnackbarProps) => {
     const [openSnackbar, setOpenSnackbar] = React.useState(open);
 
 
@@ -49,7 +50,7 @@ export const SnackbarApp = ({ type, message, open} : SnackbarProps) => {
         <Alert 
             severity={type} 
             sx={{ width: '100%' }}
-            variant='filled'
+            variant={variant}
         >
             {message} 
             {action}

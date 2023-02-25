@@ -1,12 +1,15 @@
 import { Box, Button,  } from '@mui/material'
 import React from 'react'
+import CircularProgress from '@mui/material/CircularProgress';
+
 
 type actionButtonProps = {
   onDelete: ( id_reserva: number ) => void
-
+  isDisabled: boolean
+  isLoading : boolean
 }
 
-export const ActionButton = ( { onDelete}: actionButtonProps) => {
+export const ActionButton = ( { onDelete, isDisabled, isLoading }: actionButtonProps) => {
 
   const [disabledGuardar, setDisabledGuardar] = React.useState(false)
   const [disabledELiminar, setDisabledELiminar] = React.useState(true)
@@ -36,10 +39,10 @@ export const ActionButton = ( { onDelete}: actionButtonProps) => {
             variant="contained" 
             color="primary"
             size="large"
-            // disabled={disabledGuardar}
+            disabled={isDisabled}
             type="submit"
         >
-            Guardar
+            { isDisabled ? <CircularProgress size={24}/> : 'Guardar' }
         </Button>
         </Box>
     </Box>

@@ -16,15 +16,18 @@ type MenuDelDiaProps = {
     control: any;
     fechaSeleccionada: string;
     errors: string;
+    selectedMenu: number;
 }
 
 
-export const  MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, errors}: MenuDelDiaProps) => {
+export const  MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, errors, selectedMenu}: MenuDelDiaProps) => {
     const menus = useMenuStore(state => state.menus)
+
+    console.log("selectedMenu", selectedMenu)
   
     const data = menus.filter((item) => item.fecha_menu.substring(0,10) === fechaSeleccionada)
 
-    const [seleccionado, setSeleccionado] = React.useState<number>(0);
+    const [seleccionado, setSeleccionado] = React.useState<number>(selectedMenu);
 
     const handleSeleccionar = (id) => {
 
@@ -37,10 +40,8 @@ export const  MenuDelDia = ({ name, register, watch, control, fechaSeleccionada,
 
 
     React.useEffect(() => {
-        if (fechaSeleccionada) {
-            setSeleccionado(0)
-        }
-    }, [fechaSeleccionada])
+        setSeleccionado(selectedMenu)
+    }, [fechaSeleccionada, selectedMenu])
 
   return (
 

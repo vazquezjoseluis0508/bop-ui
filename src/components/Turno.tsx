@@ -1,55 +1,57 @@
 
 import { Box, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material'
-import React, { useEffect } from 'react'
-import { FieldErrors } from 'react-hook-form';
-import { IFormPedido } from '../pages/PedidosPage';
+import React, { useEffect, useState } from 'react'
 
 type TurnoProps = {
   register: any;
   name: string;
   fechaSeleccionada: string;
   errors: string;
+  selectedTurno: string;
 }
 
-export const Turno = ({ register, name, fechaSeleccionada, errors = '' }: TurnoProps) => {
-    const [value, setValue] = React.useState<string>('');
+export const Turno = ({ register, name, fechaSeleccionada, errors = '', selectedTurno }: TurnoProps) => {
+    const [value, setValue] = React.useState<string>(selectedTurno);
    
     const turnos = [
         {
             id: 1,
-            turno: 'Turno 11:00'
+            turno: '11:00'
         },
         {
             id: 2,
-            turno: 'Turno 14:00'
+            turno: '14:00'
         },
         {
             id: 3,
-            turno: 'Turno 20:00'
+            turno: '20:00'
         },
       ]
-    
+
+      const handleChange = (event) => {
+        setValue(event.target.value);
+    }
+
+
       useEffect(() => {
         if (fechaSeleccionada) {
-          setValue('');
+          setValue(selectedTurno);
         }
-      }, [fechaSeleccionada]);
+      }, [fechaSeleccionada, selectedTurno]);
 
   return (
-    
+
     <Box  m={2}  alignContent="center" alignItems="center">
-          { 
-            errors !== '' && 
+          {
+            errors !== '' &&
               <Typography color="error" variant="body2" component="p" align="center" >
                 {errors}
-              </Typography>  
+              </Typography>
             }
 
           <RadioGroup
             aria-labelledby="demo-controlled-radio-buttons-group"
             name="controlled-radio-buttons-group"
-            value={value}
-            onChange={(event) => setValue(event.target.value)}
             // row
             sx={{
                 display: 'flex',
@@ -60,11 +62,11 @@ export const Turno = ({ register, name, fechaSeleccionada, errors = '' }: TurnoP
 
           >
             {turnos.map((turno) => (
-              
-                <Box 
+
+                <Box
                   key={turno.id}
-                  borderRadius={2} 
-                  padding={0.5} 
+                  borderRadius={2}
+                  padding={0.5}
                   margin={1}
                     sx={{
                         display: 'flex',
@@ -78,8 +80,9 @@ export const Turno = ({ register, name, fechaSeleccionada, errors = '' }: TurnoP
                         value={turno.turno} 
                         control={<Radio  
                             {...register(name)} 
-                            value={turno.turno}
-                            
+                            checked={value === turno.turno}
+                            onChange={handleChange}
+
                             />} 
                         label={turno.turno} 
                         sx={{
@@ -91,7 +94,7 @@ export const Turno = ({ register, name, fechaSeleccionada, errors = '' }: TurnoP
                         }}
 
                         />
-                  
+
                 </Box>
               )
             )}

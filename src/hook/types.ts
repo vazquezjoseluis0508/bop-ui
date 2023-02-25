@@ -6,12 +6,19 @@ export interface IMenu {
     image?: string
 }
 
-export interface IPedido {
-    idPedido: number // idCalendarioMenu
-    idMenuPersonal: number // idMenu
+export interface idMenuPersonal {
+    color: string
+    descripcion: string
+    end: string
+    estado: number
+    f_registro: string
+    idCalendarioMenu: number
+    idMenu: number
+    idMenuBingo: number
+    legajo: string
     persona_str: string
-    legajo: number
-    fecha_pedido: string //start
-    estado: number // 1: pendiente, 2: reservado, 3: rechazado
-
+    start: string
+    textColor: string
+    title: string
+    turno: string
 }
