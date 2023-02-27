@@ -6,7 +6,7 @@ export interface IMenu {
     image?: string
 }
 
-export interface idMenuPersonal {
+export interface IMenuPersonal {
     color: string
     descripcion: string
     end: string

@@ -1,11 +1,11 @@
 import api from "../api/bop";
 import { useQuery } from "@tanstack/react-query";
-import { idMenuPersonal } from "./types";
+import { IMenuPersonal } from "./types";
 import { IFormPedido } from "../pages/PedidosPage";
 import { AxiosError } from "axios";
 
 
-async function fetchPedidos( legajo: string ): Promise<idMenuPersonal[]> {
+async function fetchPedidos( legajo: string ): Promise<IMenuPersonal[]> {
     try {
         const { data } = await api.get("/pedidos/get-reservas", {
             params: {
@@ -52,9 +52,9 @@ export async function eliminarReserva( id: number ) {
     }
 }
 
-export async function filterReservaByDate(data: idMenuPersonal[], fecha: string) {
+export async function filterReservaByDate(data: IMenuPersonal[], fecha: string) {
     try {
-        const filtered = await data.filter((pedido: idMenuPersonal) => pedido.start.substring(0,10) === fecha);
+        const filtered = await data.filter((pedido: IMenuPersonal) => pedido.start.substring(0,10) === fecha);
         return filtered;
     } catch (error) {
         console.log("filterReservaByDate: ",error);

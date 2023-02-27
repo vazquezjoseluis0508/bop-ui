@@ -12,16 +12,16 @@ async function fetchMenu() {
     const { data } = await api.get<IMenu[]>("/menu/get-menus");
 
     const misMenus = await Promise.all(data.map(async (menu: IMenu) => {
-
-      const cachedResults = getFromLocalStorage(menu.descripcion);
       let image = ''
-      if (cachedResults) {
-          image = cachedResults
-      } else {
-          const results = await searchImages(menu.descripcion);
-          storeInLocalStorage(menu.descripcion, results);
-          image = results
-      }
+
+      // const cachedResults = getFromLocalStorage(menu.descripcion);
+      // if (cachedResults) {
+      //     image = cachedResults
+      // } else {
+      //     const results = await searchImages(menu.descripcion);
+      //     storeInLocalStorage(menu.descripcion, results);
+      //     image = results
+      // }
       if (image === '') {
         image = './img/menu22.png'
       }

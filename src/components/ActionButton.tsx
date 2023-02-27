@@ -1,15 +1,14 @@
 import { Box, Button,  } from '@mui/material'
 import React from 'react'
 import CircularProgress from '@mui/material/CircularProgress';
+import { IMenuPersonal } from '../hook/types';
 
 
 type actionButtonProps = {
-  onDelete: ( id_reserva: number ) => void
   isDisabled: boolean
-  reserva: number
 }
 
-export const ActionButton = ( { onDelete, isDisabled, reserva }: actionButtonProps) => {
+export const ActionButton = ( {  isDisabled }: actionButtonProps) => {
 
 
   return (
@@ -23,16 +22,6 @@ export const ActionButton = ( { onDelete, isDisabled, reserva }: actionButtonPro
 
      }}>
       <Box m={1} >
-        {/* <Button
-            variant="contained"
-            color="error"
-            size="large"
-            disabled={reserva > 0 ? false : true}
-            onClick={ () => onDelete(reserva) }
-            
-          >
-          Eliminar
-        </Button> */}
         </Box>
         <Box m={1} >
         <Button  

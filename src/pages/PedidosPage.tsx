@@ -1,14 +1,14 @@
 
 import { Grid } from '@material-ui/core'
-import {  Box, Divider, Snackbar } from '@mui/material'
+import {  Alert, AlertTitle, Box, Divider, Snackbar, Stack, Typography } from '@mui/material'
 import {  useEffect, useState } from 'react'
 import { ActionButton } from '../components/ActionButton'
 import Calendar from '../components/Calendar'
 import { MenuDelDia } from '../components/MenuDelDia'
 import HorizontalLinearStepper from '../components/Stepper/Stepper2'
 import { Turno } from '../components/Turno'
-import { convertDate } from '../helpers/data-time'
-import { idMenuPersonal, IMenu } from '../hook/types'
+import { convertDate, formatDate } from '../helpers/data-time'
+import { IMenuPersonal, IMenu } from '../hook/types'
 import { userFetchMenu } from '../hook/useMenu'
 import { crearReserva, eliminarReserva, userFetchPedido, } from '../hook/usePedidos'
 import { useMenuStore } from '../store/menus'
@@ -18,9 +18,8 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { SnackbarApp } from '../components/Snackbar'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '../store/auth'
-import EliminaReserva from '../components/EliminaReserva'
 import { ContainerApp } from '../components/container'
-import InsetDividers from '../components/listDivider'
+import MiReserva from '../components/MiReserva'
 
 
 export interface IFormPedido {
@@ -38,7 +37,7 @@ const PedidosPage = () => {
   const [isDisabled, setIsDisabled] = useState(false);
   const [selectedMenu, setSelectedMenu] = useState<number>(0)
   const [selectedTurno, setSelectedTurno] = useState<string>('')
-  const [reserva, setReserva] = useState<number>(0)
+  const [reserva, setReserva] = useState<IMenuPersonal | null>(null)
   const [error, setError] = useState<string>('')
 
   const profile = useAuthStore(state => state.profile)
@@ -61,8 +60,6 @@ const PedidosPage = () => {
    const { mutate: mutateDelete, isLoading: isLoadingDelete } = useMutation({
     mutationFn: eliminarReserva,
     onSuccess: (data) => {
-      console.log(data)
-
       setOpenDeleteSuccess(true)
       setIsDisabled(false)
       queryClient.invalidateQueries (['pedidos'])
@@ -75,6 +72,7 @@ const PedidosPage = () => {
   const { data: menus, isLoading: lodingMenus } = userFetchMenu()
 
   const addMenus = useMenuStore( state => state.addAllMenus)
+
 
   const schema = yup.object().shape({
     form_turno: yup.string().required('debe seleccionar un turno.'),
@@ -107,19 +105,11 @@ const PedidosPage = () => {
   }, [reservas])
 
 
-  // const selectedTurn = watch("form_turno");
-  // const selectedMenu = watch("form_menu");
-  // const selectedFecha = watch("form_fecha");
-  // const selectedIdUsuario = watch("idUsuarios");
-
-  // console.log(selectedTurn, selectedMenu, selectedFecha, selectedIdUsuario)
-
-
   const onDelete = (id_reserva : number) => {
     mutateDelete(id_reserva)
   }
 
-  const handleSetReserva = (reservas: idMenuPersonal[], date: string) => {
+  const handleSetReserva = (reservas: IMenuPersonal[], date: string) => {
   
     if (reservas){
       const reserva = reservas.find( reserva => reserva.start.substring(0,10) === convertDate(date))
@@ -128,13 +118,13 @@ const PedidosPage = () => {
         setValue('form_menu', reserva.idMenu.toString())
         setSelectedTurno(reserva.turno)
         setSelectedMenu(reserva.idMenu)
-        setReserva(reserva.idCalendarioMenu)
+        setReserva(reserva)
       } else {
         setValue('form_turno', '')
         setValue('form_menu', '')
         setSelectedMenu(0)
         setSelectedTurno('')
-        setReserva(0)
+        setReserva(null)
       } 
     }
   }
@@ -150,7 +140,12 @@ const PedidosPage = () => {
   if (lodingMenus ) return <div>Loading Menus...</div>
   if (lodingReservas ) return <div>Loading Reservas...</div>
 
-  if (menus)  addMenus(menus)
+  let menuDelDia: IMenu | undefined
+  if (menus) {
+    addMenus(menus)
+    menuDelDia = menus.find( menu => menu.fecha_menu.substring(0,10) === fechaSeleccionada)
+  } 
+
   
 
 
@@ -180,12 +175,17 @@ const PedidosPage = () => {
         <input type={'hidden'} {...register('idUsuarios')} value={profile.idUsuarios} />
         
        
-       <Grid container >
-            <Grid item xs={3} sm={12} md={3} >
+       <Grid container spacing={2}>
+            <Grid item xs={12} sm={12} md={3} >
+              <Grid container spacing={2}>
+                <Grid item xs={6} sm={6} md={12} >
                 <Calendar 
                   onDateChange={handleDateChange}
                   fechaSeleccionada={fechaSeleccionada}
+                  reservas={reservas}
                   />
+                </Grid>
+                <Grid item xs={6} sm={6} md={12} >
                 <Turno 
                   name="form_turno" 
                   register={register} 
@@ -193,9 +193,18 @@ const PedidosPage = () => {
                   selectedTurno={selectedTurno}
                   errors={errors['form_turno']?.message || ''}
                   />
+                </Grid>
+              </Grid>
+
+                
+                
+
             </Grid>
-            <Grid item xs={6} sm={12} md={6} >
-              <Box  m={1} paddingLeft={2}>
+            {
+              menuDelDia ? (
+                <>
+                <Grid item xs={12} sm={12} md={7} >
+              <Box  m={1} paddingLeft={4}>
                 <MenuDelDia 
                   name="form_menu" 
                   register={register} 
@@ -208,19 +217,49 @@ const PedidosPage = () => {
                 <Divider  sx={{ marginTop: 5}}/>
                 <Snackbar open={isSubmitting} message="Guardando..." />
                 <Box mt={5} pr={5}>
-                  <ActionButton  
-                    onDelete={onDelete}
-                    isDisabled={isDisabled} 
-                    reserva={reserva}
-                    />
+                  <ActionButton  isDisabled={isDisabled} />
                 </Box>
               </Box>
             </Grid>
-            <Grid item xs={3} sm={12} md={3} >
+            <Grid item xs={12} sm={12} md={2} >
               <Box  mt={2} >
-              <InsetDividers />
+                {
+                  reserva ? (
+                    <MiReserva
+                      description={reserva?.title}
+                      date={reserva?.start}
+                      onDelete={onDelete}
+                      id={reserva?.idCalendarioMenu}
+                      />
+                  ): (
+                    <Alert severity="warning">
+                      <AlertTitle>Atención</AlertTitle>
+                      No se ha realizado ninguna reserva de menú para el día <b>{formatDate(fechaSeleccionada, 'larga')}</b>
+                    </Alert>
+                  )
+                }
+                
               </Box>
             </Grid>
+            </>
+
+              ) : (<> 
+              
+              <Grid item xs={6} sm={12} md={6} >
+              <Box  m={1} paddingLeft={2}>
+              <Alert severity="info" variant='outlined'>
+                  <AlertTitle>Lo sentimos!</AlertTitle> 
+                  No hay menus disponibles para el día de hoy. Por favor, <b>pruebe con otra fecha</b>.
+                </Alert>
+              </Box>
+              </Grid>
+                
+              </>)
+
+            }
+
+
+            
        </Grid>
        {
           openSuccess && (

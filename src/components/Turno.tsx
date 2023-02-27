@@ -58,6 +58,7 @@ export const Turno = ({ register, name, fechaSeleccionada, errors = '', selected
                 flexDirection: 'row',
                 justifyContent: 'space-evenly',
                 backgroundColor: 'transparent',
+                width: '340px'
               }}
 
           >
@@ -101,6 +102,6 @@ export const Turno = ({ register, name, fechaSeleccionada, errors = '', selected
 
           </RadioGroup>
 
-      </Box>
+    </Box>
   )
 }
