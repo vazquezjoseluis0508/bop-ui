@@ -62,13 +62,13 @@ export default function MiReserva({ description, date, onDelete, id }: MisReserv
       <ListItem>
         <ListItemText primary={formattedDescription} secondary={formattedDate} />
         <ListItemAvatar color='error'>
-          <Box border={0.2} marginLeft={2}  borderRadius={50} borderColor={'red'}>
+          {/* <Box border={0.2} marginLeft={2}  borderRadius={50} borderColor={'red'}> */}
           <IconButton color='secondary' 
             onClick={() => onDelete(id)}
             >
             <DeleteForever />
           </IconButton>
-          </Box>
+          {/* </Box> */}
         </ListItemAvatar>
       </ListItem>
       {/* <Divider variant="inset" component="li" /> */}
