@@ -1,30 +1,29 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import { Provider } from 'react-redux'
-import { store } from './store'
 import ThemeProvider from '@mui/material/styles/ThemeProvider'
-import { darkTheme, theme } from './styling/themeConfig'
-import { Router } from './routers/Router'
+import { darkTheme } from './styling/themeConfig'
 import {
-  QueryClient,
-  QueryClientProvider,
+  QueryClientProvider
 } from '@tanstack/react-query'
-import { SessionProvider } from './provider/SessionProvider'
+import { BrowserRouter } from 'react-router-dom'
+import App from './App'
+import queryClient from './queryClient'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 
 const clientId = import.meta.env.VITE_AUTH0 || ''
 const domain = import.meta.env.VITE_AUTHO_DOMAIN || ''
 
 console.log(domain, clientId)
 
-const queryClient = new QueryClient()
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+ReactDOM.createRoot(document.getElementById('root')!).render(
 
-  <Provider store={store}>
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={darkTheme}>
       <QueryClientProvider client={queryClient}>
-        <Router />
+        <BrowserRouter>
+          <App />
+          <ReactQueryDevtools  initialIsOpen={false} />
+        </BrowserRouter>
       </QueryClientProvider>
     </ThemeProvider>
-  </Provider>
-);
+)

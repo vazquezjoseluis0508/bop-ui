@@ -1,11 +1,10 @@
 
 import axios from 'axios'
-import { IFormInput } from '../pages/login'
+import { type IFormInput } from '../pages/Login'
 
 const axios_api = axios.create({
-    baseURL: 'http://localhost:3001'
+  baseURL: 'http://localhost:3001'
 })
-
 
 // export const auth = {
 //     login: (usuario: string, password: string) => axios_api.post('/auth/login', { usuario, password }),
@@ -15,10 +14,9 @@ const axios_api = axios.create({
 // }
 
 export const getUsuarios = async () => {
-    return await axios_api.get('/usuarios')
+  return await axios_api.get('/usuarios')
 }
 
-
 export const LoginUser = async (data: IFormInput) => {
-   return await axios_api.post('/usuarios', { usr: data.username, clave: data.password })
+  return await axios_api.post('/usuarios', { usr: data.username, clave: data.password })
 }

@@ -1,12 +1,5 @@
 
 
-type OmitAuthEntityValues = Omit<
-  IAuthEntity,
-  'password' 
->
-
-
-
 export interface IAuthEntity {
   readonly id: string
   usr: string
@@ -15,6 +8,8 @@ export interface IAuthEntity {
   nombre: string
   access_token: string
   account_type: AuthRol
+  message: string
+  status: number
 }
 
 export enum AuthRol {
@@ -25,6 +20,6 @@ export enum AuthRol {
 }
 
 export interface AuthFormLoginValue {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }

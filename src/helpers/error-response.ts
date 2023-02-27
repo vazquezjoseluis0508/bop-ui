@@ -1,23 +1,23 @@
 export class ErrorResponse<T = {}> {
   error: IErrorResponse<T>['error']
 
-  constructor(props: { code: ICommonError; metadata?: T }) {
+  constructor (props: { code: ICommonError, metadata?: T }) {
     this.error = this.#getErrorMessage(props.code, props.metadata)
   }
 
-  #getErrorMessage(
+  #getErrorMessage (
     code: ICommonError,
     metadata?: T
   ): IErrorResponse<T>['error'] {
     return {
       code: STATUS_CODE[code],
       status: code,
-      metadata,
+      metadata
     }
   }
 }
 
-export type IErrorResponse<T = {}> = {
+export interface IErrorResponse<T = {}> {
   error?: {
     status: string
     code: number
@@ -49,5 +49,5 @@ const STATUS_CODE: Record<ICommonError, number> = {
   USER_ALREADY_EXISTS: 409,
   AUTH_INVALID_CODE: 401,
   PATIENT_ALREADY_EXISTS: 409,
-  SESSION_EXPIRED: 440,
+  SESSION_EXPIRED: 440
 }

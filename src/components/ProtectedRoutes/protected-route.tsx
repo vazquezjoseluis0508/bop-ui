@@ -1,24 +1,16 @@
-import { Navigate, Outlet, useLocation } from 'react-router-dom'
+import { Navigate, Outlet } from 'react-router-dom'
 import { ROUTES } from '../../constant/routes'
-import { useAuth } from '../../hook/useAuth.hook'
+import { Layout } from '../Layout/layout'
 
-export const ProtectedRoute = () => {
-  const { isLoading, isAuthenticated } = useAuth()
-  const { pathname } = useLocation()
+interface Props {
+  isAllowed?: boolean
+  children?: React.ReactNode
+}
 
-  if (isLoading) {
-    return (
-      <> Circular Progres....</>
-    )
-  }
+export const ProtectedRoute = ({ children, isAllowed} : Props) => {
 
-  if (!isAuthenticated) {
-    return <Navigate replace to={ROUTES.login} />
-  }
+  if (!isAllowed) return <Navigate replace to={ROUTES.login} />
 
-  if (pathname === ROUTES.home) {
-    return <Navigate to={ROUTES.pedidos} replace />
-  }
 
-  return <Outlet />
+  return children ? <Layout>{children}</Layout> : <Outlet />
 }
