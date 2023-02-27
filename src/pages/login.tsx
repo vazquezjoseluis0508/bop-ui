@@ -12,8 +12,6 @@ import * as yup from 'yup'
 import { useForm } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigate } from 'react-router-dom'
-import { useAuth } from '../hook/useAuth.hook'
-import { AlertError } from '../components/AlertError/AlertError'
 import { ROUTES } from '../constant/routes'
 import { useAuthStore } from '../store/auth'
 import { handleSignIn } from '../services/auth.service'
@@ -32,7 +30,6 @@ export const LoginPage = () => {
   const navigate = useNavigate()
   const [errorMessage, setErrorMessage] = useState<string>('')
   const [open, setOpen] = useState<boolean>(false)
-  // const { handleSignIn, isAuthenticated } = useAuth()
 
   const schema = yup.object().shape({
     username: yup.string().required('usuario es requerido.'),
