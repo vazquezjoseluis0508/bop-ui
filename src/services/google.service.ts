@@ -1,5 +1,5 @@
 import axios from "axios";
-import { google_search_api_key, google_search_cx, google_search_url } from "../constants";
+import { google_search_api_key, google_search_cx, google_search_url } from "../constant/constants";
 
 // Define una función para buscar imágenes utilizando la API de Google Custom Search
 export async function searchImages(query: string): Promise<string> {

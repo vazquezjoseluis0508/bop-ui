@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { REST_API } from '../constants'
+import { REST_API } from '../constant/constants'
 import { type IFormInput } from '../pages/Login'
 import { AuthFormLoginValue, IAuthEntity } from '../types/auth.type'
 

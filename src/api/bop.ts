@@ -1,11 +1,12 @@
 import axios from "axios";
 import { config } from "process";
+import { REST_API } from "../constant/constants";
 import { useAuthStore } from "../store/auth";
 
 const token = useAuthStore.getState().token;
 
 const api = axios.create({
-    baseURL: "http://localhost:3000/api",
+    baseURL: REST_API,
 });
 
 

@@ -2,7 +2,6 @@ import api from "../api/bop";
 import { useQuery } from "@tanstack/react-query";
 import { IMenuPersonal } from "./types";
 import { IFormPedido } from "../pages/PedidosPage";
-import { AxiosError } from "axios";
 
 
 async function fetchPedidos( legajo: string ): Promise<IMenuPersonal[]> {
@@ -61,9 +60,7 @@ export async function filterReservaByDate(data: IMenuPersonal[], fecha: string) 
     }
 }
 
-// export function userCreateReserva( pedido: IFormPedido ) {
-//     return useQuery(["pedidos"], () => createReserva(pedido));
-// }
+
 
 export function userFetchPedido( legajo : string) {
     return useQuery({
