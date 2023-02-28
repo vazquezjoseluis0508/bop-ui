@@ -252,6 +252,7 @@ const PedidosPage = () => {
                       date={reserva?.start}
                       onDelete={onDelete}
                       id={reserva?.idCalendarioMenu}
+                      isRestricted={ fechaActual > fechaLimite }
                       />
                   ): (
                     <Alert severity="warning">

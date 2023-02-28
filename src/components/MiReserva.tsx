@@ -10,16 +10,18 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Divider from '@mui/material/Divider';
 import { DeleteForever } from '@mui/icons-material';
 import { Box, IconButton } from '@material-ui/core';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
+import { padding, width } from '@mui/system';
 
 type MisReservasProps = {
   description: string;
   date: string;
   onDelete: (id: number) => void;
   id: number;
+  isRestricted: boolean
 };
 
-export default function MiReserva({ description, date, onDelete, id }: MisReservasProps) {
+export default function MiReserva({ description, date, onDelete, id, isRestricted }: MisReservasProps) {
   
   /// convertir string de fecha 2021-10-10 a 10 Oct, 2021
   const dateToFormat = new Date(date);
@@ -61,15 +63,39 @@ export default function MiReserva({ description, date, onDelete, id }: MisReserv
 
       <ListItem>
         <ListItemText primary={formattedDescription} secondary={formattedDate} />
-        <ListItemAvatar color='error'>
-          {/* <Box border={0.2} marginLeft={2}  borderRadius={50} borderColor={'red'}> */}
-          <IconButton color='secondary' 
-            onClick={() => onDelete(id)}
-            >
-            <DeleteForever />
-          </IconButton>
-          {/* </Box> */}
-        </ListItemAvatar>
+        {
+          isRestricted ? ( <></> ) : (
+            <Button
+             variant='text'
+             size='small'
+             onClick={() => onDelete(id)}
+             sx={
+              { 
+              bgcolor: 'transparent',
+              borderRadius: "100%",
+              border: 0,
+              padding:1,
+              minWidth:0,
+              marginLeft:1,
+              color: 'primary.dark'
+
+
+            }
+             }
+            > <DeleteForever /></Button>
+
+            // <ListItemAvatar color='error'>
+            //   {/* <Box border={0.2} marginLeft={2}  borderRadius={50} borderColor={'red'}> */}
+            //   <IconButton color='secondary' 
+            //     onClick={() => onDelete(id)}
+            //     >
+            //     <DeleteForever />
+            //   </IconButton>
+            //   {/* </Box> */}
+            // </ListItemAvatar>
+          )
+        }
+       
       </ListItem>
       {/* <Divider variant="inset" component="li" /> */}
       
