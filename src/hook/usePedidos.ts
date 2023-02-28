@@ -44,7 +44,6 @@ export async function eliminarReserva( id: number ) {
                 idCalendarioMenu: id
             }
         });
-        console.log("deleteReserva: ",data)
         return data;
     } catch (error: any) {
         throw new Error("Error en el servidor: " + error.response.data);
@@ -59,8 +58,6 @@ export async function filterReservaByDate(data: IMenuPersonal[], fecha: string) 
         console.log("filterReservaByDate: ",error);
     }
 }
-
-
 
 export function userFetchPedido( legajo : string) {
     return useQuery({
