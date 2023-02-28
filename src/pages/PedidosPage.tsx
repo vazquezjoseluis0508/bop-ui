@@ -39,6 +39,7 @@ const PedidosPage = () => {
   const [selectedTurno, setSelectedTurno] = useState<string>('')
   const [reserva, setReserva] = useState<IMenuPersonal | null>(null)
   const [error, setError] = useState<string>('')
+  const [restriccion, setRestriccion] = useState<boolean>(false)
 
   const profile = useAuthStore(state => state.profile)
 
@@ -146,6 +147,16 @@ const PedidosPage = () => {
     menuDelDia = menus.find( menu => menu.fecha_menu.substring(0,10) === fechaSeleccionada)
   } 
 
+  const fechaActual = new Date()
+  const fechaLimite = new Date(fechaSeleccionada)
+  fechaLimite.setDate(fechaLimite.getDate() - 1)
+  fechaLimite.setHours(18,0,0,0)
+
+  console.log('fechaActual', fechaActual)
+  console.log('fechaLimite', fechaLimite)
+
+
+
   
 
 
@@ -217,7 +228,18 @@ const PedidosPage = () => {
                 <Divider  sx={{ marginTop: 5}}/>
                 <Snackbar open={isSubmitting} message="Guardando..." />
                 <Box mt={5} pr={5}>
-                  <ActionButton  isDisabled={isDisabled} />
+                  {
+                    fechaActual > fechaLimite ? (
+                      <Alert severity="info">
+                        <AlertTitle>¡Hola!</AlertTitle>
+                        Recuerda que para reservar tu menú debes hacerlo antes de las 18 hs del día anterior a la entrega. Después de esa hora, ya no se aceptan más reservas. ¡Gracias por tu comprensión!
+                      </Alert>
+                    ) : (
+                      <ActionButton  isDisabled={isDisabled} />
+                    )
+
+                  }
+                  
                 </Box>
               </Box>
             </Grid>

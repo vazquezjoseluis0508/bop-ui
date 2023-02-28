@@ -14,13 +14,16 @@ import { yupResolver } from '@hookform/resolvers/yup'
 import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../constant/routes'
 import { useAuthStore } from '../store/auth'
-import { handleSignIn } from '../services/auth.service'
 import { SnackbarApp } from '../components/Snackbar'
 import { IFormInput } from '../types/auth.type'
 
+import { useMutation } from '@tanstack/react-query'
+import { handleSignIn } from '../hook/useAuth'
 
 
 export const LoginPage = () => {
+
+  const [error, setError] = useState<string>('')
 
   const setToken = useAuthStore(state => state.setToken)
   const setProfile = useAuthStore(state => state.setProfile)
@@ -38,28 +41,29 @@ export const LoginPage = () => {
     resolver: yupResolver(schema)
   })
 
+  const { mutate, isLoading } = useMutation({
+    mutationFn: handleSignIn,
+    onSuccess: (data) => {
+        setToken(data.data.access_token || '')
+        setProfile( { 
+            idUsuarios : data.data.idUsuarios,
+            nombre : data.data.nombre,
+            legajo : data.data.legajo,
+            usr: data.data.usr,
+            permiso_id : data.data.permiso_id
+        } || {})
+        navigate(ROUTES.pedidos, { replace: true })
+    },
+    onError: (error: any) => {
+      console.log("error", error)
+      setError(error.message)
+    }
+  })
+
+
+
   const onSubmit = async (data: IFormInput) => {
-    // const response = await handleSignIn(data)
-
-    try {
-          const response = await handleSignIn(data)
-        
-          setToken(response.data.access_token || '')
-          setProfile( { 
-              idUsuarios : response.data.idUsuarios,
-              nombre : response.data.nombre,
-              legajo : response.data.legajo,
-              usr: response.data.usr,
-              permiso_id : response.data.permiso_id
-          } || {})
-
-          navigate(ROUTES.pedidos, { replace: true })
-
-      } catch (error: any) {
-        setErrorMessage(error.response.data.message)
-        setOpen(true)
-          // return <SnackbarApp message={response.response.data.message || ''} type='error' open={true} /> 
-      }
+     mutate(data)
   }
 
 
@@ -70,6 +74,14 @@ export const LoginPage = () => {
       <Container component="main" maxWidth="xs">
 
       <CssBaseline />
+       {
+          error !== '' && (<SnackbarApp 
+            open={true}
+            message={error}
+            type='error'
+          />)
+
+       }
           <SnackbarApp message="Usuario o password invallido" open={open} type='error'/>
 
           <Box
@@ -129,14 +141,19 @@ export const LoginPage = () => {
                 )
               }}
             />
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2, color: 'secondary', backgroundColor: 'orange' }}
-            >
-              Ingresar
-            </Button>
+                <Button
+                  type="submit"
+                  fullWidth
+                  disabled={isSubmitting}
+                  variant="contained"
+                  sx={{ mt: 3, mb: 2, color: 'secondary', backgroundColor: 'orange' }}
+                >
+                  {
+                    isLoading ? 'Cargando...' : 'Ingresar'
+                  }
+                  
+                </Button>
+            
 
           </form>
         </Box>
