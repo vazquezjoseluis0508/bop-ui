@@ -23,3 +23,9 @@ export interface AuthFormLoginValue {
   username: string
   password: string
 }
+
+
+export interface IFormInput {
+  username: string
+  password: string
+}

@@ -16,11 +16,9 @@ import { ROUTES } from '../constant/routes'
 import { useAuthStore } from '../store/auth'
 import { handleSignIn } from '../services/auth.service'
 import { SnackbarApp } from '../components/Snackbar'
+import { IFormInput } from '../types/auth.type'
 
-export interface IFormInput {
-  username: string
-  password: string
-}
+
 
 export const LoginPage = () => {
 

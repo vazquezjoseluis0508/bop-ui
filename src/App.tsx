@@ -2,12 +2,10 @@ import * as React from 'react'
 import {
   Routes,
   Route,
-  useLocation,
-  Navigate
 } from 'react-router-dom'
 import { ProtectedRoute } from './components/ProtectedRoutes/protected-route'
 import { ROUTES } from './constant/routes'
-import { LoginPage } from './pages/Login'
+import { LoginPage } from './pages/login'
 import NotFoundPage from './pages/NotFoundPage'
 import PedidosPage from './pages/PedidosPage'
 import { useAuthStore } from './store/auth'
