@@ -232,7 +232,7 @@ const PedidosPage = () => {
                     fechaActual > fechaLimite ? (
                       <Alert severity="info">
                         <AlertTitle>¡Hola!</AlertTitle>
-                        Recuerda que para reservar tu menú debes hacerlo antes de las 18 hs del día anterior a la entrega. Después de esa hora, ya no se aceptan más reservas. ¡Gracias por tu comprensión!
+                        Recuerda que para reservar tu menú para el dia de mañana <strong>debes hacerlo antes de las 18 hs.</strong> Después de esa hora, ya no se aceptan más reservas. ¡Gracias por tu comprensión!
                       </Alert>
                     ) : (
                       <ActionButton  isDisabled={isDisabled} />

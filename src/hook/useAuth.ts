@@ -8,7 +8,6 @@ import { REST_API } from "../constant/constants";
 
 export const handleSignIn = async (params: AuthFormLoginValue) => {
     try {
-        console.log("Parametros de reserva: ", params)
       const response = await axios.post(`${REST_API}/auth/signin`,
         { usuario: params.username, password: params.password }
       )
