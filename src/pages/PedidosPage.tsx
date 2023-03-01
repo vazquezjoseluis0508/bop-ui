@@ -39,7 +39,7 @@ const PedidosPage = () => {
   const [selectedTurno, setSelectedTurno] = useState<string>('')
   const [reserva, setReserva] = useState<IMenuPersonal | null>(null)
   const [error, setError] = useState<string>('')
-  const [restriccion, setRestriccion] = useState<boolean>(false)
+  const [restriccion, setRestriccion] = useState<string>('')
 
   const profile = useAuthStore(state => state.profile)
 
@@ -105,10 +105,43 @@ const PedidosPage = () => {
 
   }, [reservas])
 
+  useEffect (() => {
+       handleRestriction()
+  }, [fechaSeleccionada])
+
 
   const onDelete = (id_reserva : number) => {
     mutateDelete(id_reserva)
   }
+
+  const handleRestriction = () => {
+      const today = new Date();
+      const tomorrow = new Date(today);
+      tomorrow.setDate(tomorrow.getDate() + 1);
+
+      const limitHour = new Date(today);
+      limitHour.setHours(18, 0, 0, 0);
+
+
+
+      if(convertDate(today) === fechaSeleccionada){
+        setRestriccion('No se puede reservar para el día de hoy. Recuerda que tienes hasta las 18 hs para realizar la reserva, Gracias por tu comprensión!. ')
+        setIsDisabled(true)
+      } else if ( convertDate(tomorrow) === fechaSeleccionada) {
+        if (today > limitHour){
+            setRestriccion('La reserva para mañana solo se permite hasta las 18 hs del día de hoy.')
+            setIsDisabled(true)
+        } else {
+          setRestriccion('')
+          setIsDisabled(false)
+        }
+      } else {
+        setRestriccion('')
+        setIsDisabled(false)
+      }
+
+  }
+    
 
   const handleSetReserva = (reservas: IMenuPersonal[], date: string) => {
   
@@ -147,13 +180,7 @@ const PedidosPage = () => {
     menuDelDia = menus.find( menu => menu.fecha_menu.substring(0,10) === fechaSeleccionada)
   } 
 
-  const fechaActual = new Date()
-  const fechaLimite = new Date(fechaSeleccionada)
-  fechaLimite.setDate(fechaLimite.getDate() - 1)
-  fechaLimite.setHours(18,0,0,0)
 
-  console.log('fechaActual', fechaActual)
-  console.log('fechaLimite', fechaLimite)
 
 
 
@@ -229,10 +256,10 @@ const PedidosPage = () => {
                 <Snackbar open={isSubmitting} message="Guardando..." />
                 <Box mt={5} pr={5}>
                   {
-                    fechaActual > fechaLimite ? (
+                    restriccion !== '' ? (
                       <Alert severity="info">
                         <AlertTitle>¡Hola!</AlertTitle>
-                        Recuerda que para reservar tu menú para el dia de mañana <strong>debes hacerlo antes de las 18 hs.</strong> Después de esa hora, ya no se aceptan más reservas. ¡Gracias por tu comprensión!
+                        {restriccion}
                       </Alert>
                     ) : (
                       <ActionButton  isDisabled={isDisabled} />
@@ -252,7 +279,7 @@ const PedidosPage = () => {
                       date={reserva?.start}
                       onDelete={onDelete}
                       id={reserva?.idCalendarioMenu}
-                      isRestricted={ fechaActual > fechaLimite }
+                      isRestricted={ restriccion !== '' ? true : false }
                       />
                   ): (
                     <Alert severity="warning">
