@@ -181,16 +181,6 @@ const PedidosPage = () => {
   } 
 
 
-
-
-
-  
-
-
- 
-
- 
-
   const onSubmit: SubmitHandler<IFormPedido> = (data: IFormPedido) => {
     setIsDisabled(true);
     setTimeout(() => {
@@ -352,7 +342,6 @@ const PedidosPage = () => {
             />
           )
         }
-
 
        </form>
         

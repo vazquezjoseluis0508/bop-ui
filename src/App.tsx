@@ -6,6 +6,7 @@ import {
 import { ProtectedRoute } from './components/ProtectedRoutes/protected-route'
 import { ROUTES } from './constant/routes'
 import { LoginPage } from './pages/login'
+import MonitorPage from './pages/MonitorPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PedidosPage from './pages/PedidosPage'
 import { useAuthStore } from './store/auth'
@@ -22,6 +23,10 @@ export default function App () {
         <Route path={ROUTES.pedidos} element={
             <ProtectedRoute isAllowed={isAuth}>
                 <PedidosPage />
+            </ProtectedRoute>} />
+        <Route path={ROUTES.monitor} element={
+            <ProtectedRoute isAllowed={isAuth}>
+                <MonitorPage />
             </ProtectedRoute>} />
       </Routes>
   )

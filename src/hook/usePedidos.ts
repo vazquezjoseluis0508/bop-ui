@@ -2,9 +2,46 @@ import api from "../api/bop";
 import { useQuery } from "@tanstack/react-query";
 import { IMenuPersonal } from "./types";
 import { IFormPedido } from "../pages/PedidosPage";
+import { REST_API } from "../constant/constants";
 
 
-async function fetchPedidos( legajo: string ): Promise<IMenuPersonal[]> {
+
+function getSuspenderReservas(promise: Promise<any>) {
+    let status = "pending";
+    let result: any;
+    let suspender = promise.then(
+        (r) => {
+            status = "success";
+            result = r;
+        },
+        (e) => {
+            status = "error";
+            result = e;
+        }
+    );
+    return {
+        read() {
+            if (status === "pending") {
+                throw suspender;
+            } else if (status === "error") {
+                throw result;
+            } else if (status === "success") {
+                return result;
+            }
+        },
+    };
+}
+
+export function fetchReservasMonitor() {
+   const promise = api.get("/pedidos/get-reservas")
+        .then((res) => res.data())
+        .then((data) => data);
+        
+        return getSuspenderReservas(promise);
+
+}
+
+async function fetchReservas( legajo: string ): Promise<IMenuPersonal[]> {
     try {
         const { data } = await api.get("/pedidos/get-reservas", {
             params: {
@@ -62,7 +99,7 @@ export async function filterReservaByDate(data: IMenuPersonal[], fecha: string) 
 export function userFetchPedido( legajo : string) {
     return useQuery({
         queryKey: ["pedidos", legajo ],
-        queryFn: async () => await fetchPedidos(legajo)
+        queryFn: async () => await fetchReservas(legajo)
         
     });  
 }
