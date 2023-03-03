@@ -5,28 +5,29 @@ import { Box } from '@mui/material';
 import { ContainerApp } from '../components/container';
 import randomColor from 'randomcolor';
 import { fetchReservasMonitor } from '../hook/usePedidos';
+import { UserMenu } from '../hook/types';
 
-
-interface User {
-  id: number;
-  firstName: string;
-  lastName: string;
-  legajo: string;
-  pedido: string;
-}
 
 
 
 const apiData = fetchReservasMonitor()
 
+
+
 const MonitorPage: React.FC = () => {
-    // const test = apiData.read()
-    // console.log(test)
-  const users: User[] = []
+
+  const [data, setData] = useState(apiData.read());
+  //const users: UserMenu[] = data
+
+  const fetchData = () => {
+    setData(apiData.read());
+  };
+
+ 
 
   const [filter, setFilter] = useState('');
 
-  const filteredUsers = users.filter(user =>
+  const filteredUsers = data.filter(user =>
     user.firstName.toLowerCase().includes(filter.toLowerCase()) ||
     user.lastName.toLowerCase().includes(filter.toLowerCase()) ||
     user.legajo.toLowerCase().includes(filter.toLowerCase())
@@ -35,6 +36,17 @@ const MonitorPage: React.FC = () => {
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
   };
+
+
+  React.useEffect(() => {
+    // Actualizar los datos cada 2 minutos
+    const intervalId = setInterval(() => {
+      fetchData();
+    }, 1 * 60 * 1000); // 2 minutos en milisegundos
+
+    // Limpiar el intervalo al desmontar el componente
+    return () => clearInterval(intervalId);
+  }, []);
 
   return (
     <>

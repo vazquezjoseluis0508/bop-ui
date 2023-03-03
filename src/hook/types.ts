@@ -22,3 +22,12 @@ export interface IMenuPersonal {
     title: string
     turno: string
 }
+
+
+export interface UserMenu {
+    id: number;
+    firstName: string;
+    lastName: string;
+    legajo: string;
+    pedido: string;
+  }

@@ -1,12 +1,11 @@
 import api from "../api/bop";
 import { useQuery } from "@tanstack/react-query";
-import { IMenuPersonal } from "./types";
+import { IMenuPersonal, UserMenu } from "./types";
 import { IFormPedido } from "../pages/PedidosPage";
-import { REST_API } from "../constant/constants";
 
 
 
-function getSuspenderReservas(promise: Promise<any>) {
+function getSuspenderReservas(promise: Promise<UserMenu[]>) {
     let status = "pending";
     let result: any;
     let suspender = promise.then(
@@ -34,7 +33,23 @@ function getSuspenderReservas(promise: Promise<any>) {
 
 export function fetchReservasMonitor() {
    const promise = api.get("/pedidos/get-reservas")
-        .then((res) => res.data())
+        .then((res) => {
+            const menu_user: UserMenu[] = res.data.map((menu: IMenuPersonal ) => {
+                return {
+                    id: menu.idCalendarioMenu,
+                    firstName: menu.persona_str,
+                    lastName: '',
+                    legajo: menu.legajo,
+                    pedido: menu.title
+
+                }
+            }
+            );
+            return menu_user;
+
+        }
+        
+        )
         .then((data) => data);
         
         return getSuspenderReservas(promise);
