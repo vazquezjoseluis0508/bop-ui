@@ -74,7 +74,6 @@ async function fetchReservas( legajo: string ): Promise<IMenuPersonal[]> {
 
 export async function crearReserva( params: IFormPedido ) {
     try {
-        console.log("Parametros de reserva: ", params)
 
         const { data } = await api.post<IFormPedido>("/pedidos/reservar", {
             idMenu: params.form_menu,
@@ -82,7 +81,6 @@ export async function crearReserva( params: IFormPedido ) {
             usuario: params.idUsuarios,
             fecha: params.form_fecha,
         });
-        console.log("createReserva: ",data)
         return data;
     } catch (error) {
         console.log("createReserva: ",error);

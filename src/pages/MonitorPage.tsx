@@ -5,7 +5,8 @@ import { Box } from '@mui/material';
 import { ContainerApp } from '../components/container';
 import randomColor from 'randomcolor';
 import { fetchReservasMonitor } from '../hook/usePedidos';
-import { UserMenu } from '../hook/types';
+import { IMenuPersonal, UserMenu } from '../hook/types';
+import { socket } from '../services/socket.service';
 
 
 
@@ -17,13 +18,21 @@ const apiData = fetchReservasMonitor()
 const MonitorPage: React.FC = () => {
 
   const [data, setData] = useState(apiData.read());
-  //const users: UserMenu[] = data
 
-  const fetchData = () => {
-    setData(apiData.read());
-  };
 
- 
+  React.useEffect(() => {
+    socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
+      const newReserva: UserMenu = {
+        id: reserva.idCalendarioMenu,
+        firstName: reserva.persona_str,
+        lastName: '',
+        legajo: reserva.legajo,
+        pedido: reserva.title
+      }
+      console.log('nueva reserva: ', reserva)
+      setData([...data, newReserva])
+    });
+  }, [data]);
 
   const [filter, setFilter] = useState('');
 
@@ -38,15 +47,6 @@ const MonitorPage: React.FC = () => {
   };
 
 
-  React.useEffect(() => {
-    // Actualizar los datos cada 2 minutos
-    const intervalId = setInterval(() => {
-      fetchData();
-    }, 1 * 60 * 1000); // 2 minutos en milisegundos
-
-    // Limpiar el intervalo al desmontar el componente
-    return () => clearInterval(intervalId);
-  }, []);
 
   return (
     <>

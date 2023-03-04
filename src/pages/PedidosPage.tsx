@@ -20,6 +20,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '../store/auth'
 import { ContainerApp } from '../components/container'
 import MiReserva from '../components/MiReserva'
+import { socket } from '../services/socket.service'
+
+
+
 
 
 export interface IFormPedido {
