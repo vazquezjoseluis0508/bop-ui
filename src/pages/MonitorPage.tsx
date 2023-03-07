@@ -11,8 +11,9 @@ import { socket } from '../services/socket.service';
 
 
 
-const apiData = fetchReservasMonitor()
 
+
+const apiData = fetchReservasMonitor()
 
 
 const MonitorPage: React.FC = () => {
@@ -20,19 +21,26 @@ const MonitorPage: React.FC = () => {
   const [data, setData] = useState(apiData.read());
 
 
-  React.useEffect(() => {
-    socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
-      const newReserva: UserMenu = {
-        id: reserva.idCalendarioMenu,
-        firstName: reserva.persona_str,
-        lastName: '',
-        legajo: reserva.legajo,
-        pedido: reserva.title
-      }
-      console.log('nueva reserva: ', reserva)
-      setData([...data, newReserva])
-    });
-  }, [data]);
+  socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
+    const newReserva: UserMenu = {
+      id: reserva.idCalendarioMenu,
+      firstName: reserva.persona_str,
+      lastName: '',
+      legajo: reserva.legajo,
+      pedido: reserva.title,
+      fecha: reserva.start.substring(0, 10),
+      estado: reserva.estado,
+    }
+    const newData = data.filter((item) => item.id !== newReserva.id)
+    setData([...newData, newReserva])
+  });
+
+  socket.on('elimina-reserva', (reserva: IMenuPersonal) => {
+    const newData = data.filter((item) => item.id !== reserva.idCalendarioMenu)
+    setData(newData)
+  });
+
+    
 
   const [filter, setFilter] = useState('');
 
@@ -41,6 +49,8 @@ const MonitorPage: React.FC = () => {
     user.lastName.toLowerCase().includes(filter.toLowerCase()) ||
     user.legajo.toLowerCase().includes(filter.toLowerCase())
   );
+
+  console.log('filteredUsers: ',filteredUsers)
 
   const handleFilterChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setFilter(event.target.value);
@@ -62,6 +72,7 @@ const MonitorPage: React.FC = () => {
                         <TableRow>
                         <TableCell>Avatar</TableCell>
                         <TableCell>Nombre y Legajo</TableCell>
+                        <TableCell>Fecha</TableCell>
                         <TableCell>Pedido</TableCell>
                         <TableCell>Acciones</TableCell>
                         </TableRow>
@@ -77,6 +88,9 @@ const MonitorPage: React.FC = () => {
                             </TableCell>
                             <TableCell>
                             {user.firstName} {user.lastName} ({user.legajo})
+                            </TableCell>
+                            <TableCell>
+                            {user.fecha}
                             </TableCell>
                             <TableCell>
                             {user.pedido}

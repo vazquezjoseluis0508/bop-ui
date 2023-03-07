@@ -34,17 +34,22 @@ function getSuspenderReservas(promise: Promise<UserMenu[]>) {
 export function fetchReservasMonitor() {
    const promise = api.get("/pedidos/get-reservas")
         .then((res) => {
-            const menu_user: UserMenu[] = res.data.map((menu: IMenuPersonal ) => {
+
+            // map the data to the format that useSWR expects and filter estate === 2
+            const menu_user = res.data.map((menu: IMenuPersonal) => {
                 return {
                     id: menu.idCalendarioMenu,
                     firstName: menu.persona_str,
-                    lastName: '',
+                    lastName: menu.descripcion,
                     legajo: menu.legajo,
-                    pedido: menu.title
+                    pedido: menu.title,
+                    fecha: menu.start.substring(0,10),
+                    estado: menu.estado
+                };
+            }).filter((menu: UserMenu) => menu.estado === 2);
 
-                }
-            }
-            );
+            console.log("menu_user: ",menu_user);
+
             return menu_user;
 
         }

@@ -30,4 +30,6 @@ export interface UserMenu {
     lastName: string;
     legajo: string;
     pedido: string;
+    fecha: string;
+    estado: number;
   }
