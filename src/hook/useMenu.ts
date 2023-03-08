@@ -1,15 +1,11 @@
 
-import api from "../api/bop";
-import { useQuery } from "@tanstack/react-query";
-import { IMenu } from "./types";
-import { getFromLocalStorage, storeInLocalStorage } from "../services/cache.service";
-import { searchImages } from "../services/google.service";
+import api from '../api/bop'
+import { useQuery } from '@tanstack/react-query'
+import { type IMenu } from './types'
 
-
-
-async function fetchMenu() {
+async function fetchMenu () {
   try {
-    const { data } = await api.get<IMenu[]>("/menu/get-menus");
+    const { data } = await api.get<IMenu[]>('/menu/get-menus')
 
     const misMenus = await Promise.all(data.map(async (menu: IMenu) => {
       let image = ''
@@ -30,17 +26,15 @@ async function fetchMenu() {
         descripcion: menu.descripcion,
         estado: menu.estado,
         fecha_menu: menu.fecha_menu,
-        image: image
+        image
       }
     }))
-    return misMenus;
+    return misMenus
   } catch (error) {
-    console.log("fetchImageMenu: ",error);
+    console.log('fetchImageMenu: ', error)
   }
 }
 
-
-export function userFetchMenu() {
-  return useQuery(["menu"], fetchMenu);  
+export function userFetchMenu () {
+  return useQuery(['menu'], fetchMenu)
 }
-

@@ -1,5 +1,4 @@
 
-
 export interface IAuthEntity {
   readonly id: string
   usr: string
@@ -23,7 +22,6 @@ export interface AuthFormLoginValue {
   username: string
   password: string
 }
-
 
 export interface IFormInput {
   username: string

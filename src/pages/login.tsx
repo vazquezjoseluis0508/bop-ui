@@ -15,14 +15,12 @@ import { useNavigate } from 'react-router-dom'
 import { ROUTES } from '../constant/routes'
 import { useAuthStore } from '../store/auth'
 import { SnackbarApp } from '../components/Snackbar'
-import { IFormInput } from '../types/auth.type'
+import { type IFormInput } from '../types/auth.type'
 
 import { useMutation } from '@tanstack/react-query'
 import { handleSignIn } from '../hook/useAuth'
 
-
 export const LoginPage = () => {
-
   const [error, setError] = useState<string>('')
 
   const setToken = useAuthStore(state => state.setToken)
@@ -44,30 +42,25 @@ export const LoginPage = () => {
   const { mutate, isLoading } = useMutation({
     mutationFn: handleSignIn,
     onSuccess: (data) => {
-        setToken(data.data.access_token || '')
-        setProfile( { 
-            idUsuarios : data.data.idUsuarios,
-            nombre : data.data.nombre,
-            legajo : data.data.legajo,
-            usr: data.data.usr,
-            permiso_id : data.data.permiso_id
-        } || {})
-        navigate(ROUTES.pedidos, { replace: true })
+      setToken(data.data.access_token || '')
+      setProfile({
+        idUsuarios: data.data.idUsuarios,
+        nombre: data.data.nombre,
+        legajo: data.data.legajo,
+        usr: data.data.usr,
+        permiso_id: data.data.permiso_id
+      } || {})
+      navigate(ROUTES.pedidos, { replace: true })
     },
     onError: (error: any) => {
-      console.log("error", error)
+      console.log('error', error)
       setError(error.message)
     }
   })
 
-
-
   const onSubmit = async (data: IFormInput) => {
-     mutate(data)
+    mutate(data)
   }
-
-
-
 
   return (
     <>
@@ -75,7 +68,7 @@ export const LoginPage = () => {
 
       <CssBaseline />
        {
-          error !== '' && (<SnackbarApp 
+          error !== '' && (<SnackbarApp
             open={true}
             message={error}
             type='error'
@@ -151,9 +144,8 @@ export const LoginPage = () => {
                   {
                     isLoading ? 'Cargando...' : 'Ingresar'
                   }
-                  
+
                 </Button>
-            
 
           </form>
         </Box>
