@@ -29,16 +29,16 @@ function getSuspenderReservas (promise: Promise<UserMenu[]>) {
   }
 }
 
-async function fetchReservasMonitor (): Promise<IMenuPersonal[]> {
+async function fetchReservasMonitor (): Promise<UserMenu[]> {
   try {
     const { data } = await api.get('/pedidos/get-reservas')
 
     // map the data to the format that useSWR expects and filter estate === 2
-    const menu_user: IMenuPersonal[] = data.map((menu: IMenuPersonal) => {
+    const menu_user: UserMenu[] = data.map((menu: IMenuPersonal) => {
       return {
         id: menu.idCalendarioMenu,
-        firstName: menu.persona_str,
-        lastName: menu.descripcion,
+        firstName: menu.persona_str.split(' ')[0],
+        lastName: '',
         legajo: menu.legajo,
         pedido: menu.title,
         fecha: menu.start.substring(0, 10),
@@ -108,7 +108,9 @@ export async function filterReservaByDate (data: IMenuPersonal[], fecha: string)
 export function useFetchPedidosMonitor () {
   return useQuery({
     queryKey: ['pedidos-monitor'],
-    queryFn: async () => await fetchReservasMonitor()
+    queryFn: async () => await fetchReservasMonitor(),
+    suspense: true
+    
   })
 }
 

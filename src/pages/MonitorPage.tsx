@@ -10,7 +10,7 @@ import { socket } from '../services/socket.service'
 const MonitorPage = (): JSX.Element => {
   const { data: reservas } = useFetchPedidosMonitor()
 
-  const [data, setData] = useState<UserMenu[]>([])
+  const [data, setData] = useState<UserMenu[]>(reservas || [])
 
   socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
     const newReserva: UserMenu = {
@@ -54,11 +54,11 @@ const MonitorPage = (): JSX.Element => {
                     <Table>
                     <TableHead>
                         <TableRow>
-                        <TableCell>Avatar</TableCell>
+                        <TableCell></TableCell>
                         <TableCell>Nombre y Legajo</TableCell>
-                        <TableCell>Fecha</TableCell>
-                        <TableCell>Pedido</TableCell>
-                        <TableCell>Acciones</TableCell>
+                        <TableCell>Dia y Turno</TableCell>
+                        <TableCell>Menu</TableCell>
+                        <TableCell>...</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
