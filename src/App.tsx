@@ -6,6 +6,7 @@ import {
 import { ProtectedRoute } from './components/ProtectedRoutes/protected-route'
 import { ROUTES } from './constant/routes'
 import { LoginPage } from './pages/login'
+import MenuPage from './pages/MenuPage'
 import MonitorPage from './pages/MonitorPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PedidosPage from './pages/PedidosPage'
@@ -27,6 +28,10 @@ export default function App () {
         <Route path={ROUTES.monitor} element={
             <ProtectedRoute isAllowed={isAuth}>
                 <MonitorPage />
+            </ProtectedRoute>} />
+        <Route path={ROUTES.menu} element={
+            <ProtectedRoute isAllowed={isAuth}>
+                <MenuPage />
             </ProtectedRoute>} />
       </Routes>
   )

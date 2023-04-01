@@ -43,6 +43,11 @@ const MonitorPage = (): JSX.Element => {
     setFilter(event.target.value)
   }
 
+  const realizarPedido = ( idCalendarioMenu: number) => {
+    console.log('realizar pedido: ', idCalendarioMenu)
+
+  }
+
   return (
     <>
     <ContainerApp>
@@ -86,6 +91,8 @@ const MonitorPage = (): JSX.Element => {
                               variant="contained"
                               size="small"
                               color="primary"
+                              onClick={() => realizarPedido(user.id)}
+                              // onClick={realizarPedido(user.id)}
                             >
                                 Realizar Pedido
                             </Button>
