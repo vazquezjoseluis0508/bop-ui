@@ -21,10 +21,12 @@ export interface IMenuPersonal {
   textColor: string
   title: string
   turno: string
+  idPedido: number
 }
 
 export interface UserMenu {
   id: number
+  idPedido: number
   firstName: string
   lastName: string
   legajo: string

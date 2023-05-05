@@ -29,6 +29,31 @@ function getSuspenderReservas (promise: Promise<UserMenu[]>) {
   }
 }
 
+export async function pedidoRealizado ( { idCalendarioMenu, idPedido }) {
+  try {
+    const { data } = await api.put('/pedidos/pedido-realizado', {
+        idCalendarioMenu: idCalendarioMenu,
+        idPedido: idPedido
+    })
+    return data
+  } catch (error: any) {
+    throw new Error('Error en el servidor: ' + error.response.data)
+  }
+}
+
+export async function pedidoCancelado ( { idCalendarioMenu, idPedido }) {
+  try {
+    const { data } = await api.put('/pedidos/pedido-cancelado', {
+        idCalendarioMenu: idCalendarioMenu,
+        idPedido: idPedido
+    })
+    return data
+  } catch (error: any) {
+    throw new Error('Error en el servidor: ' + error.response.data)
+  }
+}
+
+
 async function fetchReservasMonitor (): Promise<UserMenu[]> {
   try {
     const { data } = await api.get('/pedidos/get-reservas')
@@ -37,6 +62,7 @@ async function fetchReservasMonitor (): Promise<UserMenu[]> {
     const menu_user: UserMenu[] = data.map((menu: IMenuPersonal) => {
       return {
         id: menu.idCalendarioMenu,
+        idPedido: menu.idPedido,
         firstName: menu.persona_str.split(' ')[0],
         lastName: '',
         legajo: menu.legajo,
@@ -44,7 +70,12 @@ async function fetchReservasMonitor (): Promise<UserMenu[]> {
         fecha: menu.start.substring(0, 10),
         estado: menu.estado
       }
-    }).filter((menu: UserMenu) => menu.estado === 2)
+    }).filter((menu: UserMenu) => ( 
+        menu.estado === 2 && // estado 2 = reservado
+        menu.fecha >= new Date().toISOString().substring(0, 10)  && // hoy
+        menu.fecha <= new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().substring(0, 10) // 1 dias
+      )
+    )
 
     console.log('menu_user: ', menu_user)
     return menu_user
@@ -121,3 +152,5 @@ export function userFetchPedido (legajo: string) {
 
   })
 }
+
+

@@ -3,27 +3,72 @@ import { useState } from 'react'
 import { Avatar, Button, Input, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Box } from '@mui/material'
 import { ContainerApp } from '../components/container'
 import randomColor from 'randomcolor'
-import { useFetchPedidosMonitor } from '../hook/usePedidos'
+import { pedidoCancelado, pedidoRealizado, useFetchPedidosMonitor } from '../hook/usePedidos'
 import { type IMenuPersonal, type UserMenu } from '../hook/types'
 import { socket } from '../services/socket.service'
+import { useMutation } from '@tanstack/react-query'
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
+
 
 const MonitorPage = (): JSX.Element => {
-  const { data: reservas } = useFetchPedidosMonitor()
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [userMenuToCancel, setUserMenuToCancel] = useState<UserMenu | null>(null);
 
+  const { data: reservas } = useFetchPedidosMonitor()
   const [data, setData] = useState<UserMenu[]>(reservas || [])
+  const { mutate: mutateRealizado } = useMutation({
+    mutationFn: pedidoRealizado,
+    onSuccess: (data) => {
+      console.log('onSuccess pedidoRealizado: ', data)
+    },
+    onError: (error: any) => {
+      console.log('onError pedidoRealizado: ', error)
+    }
+  })
+
+  const { mutate: mutateCancel } = useMutation({
+    mutationFn: pedidoCancelado,
+    onSuccess: (data) => {
+      console.log('onSuccess pedidoCancelado: ', data)
+    },
+    onError: (error: any) => {
+      console.log('onError pedidoCancelado: ', error)
+    }
+  })
+
+  const isDateWithinRange = (dateStr: string, startDateStr: string, endDateStr: string): boolean => {
+    return dateStr >= startDateStr && dateStr <= endDateStr;
+  };
 
   socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
     const newReserva: UserMenu = {
       id: reserva.idCalendarioMenu,
+      idPedido: reserva.idPedido,
       firstName: reserva.persona_str,
       lastName: '',
       legajo: reserva.legajo,
       pedido: reserva.title,
-      fecha: reserva.start.substring(0, 10),
+      fecha: reserva.start,
       estado: reserva.estado
     }
-    const newData = data.filter((item: UserMenu) => item.id !== newReserva.id)
-    setData([...newData, newReserva])
+    // Verifica si la fecha de la nueva reserva está dentro del rango deseado (hoy o mañana).
+    const todayStr = new Date().toISOString().substring(0, 10);
+    const tomorrowStr = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().substring(0, 10);
+    const newReservaDateStr = newReserva.fecha.substring(0, 10);
+
+    const isNewReservaWithinRange = isDateWithinRange(newReservaDateStr, todayStr, tomorrowStr);
+
+    if (isNewReservaWithinRange) {
+      // Filtra las reservas existentes para evitar duplicados.
+      const newData = data.filter((item: UserMenu) => item.id !== newReserva.id);
+  
+      // Agrega la nueva reserva a la data y actualiza el estado.
+      setData([...newData, newReserva]);
+    }
   })
 
   socket.on('elimina-reserva', (reserva: IMenuPersonal) => {
@@ -31,8 +76,17 @@ const MonitorPage = (): JSX.Element => {
     setData(newData)
   })
 
-  const [filter, setFilter] = useState('')
+  socket.on('pedido-realizado', (param: any) => {
+    const newData = data.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
+    setData(newData)
+  })
 
+  socket.on('pedido-cancelado', (param: any) => {
+    const newData = data.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
+    setData(newData)
+  })
+
+  const [filter, setFilter] = useState('')
   const filteredUsers = data.filter(user =>
     user.firstName.toLowerCase().includes(filter.toLowerCase()) ||
     user.lastName.toLowerCase().includes(filter.toLowerCase()) ||
@@ -43,75 +97,112 @@ const MonitorPage = (): JSX.Element => {
     setFilter(event.target.value)
   }
 
-  const realizarPedido = ( idCalendarioMenu: number) => {
-    console.log('realizar pedido: ', idCalendarioMenu)
-
+  const realizarPedido = (userMenu: UserMenu) => {
+    console.log('realizarPedido: ', userMenu)
+    mutateRealizado({ idCalendarioMenu: userMenu.id, idPedido: userMenu.idPedido })
   }
+
+  const handleCancelClick = (userMenu: UserMenu) => {
+    setUserMenuToCancel(userMenu);
+    setOpenConfirmDialog(true);
+  };
+
+  const cancelPedido = () => {
+    if (!userMenuToCancel) return;
+
+    // Aquí va la lógica de cancelación del pedido.
+    console.log('Cancelar pedido: ', userMenuToCancel);
+    mutateCancel({ idCalendarioMenu: userMenuToCancel.id, idPedido: userMenuToCancel.idPedido });
+
+    // Cerrar el diálogo de confirmación.
+    setOpenConfirmDialog(false);
+  };
+
 
   return (
     <>
-    <ContainerApp>
+      <ContainerApp>
+        <Box border={0} borderColor='primary.main' borderRadius={2} sx={{ width: '100%' }}>
+          <Input type="text" placeholder="Buscar por nombre o legajo" onChange={handleFilterChange} />
 
-      <Box border={0} borderColor='primary.main' borderRadius={2} sx={{ width: '100%' }}>
-        <Input type="text" placeholder="Buscar por nombre o legajo" onChange={handleFilterChange} />
+          <TableContainer>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell></TableCell>
+                  <TableCell>Nombre y Legajo</TableCell>
+                  <TableCell>Dia y Turno</TableCell>
+                  <TableCell>Menu</TableCell>
+                  <TableCell>...</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {filteredUsers.map(user => (
+                  <TableRow key={user.id}>
+                    <TableCell>
+                      <Avatar sx={{
+                        backgroundColor: randomColor({ luminosity: 'dark' }),
+                        color: '#FFF'
+                      }}>{user.firstName.charAt(0)}{user.lastName.charAt(0)}</Avatar>
+                    </TableCell>
+                    <TableCell>
+                      {user.firstName} {user.lastName} ({user.legajo})
+                    </TableCell>
+                    <TableCell>
+                      {user.fecha}
+                    </TableCell>
+                    <TableCell>
+                      {user.pedido}
+                    </TableCell>
+                    <TableCell>
 
-                <TableContainer>
-                    <Table>
-                    <TableHead>
-                        <TableRow>
-                        <TableCell></TableCell>
-                        <TableCell>Nombre y Legajo</TableCell>
-                        <TableCell>Dia y Turno</TableCell>
-                        <TableCell>Menu</TableCell>
-                        <TableCell>...</TableCell>
-                        </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        {filteredUsers.map(user => (
-                        <TableRow key={user.id}>
-                            <TableCell>
-                            <Avatar sx={{
-                              backgroundColor: randomColor({ luminosity: 'dark' }),
-                              color: '#FFF'
-                            }}>{user.firstName.charAt(0)}{user.lastName.charAt(0)}</Avatar>
-                            </TableCell>
-                            <TableCell>
-                            {user.firstName} {user.lastName} ({user.legajo})
-                            </TableCell>
-                            <TableCell>
-                            {user.fecha}
-                            </TableCell>
-                            <TableCell>
-                            {user.pedido}
-                            </TableCell>
-                            <TableCell>
-
-                            <Button
-                              sx={{ marginRight: 1 }}
-                              variant="contained"
-                              size="small"
-                              color="primary"
-                              onClick={() => realizarPedido(user.id)}
-                              // onClick={realizarPedido(user.id)}
-                            >
-                                Realizar Pedido
-                            </Button>
-                            <Button
-                              sx={{ marginLeft: 1 }}
-                              variant="contained"
-                              size="small"
-                              color="secondary"
-                            >
-                                Cancelar
-                            </Button>
-                            </TableCell>
-                        </TableRow>
-                        ))}
-                    </TableBody>
-                    </Table>
-                </TableContainer>
+                      <Button
+                        sx={{ marginRight: 1 }}
+                        variant="contained"
+                        size="small"
+                        color="primary"
+                        onClick={() => realizarPedido(user)}
+                      >
+                        Realizar Pedido
+                      </Button>
+                      <Button
+                        sx={{ marginLeft: 1 }}
+                        variant="contained"
+                        size="small"
+                        color="secondary"
+                        onClick={() => handleCancelClick(user)}
+                      >
+                        Cancelar
+                      </Button>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
         </Box>
-        </ContainerApp>
+      </ContainerApp>
+
+      <Dialog
+        open={openConfirmDialog}
+        onClose={() => setOpenConfirmDialog(false)}
+      >
+        <DialogTitle>Cancelar Pedido</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            ¿Estás seguro de que deseas cancelar este pedido?
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenConfirmDialog(false)} color="primary">
+            No
+          </Button>
+          <Button onClick={cancelPedido} color="secondary">
+            Sí, cancelar
+          </Button>
+        </DialogActions>
+      </Dialog>
+
     </>
   )
 }
