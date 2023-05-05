@@ -114,6 +114,21 @@ export async function crearReserva (params: IFormPedido) {
   }
 }
 
+export async function crearPedido (params: IFormPedido) {
+  try {
+    console.log('params: ', params)
+    const { data } = await api.post<IFormPedido>('/pedidos/crear', {
+      idMenu: params.form_menu,
+      turno: params.form_turno,
+      usuario: params.idUsuarios,
+      fecha: params.form_fecha
+    })
+    return data
+  } catch (error) {
+    console.log('createPedido: ', error)
+  }
+} 
+
 export async function eliminarReserva (id: number) {
   try {
     const { data } = await api.delete('/pedidos/eliminar', {
