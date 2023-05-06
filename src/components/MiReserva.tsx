@@ -10,19 +10,22 @@ import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Divider from '@mui/material/Divider';
 import { DeleteForever } from '@mui/icons-material';
 import { Box, IconButton } from '@material-ui/core';
-import { Button, Typography } from '@mui/material';
+import { Button, Chip, Typography } from '@mui/material';
 import { padding, width } from '@mui/system';
+import { is } from 'date-fns/locale';
 
 type MisReservasProps = {
   description: string;
   date: string;
+  estado: number;
   onDelete: (id: number) => void;
   id: number;
   isRestricted: boolean
 };
 
-export default function MiReserva({ description, date, onDelete, id, isRestricted }: MisReservasProps) {
-  
+export default function MiReserva({ description, date, estado, onDelete, id, isRestricted }: MisReservasProps) {
+
+  const canDelete = estado === 2;
   /// convertir string de fecha 2021-10-10 a 10 Oct, 2021
   const dateToFormat = new Date(date);
   const formattedDate = dateToFormat.toLocaleDateString('es-ES', {
@@ -37,71 +40,94 @@ export default function MiReserva({ description, date, onDelete, id, isRestricte
   const formattedDescription = descriptionToFormat.charAt(0).toUpperCase() + descriptionToFormat.slice(1);
 
 
+  const chipComponent = (estado) => {
+    switch (estado) {
+      case 3:
+        return (
+          <Chip
+            label="Retirado"
+            color="success"
+            size="small"
+            variant='outlined'
+            sx={{ marginLeft: 1 }}
+          />
+        );
+        break;
+      case 4:
+        return (
+          <Chip
+            label="Cancelado"
+            color="error"
+            size="small"
+            variant='outlined'
+            sx={{ marginLeft: 1 }}
+          />
+        );
+        break;
+    }
+  }
+
+
+
 
 
   return (
     <>
-    <Box textAlign={'center'} 
-      sx={{
-        width: '100%',
-        maxWidth: 350,
-      }}
-    >
-    <Typography 
-      variant='overline' 
-      position={'initial'} 
-      sx={
-        { 
-          margin: '10px 0 10px 0', 
-          textAlign: 'center' 
-          }}
-      >Mi reserva
-      </Typography>
-      <Divider />
-    <List>
+      <Box textAlign={'center'}
+        sx={{
+          width: '100%',
+          maxWidth: 350,
+        }}
+      >
+        <Typography
+          variant='overline'
+          position={'initial'}
+          sx={
+            {
+              margin: '10px 0 10px 0',
+              textAlign: 'center'
+            }}
+        >Mi reserva
+        </Typography>
+        <Divider />
+        <List>
 
 
-      <ListItem>
-        <ListItemText primary={formattedDescription} secondary={formattedDate} />
-        {
-          isRestricted ? ( <></> ) : (
-            <Button
-             variant='text'
-             size='small'
-             onClick={() => onDelete(id)}
-             sx={
-              { 
-              bgcolor: 'transparent',
-              borderRadius: "100%",
-              border: 0,
-              padding:1,
-              minWidth:0,
-              marginLeft:1,
-              color: 'primary.dark'
+          <ListItem>
+            <ListItemText primary={formattedDescription} secondary={formattedDate} />
+            {
+              isRestricted || !canDelete ? (chipComponent(estado)) : (
+                <>
+
+                  <Button
+                    variant='text'
+                    size='small'
+                    onClick={() => onDelete(id)}
+                    sx={
+                      {
+                        bgcolor: 'transparent',
+                        borderRadius: "100%",
+                        border: 0,
+                        padding: 1,
+                        minWidth: 0,
+                        marginLeft: 1,
+                        color: 'primary.dark'
 
 
+                      }
+                    }
+                  > <DeleteForever /></Button>
+                </>
+
+              )
             }
-             }
-            > <DeleteForever /></Button>
 
-            // <ListItemAvatar color='error'>
-            //   {/* <Box border={0.2} marginLeft={2}  borderRadius={50} borderColor={'red'}> */}
-            //   <IconButton color='secondary' 
-            //     onClick={() => onDelete(id)}
-            //     >
-            //     <DeleteForever />
-            //   </IconButton>
-            //   {/* </Box> */}
-            // </ListItemAvatar>
-          )
-        }
-       
-      </ListItem>
-      {/* <Divider variant="inset" component="li" /> */}
-      
-      
-    </List>
-    </Box>
+          </ListItem>
+
+
+        </List>
+      </Box>
     </>
   );
 }
+

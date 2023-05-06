@@ -248,6 +248,7 @@ const PedidosPage = () => {
                     <MiReserva
                       description={reserva?.title}
                       date={reserva?.start}
+                      estado={reserva?.estado}
                       onDelete={onDelete}
                       id={reserva?.idCalendarioMenu}
                       isRestricted={ restriccion !== '' }
