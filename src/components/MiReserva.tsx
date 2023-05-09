@@ -2,17 +2,10 @@ import * as React from 'react';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemText from '@mui/material/ListItemText';
-import ListItemAvatar from '@mui/material/ListItemAvatar';
-import Avatar from '@mui/material/Avatar';
-import ImageIcon from '@mui/icons-material/Image';
-import WorkIcon from '@mui/icons-material/Work';
-import BeachAccessIcon from '@mui/icons-material/BeachAccess';
 import Divider from '@mui/material/Divider';
 import { DeleteForever } from '@mui/icons-material';
 import { Box, IconButton } from '@material-ui/core';
 import { Button, Chip, Typography } from '@mui/material';
-import { padding, width } from '@mui/system';
-import { is } from 'date-fns/locale';
 
 type MisReservasProps = {
   description: string;
@@ -26,8 +19,10 @@ type MisReservasProps = {
 export default function MiReserva({ description, date, estado, onDelete, id, isRestricted }: MisReservasProps) {
 
   const canDelete = estado === 2;
-  /// convertir string de fecha 2021-10-10 a 10 Oct, 2021
+  /// convertir string de fecha 2023-05-10T00:00:00.000Z a 10 May, 2023
+  
   const dateToFormat = new Date(date);
+  dateToFormat.setDate(dateToFormat.getDate() + 1);
   const formattedDate = dateToFormat.toLocaleDateString('es-ES', {
     day: 'numeric',
     month: 'short',
