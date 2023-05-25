@@ -1,8 +1,8 @@
 
 import axios from 'axios'
+import { REST_API } from '../constant/constants'
 import { type IMenu } from '../hook/types'
 
-const REST_API = 'http://localhost:3000/api'
 
 export const get_menus = async (): Promise<any> => {
   try {

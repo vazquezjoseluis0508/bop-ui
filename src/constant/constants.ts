@@ -1,4 +1,6 @@
-export const REST_API = 'http://192.168.2.120:3000/api'
+export const URL_API = 'https://192.168.2.119:3000'
+export const REST_API =  URL_API + '/api'
+
 export const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']
 export const DIAS_SEMANA = ['Domingo', 'Lunes', 'martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado']
 

@@ -2,6 +2,8 @@ import React from 'react';
 import { TableRow, TableCell, Avatar, Button } from '@mui/material';
 import { UserMenu } from '../../hook/types';
 import randomColor from 'randomcolor';
+import format from 'date-fns/format';
+import { addDays, setHours } from 'date-fns';
 
 interface UserTableRowProps {
   user: UserMenu;
@@ -10,6 +12,11 @@ interface UserTableRowProps {
 }
 
 const UserTableRow: React.FC<UserTableRowProps> = ({ user, realizarPedido, handleCancelClick }) => {
+
+  const dateInUtc = new Date(user.fecha)
+  const dateInLocalTimezone = addDays(dateInUtc, 1)
+  const formatDate = format(new Date(dateInLocalTimezone), 'dd/MM/yyyy');
+
   return (
     <TableRow key={user.id}>
       <TableCell>
@@ -22,7 +29,7 @@ const UserTableRow: React.FC<UserTableRowProps> = ({ user, realizarPedido, handl
         {user.firstName} {user.lastName} ({user.legajo})
       </TableCell>
       <TableCell>
-        {user.fecha}
+        {formatDate}
       </TableCell>
       <TableCell>
         {user.pedido}
