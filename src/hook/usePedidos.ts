@@ -41,11 +41,12 @@ export async function pedidoRealizado ( { idCalendarioMenu, idPedido }) {
   }
 }
 
-export async function pedidoCancelado ( { idCalendarioMenu, idPedido }) {
+export async function pedidoCancelado ( { idCalendarioMenu, idPedido, motivo }) {
   try {
     const { data } = await api.put('/pedidos/pedido-cancelado', {
         idCalendarioMenu: idCalendarioMenu,
-        idPedido: idPedido
+        idPedido: idPedido,
+        motivo: motivo
     })
     return data
   } catch (error: any) {

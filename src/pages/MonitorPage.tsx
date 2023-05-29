@@ -103,15 +103,20 @@ const MonitorPage = (): JSX.Element => {
     setOpenConfirmDialog(true);
   };
 
-  const cancelPedido = () => {
+  const cancelPedido = (cancelReason: string) => {
     if (!userMenuToCancel) return;
 
     // Aquí va la lógica de cancelación del pedido.
-    mutateCancel({ idCalendarioMenu: userMenuToCancel.id, idPedido: userMenuToCancel.idPedido });
+    mutateCancel({
+        idCalendarioMenu: userMenuToCancel.id,
+        idPedido: userMenuToCancel.idPedido,
+        motivo: cancelReason, // Asegúrate de cambiar esto a la clave correcta para tu API
+    });
 
     // Cerrar el diálogo de confirmación.
     setOpenConfirmDialog(false);
-  };
+};
+
 
 
   return (
