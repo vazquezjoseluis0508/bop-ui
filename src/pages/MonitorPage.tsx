@@ -37,7 +37,8 @@ const MonitorPage = (): JSX.Element => {
   })
 
   const isDateWithinRange = (dateStr: string, startDateStr: string, endDateStr: string): boolean => {
-    return dateStr >= startDateStr && dateStr <= endDateStr;
+    console.log('isDateWithinRange: ', dateStr, startDateStr, endDateStr)
+    return dateStr >= startDateStr && dateStr < endDateStr;
   };
 
   socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
@@ -57,6 +58,7 @@ const MonitorPage = (): JSX.Element => {
     const newReservaDateStr = newReserva.fecha.substring(0, 10);
 
     const isNewReservaWithinRange = isDateWithinRange(newReservaDateStr, todayStr, tomorrowStr);
+    console.log('isNewReservaWithinRange: ', isNewReservaWithinRange)
 
     if (isNewReservaWithinRange) {
       // Filtra las reservas existentes para evitar duplicados.

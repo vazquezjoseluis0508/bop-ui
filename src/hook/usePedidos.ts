@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 import { type IMenuPersonal, type UserMenu } from './types'
 import { type IFormPedido } from '../pages/PedidosPage'
 
-function getSuspenderReservas (promise: Promise<UserMenu[]>) {
+function getSuspenderReservas(promise: Promise<UserMenu[]>) {
   let status = 'pending'
   let result: any
   const suspender = promise.then(
@@ -17,7 +17,7 @@ function getSuspenderReservas (promise: Promise<UserMenu[]>) {
     }
   )
   return {
-    read () {
+    read() {
       if (status === 'pending') {
         throw suspender
       } else if (status === 'error') {
@@ -29,11 +29,11 @@ function getSuspenderReservas (promise: Promise<UserMenu[]>) {
   }
 }
 
-export async function pedidoRealizado ( { idCalendarioMenu, idPedido }) {
+export async function pedidoRealizado({ idCalendarioMenu, idPedido }) {
   try {
     const { data } = await api.put('/pedidos/pedido-realizado', {
-        idCalendarioMenu: idCalendarioMenu,
-        idPedido: idPedido
+      idCalendarioMenu: idCalendarioMenu,
+      idPedido: idPedido
     })
     return data
   } catch (error: any) {
@@ -41,12 +41,12 @@ export async function pedidoRealizado ( { idCalendarioMenu, idPedido }) {
   }
 }
 
-export async function pedidoCancelado ( { idCalendarioMenu, idPedido, motivo }) {
+export async function pedidoCancelado({ idCalendarioMenu, idPedido, motivo }) {
   try {
     const { data } = await api.put('/pedidos/pedido-cancelado', {
-        idCalendarioMenu: idCalendarioMenu,
-        idPedido: idPedido,
-        motivo: motivo
+      idCalendarioMenu: idCalendarioMenu,
+      idPedido: idPedido,
+      motivo: motivo
     })
     return data
   } catch (error: any) {
@@ -55,7 +55,7 @@ export async function pedidoCancelado ( { idCalendarioMenu, idPedido, motivo }) 
 }
 
 
-async function fetchReservasMonitor (): Promise<UserMenu[]> {
+async function fetchReservasMonitor(): Promise<UserMenu[]> {
   try {
     const { data } = await api.get('/pedidos/get-reservas')
 
@@ -71,14 +71,17 @@ async function fetchReservasMonitor (): Promise<UserMenu[]> {
         fecha: menu.start.substring(0, 10),
         estado: menu.estado
       }
-    }).filter((menu: UserMenu) => ( 
-        menu.estado === 2 && // estado 2 = reservado
-        menu.fecha >= new Date().toISOString().substring(0, 10)  && // hoy
-        menu.fecha <= new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().substring(0, 10) // 1 dias
-      )
-    )
+    }).filter((menu: UserMenu) => (
+      menu.estado === 2 && // estado 2 = reservado
+      menu.fecha === formatDate(new Date()) // hoy
+      //menu.fecha = formatDate(new Date()) 
+      //&& // hoy
+      //menu.fecha < formatDate(new Date(new Date().setDate(new Date().getDate() + 1))) // menor a manana
+    ));
 
-    console.log('menu_user: ', menu_user)
+    
+
+    // console.log('menu_user: ', menu_user)
     return menu_user
   } catch (error) {
     console.log('fetchReservasMonitor: ', error)
@@ -86,7 +89,19 @@ async function fetchReservasMonitor (): Promise<UserMenu[]> {
   return []
 }
 
-async function fetchReservas (legajo: string): Promise<IMenuPersonal[]> {
+function formatDate(date: Date): string {
+  let day = '' + date.getDate();
+  let month = '' + (date.getMonth() + 1); // Los meses en JavaScript son base 0
+  const year = date.getFullYear();
+
+  if (month.length < 2) month = '0' + month;
+  if (day.length < 2) day = '0' + day;
+
+  return [year, month, day].join('-');
+}
+
+
+async function fetchReservas(legajo: string): Promise<IMenuPersonal[]> {
   try {
     const { data } = await api.get('/pedidos/get-reservas', {
       params: {
@@ -101,7 +116,7 @@ async function fetchReservas (legajo: string): Promise<IMenuPersonal[]> {
   }
 }
 
-export async function crearReserva (params: IFormPedido) {
+export async function crearReserva(params: IFormPedido) {
   try {
     const { data } = await api.post<IFormPedido>('/pedidos/reservar', {
       idMenu: params.form_menu,
@@ -115,7 +130,7 @@ export async function crearReserva (params: IFormPedido) {
   }
 }
 
-export async function crearPedido (params: IFormPedido) {
+export async function crearPedido(params: IFormPedido) {
   try {
     console.log('params: ', params)
     const { data } = await api.post<IFormPedido>('/pedidos/crear', {
@@ -128,9 +143,9 @@ export async function crearPedido (params: IFormPedido) {
   } catch (error) {
     console.log('createPedido: ', error)
   }
-} 
+}
 
-export async function eliminarReserva (id: number) {
+export async function eliminarReserva(id: number) {
   try {
     const { data } = await api.delete('/pedidos/eliminar', {
       params: {
@@ -143,7 +158,7 @@ export async function eliminarReserva (id: number) {
   }
 }
 
-export async function filterReservaByDate (data: IMenuPersonal[], fecha: string) {
+export async function filterReservaByDate(data: IMenuPersonal[], fecha: string) {
   try {
     const filtered = await data.filter((pedido: IMenuPersonal) => pedido.start.substring(0, 10) === fecha)
     return filtered
@@ -152,16 +167,16 @@ export async function filterReservaByDate (data: IMenuPersonal[], fecha: string)
   }
 }
 
-export function useFetchPedidosMonitor () {
+export function useFetchPedidosMonitor() {
   return useQuery({
     queryKey: ['pedidos-monitor'],
     queryFn: async () => await fetchReservasMonitor(),
     suspense: true
-    
+
   })
 }
 
-export function userFetchPedido (legajo: string) {
+export function userFetchPedido(legajo: string) {
   return useQuery({
     queryKey: ['pedidos', legajo],
     queryFn: async () => await fetchReservas(legajo)
