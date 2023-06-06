@@ -3,5 +3,6 @@ export const ROUTES = {
   monitor: '/MonitorPage',
   menu: '/MenuPage',
   login: '/login',
-  home: '/'
+  home: '/home',
+  root: '/',
 }

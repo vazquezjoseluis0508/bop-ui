@@ -58,6 +58,23 @@ export async function pedidoCancelado({ idCalendarioMenu, idPedido, motivo }) {
 async function fetchReservasMonitor(): Promise<UserMenu[]> {
   try {
     const { data } = await api.get('/pedidos/get-reservas')
+    // Obtén la fecha y hora actual en la zona horaria local
+    let now = new Date();
+
+    // Ajusta 'today' para ser la fecha de ayer si es antes de las 6 AM
+    let today = new Date();
+    if (now.getHours() < 6) {
+      today.setDate(today.getDate() - 1);
+    }
+
+    // 'Tomorrow' es siempre un día después de 'today'
+    let tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1); // Avanza un día
+
+    // Transformar las fechas a formato yyyy-mm-dd para la comparación
+    let todayString = today.toISOString().split('T')[0];
+    let tomorrowString = tomorrow.toISOString().split('T')[0];
+
 
     // map the data to the format that useSWR expects and filter estate === 2
     const menu_user: UserMenu[] = data.map((menu: IMenuPersonal) => {
@@ -71,15 +88,17 @@ async function fetchReservasMonitor(): Promise<UserMenu[]> {
         fecha: menu.start.substring(0, 10),
         estado: menu.estado
       }
-    }).filter((menu: UserMenu) => (
-      menu.estado === 2 && // estado 2 = reservado
-      menu.fecha === formatDate(new Date()) // hoy
-      //menu.fecha = formatDate(new Date()) 
-      //&& // hoy
-      //menu.fecha < formatDate(new Date(new Date().setDate(new Date().getDate() + 1))) // menor a manana
-    ));
+    }).filter((menu: UserMenu) => {
+      if (menu.estado !== 2) return false; // si el estado no es 2, excluir
 
-    
+      // Aquí ignoramos la parte de la hora de las fechas comparando solo las partes del año, mes y día.
+      return (
+        (menu.fecha >= todayString) &&
+        (menu.fecha < tomorrowString)
+      );
+    })
+
+
 
     // console.log('menu_user: ', menu_user)
     return menu_user

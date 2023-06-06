@@ -50,7 +50,7 @@ export const LoginPage = () => {
         usr: data.data.usr,
         permiso_id: data.data.permiso_id
       } || {})
-      navigate(ROUTES.pedidos, { replace: true })
+      navigate(ROUTES.home, { replace: true })
     },
     onError: (error: any) => {
       console.log('error', error)

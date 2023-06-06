@@ -11,6 +11,7 @@ import MonitorPage from './pages/MonitorPage'
 import NotFoundPage from './pages/NotFoundPage'
 import PedidosPage from './pages/PedidosPage'
 import { useAuthStore } from './store/auth'
+import HomePage from './pages/homePage'
 
 export default function App () {
 
@@ -21,6 +22,11 @@ export default function App () {
         <Route path={ROUTES.login} element={<LoginPage/>} />
         <Route index element={<LoginPage/>} />
         <Route path="*" element={<NotFoundPage/>} />
+        <Route path={ROUTES.home} element={
+        <ProtectedRoute isAllowed={isAuth}>
+            <HomePage />
+        </ProtectedRoute>
+        } />
         <Route path={ROUTES.pedidos} element={
             <ProtectedRoute isAllowed={isAuth}>
                 <PedidosPage />
