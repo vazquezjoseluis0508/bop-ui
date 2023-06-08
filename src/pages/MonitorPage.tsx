@@ -13,9 +13,11 @@ import { DialogCancel } from '../components/Monitor/DialogCancel'
 const MonitorPage = (): JSX.Element => {
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [userMenuToCancel, setUserMenuToCancel] = useState<UserMenu | null>(null);
+  const [filter, setFilter] = useState('')
 
-  const { data: reservas } = useFetchPedidosMonitor()
-  const [data, setData] = useState<UserMenu[]>(reservas || [])
+  const { data: reservas, isLoading: lodingReservas } = useFetchPedidosMonitor()
+  const [data, setData] = useState(reservas || [])
+
   const { mutate: mutateRealizado } = useMutation({
     mutationFn: pedidoRealizado,
     onSuccess: (data) => {
@@ -62,7 +64,7 @@ const MonitorPage = (): JSX.Element => {
 
     if (isNewReservaWithinRange) {
       // Filtra las reservas existentes para evitar duplicados.
-      const newData = data.filter((item: UserMenu) => item.id !== newReserva.id);
+      const newData: any = data?.filter((item: UserMenu) => item.id !== newReserva.id);
 
       // Agrega la nueva reserva a la data y actualiza el estado.
       setData([...newData, newReserva]);
@@ -70,22 +72,21 @@ const MonitorPage = (): JSX.Element => {
   })
 
   socket.on('elimina-reserva', (reserva: IMenuPersonal) => {
-    const newData = data.filter((item: UserMenu) => item.id !== reserva.idCalendarioMenu)
+    const newData = data?.filter((item: UserMenu) => item.id !== reserva.idCalendarioMenu)
     setData(newData)
   })
 
   socket.on('pedido-realizado', (param: any) => {
-    const newData = data.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
+    const newData = data?.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
     setData(newData)
   })
 
   socket.on('pedido-cancelado', (param: any) => {
-    const newData = data.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
+    const newData = data?.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
     setData(newData)
   })
 
-  const [filter, setFilter] = useState('')
-  const filteredUsers = data.filter(user =>
+  const filteredUsers = data?.filter(user =>
     user.firstName.toLowerCase().includes(filter.toLowerCase()) ||
     user.lastName.toLowerCase().includes(filter.toLowerCase()) ||
     user.legajo.toLowerCase().includes(filter.toLowerCase())
@@ -110,15 +111,22 @@ const MonitorPage = (): JSX.Element => {
 
     // Aquí va la lógica de cancelación del pedido.
     mutateCancel({
-        idCalendarioMenu: userMenuToCancel.id,
-        idPedido: userMenuToCancel.idPedido,
-        motivo: cancelReason, // Asegúrate de cambiar esto a la clave correcta para tu API
+      idCalendarioMenu: userMenuToCancel.id,
+      idPedido: userMenuToCancel.idPedido,
+      motivo: cancelReason, // Asegúrate de cambiar esto a la clave correcta para tu API
     });
 
     // Cerrar el diálogo de confirmación.
     setOpenConfirmDialog(false);
-};
+  };
 
+  React.useEffect (() => {
+    if (reservas) setData(reservas)
+  }, [reservas])
+
+
+
+  if (lodingReservas) return <div>Loading Reservas...</div>
 
 
   return (
@@ -134,7 +142,7 @@ const MonitorPage = (): JSX.Element => {
           />
         </Box>
       </ContainerApp>
-      <DialogCancel 
+      <DialogCancel
         openConfirmDialog={openConfirmDialog}
         setOpenConfirmDialog={setOpenConfirmDialog}
         cancelPedido={cancelPedido}

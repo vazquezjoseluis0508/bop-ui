@@ -190,7 +190,6 @@ export function useFetchPedidosMonitor() {
   return useQuery({
     queryKey: ['pedidos-monitor'],
     queryFn: async () => await fetchReservasMonitor(),
-    suspense: true
 
   })
 }
