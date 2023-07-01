@@ -9,6 +9,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
+    "postbuild": "ncp ./img ./dist/img && ncp ./cert.pem ./dist/cert.pem && ncp ./key.pem ./dist/key.pem",
     "preview": "vite preview",
     "start": "vite",
     "serve": "json-server --watch db/usuarios.json --port 3001 ",
