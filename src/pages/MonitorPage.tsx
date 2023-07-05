@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react'
 import { Box, Input } from '@mui/material'
 import { ContainerApp } from '../components/container'
-import { pedidoCancelado, pedidoRealizado, useFetchPedidosMonitor } from '../hook/usePedidos'
+import { pedidoCancelado, pedidoRetirado, useFetchPedidosMonitor } from '../hook/usePedidos'
 import { type IMenuPersonal, type UserMenu } from '../hook/types'
 import { socket } from '../services/socket.service'
 import { useMutation } from '@tanstack/react-query'
@@ -19,12 +19,12 @@ const MonitorPage = (): JSX.Element => {
   const [data, setData] = useState(reservas || [])
 
   const { mutate: mutateRealizado } = useMutation({
-    mutationFn: pedidoRealizado,
+    mutationFn: pedidoRetirado,
     onSuccess: (data) => {
-      console.log('onSuccess pedidoRealizado: ', data)
+      console.log('onSuccess pedidoRetirado: ', data)
     },
     onError: (error: any) => {
-      console.log('onError pedidoRealizado: ', error)
+      console.log('onError pedidoRetirado: ', error)
     }
   })
 
@@ -97,7 +97,6 @@ const MonitorPage = (): JSX.Element => {
   }
 
   const realizarPedido = (userMenu: UserMenu) => {
-    console.log('realizarPedido: ', userMenu)
     mutateRealizado({ idCalendarioMenu: userMenu.id, idPedido: userMenu.idPedido })
   }
 

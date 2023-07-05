@@ -4,7 +4,7 @@ import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
 
-const steps = ['Seleccione un dia del calendario.', 'Seleccione su turno.', 'Finalmente seleccione el menu del dia.'];
+const steps = ['Seleccione un dia del calendario.', 'Seleccione su turno.', 'Finalmente Seleccione el menu del dia.'];
 
 export default function HorizontalLinearStepper() {
   const [activeStep, setActiveStep] = React.useState(-1);

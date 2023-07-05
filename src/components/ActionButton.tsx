@@ -1,14 +1,15 @@
-import { Box, Button,  } from '@mui/material'
-import React from 'react'
-import CircularProgress from '@mui/material/CircularProgress';
-import { IMenuPersonal } from '../hook/types';
-
+import { Box, Button, CircularProgress,  } from '@mui/material'
 
 type actionButtonProps = {
   isDisabled: boolean
+  type: 'submit' | 'reset' | 'button'
+  name: string
+  variant?: 'text' | 'outlined' | 'contained'
+  color?: 'inherit' | 'primary' | 'secondary' | 'success' | 'error' | 'info' | 'warning'
+  onClick?: () => void
 }
 
-export const ActionButton = ( {  isDisabled }: actionButtonProps) => {
+export const ActionButton = ( {  isDisabled, type, name, variant, color, onClick }: actionButtonProps) => {
 
 
   return (
@@ -25,13 +26,14 @@ export const ActionButton = ( {  isDisabled }: actionButtonProps) => {
         </Box>
         <Box m={1} >
         <Button  
-            variant="contained" 
-            color="primary"
+            variant={variant || 'contained'} 
+            color={color || 'primary'}
             size="large"
             disabled={isDisabled}
-            type="submit"
+            type={type}
+            onClick={onClick}
         >
-            { isDisabled ? <CircularProgress size={24}/> : 'Guardar' }
+            { isDisabled ? <CircularProgress size={24}/> : name }
         </Button>
         </Box>
     </Box>
