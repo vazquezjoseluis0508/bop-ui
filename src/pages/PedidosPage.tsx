@@ -1,6 +1,6 @@
 
-import { Grid } from '@material-ui/core'
-import { Alert, AlertTitle, Box, Divider, Snackbar, Stack, Typography } from '@mui/material'
+import { Grid, makeStyles } from '@material-ui/core'
+import { Alert, AlertTitle, Box, Button, Divider, Snackbar } from '@mui/material'
 import { useEffect, useState } from 'react'
 import { ActionButton } from '../components/ActionButton'
 import Calendar from '../components/Calendar'
@@ -8,9 +8,9 @@ import { MenuDelDia } from '../components/MenuDelDia'
 import HorizontalLinearStepper from '../components/Stepper2'
 import { Turno } from '../components/Turno'
 import { convertDate, formatDate } from '../helpers/data-time'
-import { type IMenuPersonal, type IMenu } from '../hook/types'
+import { type IMenuPersonal, type IMenu, UserMenu } from '../hook/types'
 import { userFetchMenu } from '../hook/useMenu'
-import { crearReserva, eliminarReserva, userFetchPedido } from '../hook/usePedidos'
+import { pedidoReservado, eliminarReserva, pedidoRealizado, userFetchReserva, pedidoCancelado, pedidoRetirado } from '../hook/usePedidos'
 import { useMenuStore } from '../store/menus'
 import * as yup from 'yup'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -20,24 +20,46 @@ import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { useAuthStore } from '../store/auth'
 import { ContainerApp } from '../components/container'
 import MiReserva from '../components/MiReserva'
+import { Accion, IFormPedido } from '../types/pedidos.type'
+import { DialogCancel } from '../components/Monitor/DialogCancel'
+import { RESPONSE_MESSAGES } from '../helpers/messages-response'
 
-export interface IFormPedido {
-  form_menu: string
-  form_turno: string
-  form_fecha: string
-  idUsuarios: string
-}
+const useStyles = makeStyles((theme) => ({
+  pulsate: {
+    animation: `$pulsate 1000ms ${theme.transitions.easing.easeInOut} infinite`,
+  },
+  "@keyframes pulsate": {
+    "0%": {
+      transform: "scale(1.0)",
+    },
+    "50%": {
+      transform: "scale(1.1)",
+    },
+    "100%": {
+      transform: "scale(1.0)",
+    },
+  },
+}));
+
+
+
+
+
+
 
 const PedidosPage = () => {
+  const classes = useStyles();
   const [fechaSeleccionada, setFechaSeleccionada] = useState<string>(convertDate(new Date()))
   const [openSuccess, setOpenSuccess] = useState<boolean>(false)
   const [openDeleteSuccess, setOpenDeleteSuccess] = useState<boolean>(false)
-  const [isDisabled, setIsDisabled] = useState(false)
+  const [actionButton, setActionButton] = useState<Accion>('reservar')
   const [selectedMenu, setSelectedMenu] = useState<number>(0)
   const [selectedTurno, setSelectedTurno] = useState<string>('')
   const [reserva, setReserva] = useState<IMenuPersonal | null>(null)
   const [error, setError] = useState<string>('')
   const [restriccion, setRestriccion] = useState<string>('')
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const [userMenuToCancel, setUserMenuToCancel] = useState<any>(null);
 
   const profile = useAuthStore(state => state.profile)
 
@@ -45,14 +67,43 @@ const PedidosPage = () => {
   const {
     data: reservas,
     isLoading: lodingReservas
-  } = userFetchPedido(profile.legajo)
+  } = userFetchReserva(profile.legajo)
 
-  const { mutate, isLoading } = useMutation({
-    mutationFn: crearReserva,
+  const { mutate: ReservarPedido, isLoading: reservarLoading } = useMutation({
+    mutationFn: pedidoReservado,
     onSuccess: (data) => {
       setOpenSuccess(true)
-      setIsDisabled(false)
       queryClient.invalidateQueries(['pedidos'])
+    }
+  })
+
+  const { mutate: RealizarPedido } = useMutation({
+    mutationFn: pedidoRealizado,
+    onSuccess: (data) => {
+      console.log('Pedido Realizado: ', data)
+    },
+    onError: (error: any) => {
+      console.log('Error: pedido realizado: ', error)
+    }
+  })
+
+  const { mutate: RetirarPedido } = useMutation({
+    mutationFn: pedidoRetirado,
+    onSuccess: (data) => {
+      console.log('onSuccess pedidoRetirado: ', data)
+    },
+    onError: (error: any) => {
+      console.log('onError pedidoRetirado: ', error)
+    }
+  })
+
+  const { mutate: mutateCancel } = useMutation({
+    mutationFn: pedidoCancelado,
+    onSuccess: (data) => {
+      console.log('onSuccess pedidoCancelado: ', data)
+    },
+    onError: (error: any) => {
+      console.log('onError pedidoCancelado: ', error)
     }
   })
 
@@ -60,7 +111,6 @@ const PedidosPage = () => {
     mutationFn: eliminarReserva,
     onSuccess: (data) => {
       setOpenDeleteSuccess(true)
-      setIsDisabled(false)
       queryClient.invalidateQueries(['pedidos'])
     },
     onError: (error: any) => {
@@ -81,7 +131,7 @@ const PedidosPage = () => {
     control,
     handleSubmit,
     formState:
-        { errors, isSubmitting },
+    { errors, isSubmitting },
     register,
     reset,
     watch,
@@ -95,39 +145,71 @@ const PedidosPage = () => {
   })
 
   useEffect(() => {
-    if (reservas != null) { handleSetReserva(reservas, fechaSeleccionada) }
-  }, [reservas])
+    console.log('reservas: ', reservas)
+    if (reservas != null) {
+      const reserva = handleSetReserva(reservas, fechaSeleccionada)
+      handleRestriction(reserva)
+    }
 
-  useEffect(() => {
-    handleRestriction()
-  }, [fechaSeleccionada])
+  }, [reservas, fechaSeleccionada])
+
 
   const onDelete = (id_reserva: number) => {
     mutateDelete(id_reserva)
   }
 
-  const handleRestriction = () => {
+  const handleRestriction = (reserva) => {
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
 
     const limitHour = new Date(today)
     limitHour.setHours(18, 0, 0, 0)
+    const selectedMenu = reservas && reserva ? reserva.idMenu : 0
 
     if (convertDate(today) === fechaSeleccionada) {
-      setRestriccion('No se puede reservar para el día de hoy. Recuerda que tienes hasta las 18 hs para realizar la reserva, Gracias por tu comprensión!. ')
-      setIsDisabled(true)
-    } else if (convertDate(tomorrow) === fechaSeleccionada) {
-      if (today > limitHour) {
-        setRestriccion('La reserva para mañana solo se permite hasta las 18 hs del día de hoy.')
-        setIsDisabled(true)
-      } else {
-        setRestriccion('')
-        setIsDisabled(false)
+      if (selectedMenu != 0) { // existe un menu
+        const menu = reservas?.find(reserva => reserva.idMenu === selectedMenu)
+        // 2: pedido reservado, 15: pedido realizado, 3: pedido retirado, 4: pedido cancelado
+        if (menu != null) {
+          switch (menu.estado) {
+            case 2: // pedido reservado
+              setRestriccion('')
+              setActionButton('pedir')
+              break;
+            case 15: // pedido realizado
+              setRestriccion(RESPONSE_MESSAGES.ALREADY_ORDERED.message)
+              setActionButton('retirar')
+              break;
+            case 3: // pedido retirado
+              setRestriccion(RESPONSE_MESSAGES.ALREADY_WITHDRAWN.message)
+              setActionButton('nada')
+              break;
+            case 4: // pedido cancelado
+              setRestriccion(RESPONSE_MESSAGES.ALREADY_CANCELED.message)
+              setActionButton('nada')
+              break;
+            default:
+              break;
+
+          }
+        }
+
+
+      } else { // no existe un menu
+        setRestriccion(RESPONSE_MESSAGES.TODAY_NO_RESERVATION.message)
       }
-    } else {
+
+    } else if (convertDate(tomorrow) === fechaSeleccionada) { // es para mañana
+      if (today > limitHour) { // es despues de las 18 hs
+        setRestriccion(RESPONSE_MESSAGES.TOMORROW_TOO_LATE.message)
+      } else { // es antes de las 18 hs
+        setRestriccion('')
+        setActionButton('reservar')
+      }
+    } else { // es para otro dia
       setRestriccion('')
-      setIsDisabled(false)
+      setActionButton('reservar')
     }
   }
 
@@ -147,14 +229,15 @@ const PedidosPage = () => {
         setSelectedTurno('')
         setReserva(null)
       }
+      return reserva
     }
+    return null
   }
 
   const handleDateChange = (date) => {
     setFechaSeleccionada(convertDate(date))
-    ;(reservas != null) && handleSetReserva(reservas, convertDate(date))
+      ; (reservas != null) && handleSetReserva(reservas, convertDate(date))
     setValue('form_fecha', convertDate(date))
-    setIsDisabled(false)
   }
 
   if (lodingMenus) return <div>Loading Menus...</div>
@@ -167,168 +250,238 @@ const PedidosPage = () => {
   }
 
   const onSubmit: SubmitHandler<IFormPedido> = (data: IFormPedido) => {
-    setIsDisabled(true)
     setTimeout(() => {
-      mutate(data)
+      ReservarPedido(data)
     }, 1000)
   }
 
+  const realizarPedido = ({ idCalendarioMenu, idPedido }) => {
+    RealizarPedido({ idCalendarioMenu, idPedido })
+    window.location.reload()
+  }
+
+  const retirarPedido = ({ idCalendarioMenu, idPedido }) => {
+    RetirarPedido({ idCalendarioMenu, idPedido })
+    window.location.reload()
+  }
+
+  const cancelarPedido = (userMenu: {
+    id: number;
+    idPedido: number;
+  }) => {
+    setUserMenuToCancel(userMenu);
+    setOpenConfirmDialog(true);
+  };
+
+  const cancelPedido = (cancelReason: string) => {
+    if (!userMenuToCancel) return;
+    mutateCancel({
+      idCalendarioMenu: userMenuToCancel.id,
+      idPedido: userMenuToCancel.idPedido,
+      motivo: cancelReason,
+    });
+    setOpenConfirmDialog(false);
+  };
+
   return (
     <>
-    <ContainerApp>
+      <ContainerApp>
 
-      <Box border={0} borderColor='primary.main' borderRadius={2} sx={{ width: '100%' }}>
-      <HorizontalLinearStepper />
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <input type={'hidden'} {...register('form_fecha')} value={fechaSeleccionada} />
-        <input type={'hidden'} {...register('idUsuarios')} value={profile.idUsuarios} />
+        <Box border={0} borderColor='primary.main' borderRadius={2} sx={{ width: '100%' }}>
+          <HorizontalLinearStepper />
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <input type={'hidden'} {...register('form_fecha')} value={fechaSeleccionada} />
+            <input type={'hidden'} {...register('idUsuarios')} value={profile.idUsuarios} />
 
-       <Grid container spacing={2}>
-            <Grid item xs={12} sm={12} md={3} >
-              <Grid container spacing={2}>
-                <Grid item xs={6} sm={6} md={12} >
-                <Calendar
-                  onDateChange={handleDateChange}
-                  fechaSeleccionada={fechaSeleccionada}
-                  reservas={reservas}
-                  />
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={12} md={3} >
+                <Grid container spacing={2}>
+                  <Grid item xs={6} sm={6} md={12} >
+                    <Calendar
+                      onDateChange={handleDateChange}
+                      fechaSeleccionada={fechaSeleccionada}
+                      reservas={reservas}
+                    />
+                  </Grid>
+                  <Grid item xs={6} sm={6} md={12} >
+                    <input type={'hidden'} name='action' />
+                    <Turno
+                      name="form_turno"
+                      register={register}
+                      fechaSeleccionada={fechaSeleccionada}
+                      selectedTurno={selectedTurno}
+                      errors={errors.form_turno?.message || ''}
+                    />
+                  </Grid>
                 </Grid>
-                <Grid item xs={6} sm={6} md={12} >
-                <Turno
-                  name="form_turno"
-                  register={register}
-                  fechaSeleccionada={fechaSeleccionada}
-                  selectedTurno={selectedTurno}
-                  errors={errors.form_turno?.message || ''}
-                  />
-                </Grid>
+
               </Grid>
+              {
+                (menuDelDia != null)
+                  ? (
+                    <>
+                      <Grid item xs={12} sm={12} md={7} >
+                        <Box m={1} paddingLeft={4}>
+                          <MenuDelDia
+                            name="form_menu"
+                            register={register}
+                            watch={watch}
+                            control={control}
+                            fechaSeleccionada={fechaSeleccionada}
+                            selectedMenu={selectedMenu}
+                            errors={errors.form_menu?.message || ''}
+                          />
+                          <Divider sx={{ marginTop: 5 }} />
+                          <Snackbar open={isSubmitting} message="Guardando..." />
+                          <Box mt={5} pr={5}>
+                            {
+                              restriccion !== ''
+                                ? (
+                                  <>
+                                    <Alert severity="info">
+                                      <AlertTitle>¡Hola!</AlertTitle>
+                                      {restriccion}
+                                    </Alert>
+                                    {(
+                                      actionButton === 'retirar' &&
+                                      <Box mt={2} sx={{
+                                        display: 'flex',
+                                        flexDirection: 'row',
+                                        justifyContent: 'right',
+                                        backgroundColor: 'transparent',
+                                        width: '100%',
+
+                                      }}>
+                                        <Button type='button' color='warning' variant='contained' onClick={
+                                          () => reserva && cancelarPedido({ id: reserva.idCalendarioMenu, idPedido: reserva.idPedido })
+                                        }>Cancelar</Button>
+                                        <Button sx={{ marginLeft: 2 }} type='button' color='primary' variant='contained' onClick={
+                                          () => retirarPedido({ idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido })
+                                        }>Retirar</Button>
+                                      </Box>
+                                    )}
+                                  </>
+                                )
+                                : (
+                                  actionButton === 'reservar'
+                                    ? <ActionButton isDisabled={false} type='submit' name='Reservar' />
+                                    : <Box mt={2} sx={{
+                                      display: 'flex',
+                                      flexDirection: 'row',
+                                      justifyContent: 'right',
+                                      backgroundColor: 'transparent',
+                                      width: '100%',
+
+                                    }}><Button
+                                      type='button'
+                                      variant="contained"
+                                      color='error'
+                                      onClick={() => realizarPedido({ idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido })}
+                                      className={classes.pulsate}
+                                    >Realizar Pedido</Button>
+                                    </Box>
+
+                                )
+
+                            }
+
+                          </Box>
+                        </Box>
+                      </Grid>
+                      <Grid item xs={12} sm={12} md={2} >
+                        <Box mt={2} >
+                          {
+                            (reserva != null)
+                              ? (
+                                <MiReserva
+                                  description={reserva?.title}
+                                  date={reserva?.start}
+                                  estado={reserva?.estado}
+                                  onDelete={onDelete}
+                                  id={reserva?.idCalendarioMenu}
+                                  isRestricted={restriccion !== '' || actionButton === 'pedir'}
+                                />
+                              )
+                              : (
+                                <Alert severity="warning">
+                                  <AlertTitle>Atención</AlertTitle>
+                                  No se ha realizado ninguna reserva de menú para el día <b>{formatDate(fechaSeleccionada, 'larga')}</b>
+                                </Alert>
+                              )
+                          }
+
+                        </Box>
+                      </Grid>
+                    </>
+
+                  )
+                  : (<>
+
+                    <Grid item xs={6} sm={12} md={6} >
+                      <Box m={1} paddingLeft={2}>
+                        <Alert severity="info" variant='outlined'>
+                          <AlertTitle>Lo sentimos!</AlertTitle>
+                          No hay menus disponibles para el día de hoy. Por favor, <b>pruebe con otra fecha</b>.
+                        </Alert>
+                      </Box>
+                    </Grid>
+
+                  </>)
+
+              }
 
             </Grid>
             {
-              (menuDelDia != null)
-                ? (
-                <>
-                <Grid item xs={12} sm={12} md={7} >
-              <Box m={1} paddingLeft={4}>
-                <MenuDelDia
-                  name="form_menu"
-                  register={register}
-                  watch={watch}
-                  control={control}
-                  fechaSeleccionada={fechaSeleccionada}
-                  selectedMenu={selectedMenu}
-                  errors={errors.form_menu?.message || ''}
-                  />
-                <Divider sx={{ marginTop: 5 }}/>
-                <Snackbar open={isSubmitting} message="Guardando..." />
-                <Box mt={5} pr={5}>
-                  {
-                    restriccion !== ''
-                      ? (
-                      <Alert severity="info">
-                        <AlertTitle>¡Hola!</AlertTitle>
-                        {restriccion}
-                      </Alert>
-                        )
-                      : (
-                      <ActionButton isDisabled={isDisabled} />
-                        )
-
-                  }
-
-                </Box>
-              </Box>
-            </Grid>
-            <Grid item xs={12} sm={12} md={2} >
-              <Box mt={2} >
-                {
-                  (reserva != null)
-                    ? (
-                    <MiReserva
-                      description={reserva?.title}
-                      date={reserva?.start}
-                      estado={reserva?.estado}
-                      onDelete={onDelete}
-                      id={reserva?.idCalendarioMenu}
-                      isRestricted={ restriccion !== '' }
-                      />
-                      )
-                    : (
-                    <Alert severity="warning">
-                      <AlertTitle>Atención</AlertTitle>
-                      No se ha realizado ninguna reserva de menú para el día <b>{formatDate(fechaSeleccionada, 'larga')}</b>
-                    </Alert>
-                      )
-                }
-
-              </Box>
-            </Grid>
-            </>
-
-                  )
-                : (<>
-
-              <Grid item xs={6} sm={12} md={6} >
-              <Box m={1} paddingLeft={2}>
-              <Alert severity="info" variant='outlined'>
-                  <AlertTitle>Lo sentimos!</AlertTitle>
-                  No hay menus disponibles para el día de hoy. Por favor, <b>pruebe con otra fecha</b>.
-                </Alert>
-              </Box>
-              </Grid>
-
-              </>)
+              openSuccess && (
+                <SnackbarApp
+                  open={openSuccess}
+                  message={RESPONSE_MESSAGES.MENU_RESERVED.message}
+                  type={RESPONSE_MESSAGES.MENU_RESERVED.type}
+                  variant='outlined'
+                />
+              )
+            }
+            {
+              openDeleteSuccess && (
+                <SnackbarApp
+                  open={openDeleteSuccess}
+                  message={RESPONSE_MESSAGES.MENU_DELETED.message}
+                  type={RESPONSE_MESSAGES.MENU_DELETED.type}
+                  variant='outlined'
+                />
+              )
 
             }
+            {
+              Object.keys(errors).length > 0 && (
+                <SnackbarApp
+                  open={true}
+                  message={RESPONSE_MESSAGES.FORM_ERROR.message}
+                  type={RESPONSE_MESSAGES.FORM_ERROR.type}
+                />
+              )
+            }
 
-       </Grid>
-       {
-          openSuccess && (
-            <SnackbarApp
-              open={openSuccess}
-              message="¡Genial! Ya tienes tu menú de comida reservado."
-              type='success'
-              variant='outlined'
-            />
-          )
-       }
+            {
+              error && (
+                <SnackbarApp
+                  open={true}
+                  message={error}
+                  type='error'
+                />
+              )
+            }
 
-       {
-         openDeleteSuccess && (
-            <SnackbarApp
-              open={openDeleteSuccess}
-              message="¡Listo! Hemos eliminado el menú de comida que ya no deseabas de tu pedido"
-              type='success'
-              variant='outlined'
-            />
-         )
+          </form>
 
-       }
-       {
-          Object.keys(errors).length > 0 && (
-            <SnackbarApp
-                open={true}
-                message="Por favor, selecciona al menos un menú y un turno para poder continuar"
-                type='error'
-            />
-          )
-       }
+        </Box>
+      </ContainerApp>
 
-        {
-          error && (
-            <SnackbarApp
-              open={true}
-              message={error}
-              type='error'
-            />
-          )
-        }
-
-       </form>
-
-       </Box>
-    </ContainerApp>
+      <DialogCancel
+        openConfirmDialog={openConfirmDialog}
+        setOpenConfirmDialog={setOpenConfirmDialog}
+        cancelPedido={cancelPedido}
+      />
     </>
   )
 }

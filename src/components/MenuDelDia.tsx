@@ -23,8 +23,6 @@ type MenuDelDiaProps = {
 export const  MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, errors, selectedMenu}: MenuDelDiaProps) => {
     const menus = useMenuStore(state => state.menus)
 
-    console.log("selectedMenu", selectedMenu)
-  
     const data = menus.filter((item) => item.fecha_menu.substring(0,10) === fechaSeleccionada)
 
     const [seleccionado, setSeleccionado] = React.useState<number>(selectedMenu);
