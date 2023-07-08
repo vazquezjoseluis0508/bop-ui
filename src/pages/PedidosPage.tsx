@@ -161,13 +161,15 @@ const PedidosPage = () => {
   const handleRestriction = (reserva) => {
     const today = new Date()
     const tomorrow = new Date(today)
+    const yesterday = new Date()
     tomorrow.setDate(tomorrow.getDate() + 1)
 
+    yesterday.setDate(yesterday.getDate() - 1)
     const limitHour = new Date(today)
     limitHour.setHours(18, 0, 0, 0)
     const selectedMenu = reservas && reserva ? reserva.idMenu : 0
 
-    if (convertDate(today) === fechaSeleccionada) {
+    if (convertDate(today) === fechaSeleccionada || convertDate(yesterday) === fechaSeleccionada) {
       if (selectedMenu != 0) { // existe un menu
         const menu = reservas?.find(reserva => reserva.idMenu === selectedMenu)
         // 2: pedido reservado, 15: pedido realizado, 3: pedido retirado, 4: pedido cancelado

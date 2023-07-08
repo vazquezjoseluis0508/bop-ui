@@ -57,7 +57,7 @@ export default function Calendar( { onDateChange, fechaSeleccionada, reservas }:
                     onDateChange(newValue);
                 }}
                 renderInput={(params) => <TextField  {...params} />}
-                minDate={dayjs()}
+                minDate={dayjs().subtract(1, 'day')}
               />
       </Paper>
       </Box>
