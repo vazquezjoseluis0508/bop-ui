@@ -124,7 +124,6 @@ async function fetchReservas(legajo: string): Promise<IMenuPersonal[]> {
 async function fetchPedidosMonitor(): Promise<UserMenu[]> {
   try {
     const { data } = await api.get('/pedidos/get-pedidos-monitor', {})
-    console.log('data: ', data)
     const menu_user: UserMenu[] = data.map((menu: IMenuPersonal) => {
       return {
         id: menu.idCalendarioMenu,
