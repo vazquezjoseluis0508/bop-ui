@@ -30,7 +30,7 @@ const HomePage = () => {
         </CardActions>
       </Card>
 
-      <Card sx={{ minWidth: 275, m: 1 }}>
+      {/* <Card sx={{ minWidth: 275, m: 1 }}>
         <CardContent>
           <Typography variant="h5" component="div">
             Página de Monitor
@@ -44,7 +44,7 @@ const HomePage = () => {
             Ir a la página de Monitor
           </Button>
         </CardActions>
-      </Card>
+      </Card> */}
     </Box>
   );
 }

@@ -2,13 +2,16 @@
 import api from '../api/bop'
 import { useQuery } from '@tanstack/react-query'
 import { type IMenu } from './types'
+import { imagenes } from '../constant/constants'
 
 async function fetchMenu () {
   try {
     const { data } = await api.get<IMenu[]>('/menu/get-menus')
 
     const misMenus = await Promise.all(data.map(async (menu: IMenu) => {
-      let image = ''
+      // obtener la imagen del menu desde el array de imagenes del archivo constantes.ts
+      let images = imagenes.find((image) => image.plato === menu.descripcion)?.image
+      let image = images ? images : ''
 
       // const cachedResults = getFromLocalStorage(menu.descripcion);
       // if (cachedResults) {
