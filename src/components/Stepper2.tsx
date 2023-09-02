@@ -3,17 +3,24 @@ import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
 import StepLabel from '@mui/material/StepLabel';
+import { ConSal } from './ConSal';
+import { IPreferenciaMenuUsuario } from '../types/preferencia.type';
 
 const steps = ['Seleccione un dia del calendario.', 'Seleccione su turno.', 'Finalmente Seleccione el menu del dia.'];
 
-export default function HorizontalLinearStepper() {
+interface Props {
+  preferencia?: IPreferenciaMenuUsuario 
+}
+export default function HorizontalLinearStepper({
+  preferencia,
+}: Props) {
   const [activeStep, setActiveStep] = React.useState(-1);
 
  
 
 
   return (
-    <Box sx={{ width: '75%' }} mb={5}>
+    <Box sx={{ width: '85%' }} mb={5}>
       <Stepper activeStep={activeStep}>
         {steps.map((label, index) => {
           const stepProps: { completed?: boolean } = {};
@@ -28,6 +35,7 @@ export default function HorizontalLinearStepper() {
             </Step>
           );
         })}
+        <ConSal preferencia={preferencia}/>
       </Stepper>
      
     </Box>

@@ -1,9 +1,10 @@
 import { create } from 'zustand'
 import { persist, createJSONStorage } from 'zustand/middleware'
+import { IProfile } from '../types/auth.type'
 
 interface authState {
   token: string | null
-  profile: any
+  profile: IProfile | null
   isAuth: boolean
 }
 
@@ -25,7 +26,7 @@ export const useAuthStore = create(
           isAuth: !!token
         }))
       },
-      setProfile: (profile: any) => { set((state) => ({ profile })) },
+      setProfile: (profile: IProfile) => { set((state) => ({ profile })) },
       logout: () => {
         set((state) => ({
           token: null,

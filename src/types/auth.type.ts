@@ -11,6 +11,16 @@ export interface IAuthEntity {
   status: number
 }
 
+
+
+export interface IProfile {
+  idUsuarios: string
+  usr: string
+  legajo: string
+  nombre: string
+  permiso_id: number
+}
+
 export enum AuthRol {
   TECNICO = 'TECNICO',
   GENERAL = 'GENERAL',

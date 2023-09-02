@@ -23,6 +23,7 @@ import MiReserva from '../components/MiReserva'
 import { Accion, IFormPedido } from '../types/pedidos.type'
 import { DialogCancel } from '../components/Monitor/DialogCancel'
 import { RESPONSE_MESSAGES } from '../helpers/messages-response'
+import { userFetchPreferencia } from '../hook/usePreferenciaMenuUsuario'
 
 const useStyles = makeStyles((theme) => ({
   pulsate: {
@@ -67,7 +68,14 @@ const PedidosPage = () => {
   const {
     data: reservas,
     isLoading: lodingReservas
-  } = userFetchReserva(profile.legajo)
+  } = userFetchReserva(profile?.legajo || '')
+
+  const {
+    data: preferencia,
+  } = userFetchPreferencia({
+      idUsuario: profile?.idUsuarios || '',
+      legajo: profile?.legajo || '',
+  })
 
   const { mutate: ReservarPedido, isLoading: reservarLoading } = useMutation({
     mutationFn: pedidoReservado,
@@ -290,10 +298,10 @@ const PedidosPage = () => {
       <ContainerApp>
 
         <Box border={0} borderColor='primary.main' borderRadius={2} sx={{ width: '100%' }}>
-          <HorizontalLinearStepper />
+          <HorizontalLinearStepper  preferencia={preferencia }/>
           <form onSubmit={handleSubmit(onSubmit)}>
             <input type={'hidden'} {...register('form_fecha')} value={fechaSeleccionada} />
-            <input type={'hidden'} {...register('idUsuarios')} value={profile.idUsuarios} />
+            <input type={'hidden'} {...register('idUsuarios')} value={profile?.idUsuarios || '' } />
 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={3} >
