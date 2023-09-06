@@ -24,12 +24,12 @@ export const getPreferenceByUser = async (params:IParams ): Promise<IPreferencia
 
 
     return {
-        idPreferencia: response.data.idPreferencia,
-        legajo: response.data.legajo,
-        sal: response.data.sal,
-        idUsuario: response.data.idUsuario,
-        fecharegistro: response.data.fecharegistro,
-        estado: response.data.estado
+        idPreferencia: response.data[0].idPreferencia,
+        legajo: response.data[0].legajo,
+        sal: response.data[0].sal,
+        idUsuario: response.data[0].idUsuario,
+        fecharegistro: response.data[0].fecharegistro,
+        estado: response.data[0].estado
     }
   } catch (error: any) {
     throw new Error(error.response.data.message)

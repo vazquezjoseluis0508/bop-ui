@@ -298,7 +298,7 @@ const PedidosPage = () => {
       <ContainerApp>
 
         <Box border={0} borderColor='primary.main' borderRadius={2} sx={{ width: '100%' }}>
-          <HorizontalLinearStepper  preferencia={preferencia }/>
+          <HorizontalLinearStepper />
           <form onSubmit={handleSubmit(onSubmit)}>
             <input type={'hidden'} {...register('form_fecha')} value={fechaSeleccionada} />
             <input type={'hidden'} {...register('idUsuarios')} value={profile?.idUsuarios || '' } />
