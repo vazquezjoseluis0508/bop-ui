@@ -22,6 +22,8 @@ export interface IMenuPersonal {
   title: string
   turno: string
   idPedido: number
+  rating: number
+  feedback: string
 }
 
 export interface UserMenu {

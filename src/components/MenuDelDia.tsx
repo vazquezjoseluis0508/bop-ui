@@ -28,6 +28,8 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
 
     const [seleccionado, setSeleccionado] = React.useState<number>(selectedMenu);
 
+    console.log('reserva: ', reserva)
+
     const handleSeleccionar = (id) => {
 
         // if (id === seleccionado) {
@@ -96,30 +98,29 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
                                                 </Typography>
                                             </CardContent>
                                             <CardActions>
-                                                <Controller
-                                                    name="rating"
-                                                    control={control}
-                                                    defaultValue={reserva?.rating}
-                                                    render={({ field }) => (
-                                                        <Rating
-                                                            name="simple-controlled"
-                                                            value={field.value}
-                                                            size="large"
-                                                            sx={{
-                                                                margin: 2,
-                                                                '& .MuiRating-icon': {
-                                                                    marginLeft: '5px',
-                                                                },
-                                                                '& .MuiRating-icon:first-child': {
-                                                                    marginLeft: '15px',
-                                                                },
-                                                                '& .MuiRating-icon:hover': {
-                                                                    backgroundColor: 'transparent', // Anula el fondo al pasar el cursor sobre las estrellas
-                                                                }
-                                                            }}
+                                                {
+                                                    reserva?.rating !== null && reserva?.rating > 0 && (
+                                                        <Controller
+                                                            name="rating"
+                                                            control={control}
+                                                            defaultValue={reserva?.rating}
+                                                            render={({ field }) => (
+                                                                <Rating
+                                                                    name="simple-controlled"
+                                                                    value={field.value}
+                                                                    size="large"
+                                                                    readOnly
+                                                                    sx={{
+                                                                        '& .MuiRating-icon:hover': {
+                                                                            backgroundColor: 'transparent', // Anula el fondo al pasar el cursor sobre las estrellas
+                                                                        }
+                                                                    }}
+                                                                />
+                                                            )}
                                                         />
-                                                    )}
-                                                />
+                                                    )
+                                                }
+
 
                                             </CardActions>
                                         </Card>

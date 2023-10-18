@@ -175,7 +175,7 @@ const PedidosPage = () => {
   })
 
   useEffect(() => {
-    console.log('reservas: ', reservas)
+    // console.log('reservas: ', reservas)
     if (reservas != null) {
       const reserva = handleSetReserva(reservas, fechaSeleccionada)
       handleRestriction(reserva)
@@ -215,7 +215,7 @@ const PedidosPage = () => {
               break;
             case 3: // pedido retirado
               setRestriccion(RESPONSE_MESSAGES.ALREADY_WITHDRAWN.message)
-              setActionButton('nada')
+              setActionButton('calificar')
               break;
             case 4: // pedido cancelado
               setRestriccion(RESPONSE_MESSAGES.ALREADY_CANCELED.message)

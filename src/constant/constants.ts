@@ -1,4 +1,4 @@
-export const URL_API = 'https://192.168.2.119:3000'
+export const URL_API = 'http://192.168.2.120:3002'
 export const REST_API =  URL_API + '/api'
 
 export const MESES = ['enero', 'febrero', 'marzo', 'abril', 'mayo', 'junio', 'julio', 'agosto', 'septiembre', 'octubre', 'noviembre', 'diciembre']

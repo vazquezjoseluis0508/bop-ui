@@ -4,7 +4,6 @@ import { Box, Input } from '@mui/material'
 import { ContainerApp } from '../components/container'
 import { pedidoCancelado, pedidoRetirado, useFetchPedidosMonitor } from '../hook/usePedidos'
 import { type IMenuPersonal, type UserMenu } from '../hook/types'
-import { socket } from '../services/socket.service'
 import { useMutation } from '@tanstack/react-query'
 import UserTable from '../components/Monitor/UserTable'
 import { DialogCancel } from '../components/Monitor/DialogCancel'
@@ -43,48 +42,48 @@ const MonitorPage = (): JSX.Element => {
     return dateStr >= startDateStr && dateStr < endDateStr;
   };
 
-  socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
-    const newReserva: UserMenu = {
-      id: reserva.idCalendarioMenu,
-      idPedido: reserva.idPedido,
-      firstName: reserva.persona_str,
-      lastName: '',
-      legajo: reserva.legajo,
-      pedido: reserva.title,
-      fecha: reserva.start,
-      estado: reserva.estado
-    }
-    // Verifica si la fecha de la nueva reserva está dentro del rango deseado (hoy o mañana).
-    const todayStr = new Date().toISOString().substring(0, 10);
-    const tomorrowStr = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().substring(0, 10);
-    const newReservaDateStr = newReserva.fecha.substring(0, 10);
+  // socket.on('nueva-reserva', (reserva: IMenuPersonal) => {
+  //   const newReserva: UserMenu = {
+  //     id: reserva.idCalendarioMenu,
+  //     idPedido: reserva.idPedido,
+  //     firstName: reserva.persona_str,
+  //     lastName: '',
+  //     legajo: reserva.legajo,
+  //     pedido: reserva.title,
+  //     fecha: reserva.start,
+  //     estado: reserva.estado
+  //   }
+  //   // Verifica si la fecha de la nueva reserva está dentro del rango deseado (hoy o mañana).
+  //   const todayStr = new Date().toISOString().substring(0, 10);
+  //   const tomorrowStr = new Date(new Date().setDate(new Date().getDate() + 1)).toISOString().substring(0, 10);
+  //   const newReservaDateStr = newReserva.fecha.substring(0, 10);
 
-    const isNewReservaWithinRange = isDateWithinRange(newReservaDateStr, todayStr, tomorrowStr);
-    console.log('isNewReservaWithinRange: ', isNewReservaWithinRange)
+  //   const isNewReservaWithinRange = isDateWithinRange(newReservaDateStr, todayStr, tomorrowStr);
+  //   console.log('isNewReservaWithinRange: ', isNewReservaWithinRange)
 
-    if (isNewReservaWithinRange) {
-      // Filtra las reservas existentes para evitar duplicados.
-      const newData: any = data?.filter((item: UserMenu) => item.id !== newReserva.id);
+  //   if (isNewReservaWithinRange) {
+  //     // Filtra las reservas existentes para evitar duplicados.
+  //     const newData: any = data?.filter((item: UserMenu) => item.id !== newReserva.id);
 
-      // Agrega la nueva reserva a la data y actualiza el estado.
-      setData([...newData, newReserva]);
-    }
-  })
+  //     // Agrega la nueva reserva a la data y actualiza el estado.
+  //     setData([...newData, newReserva]);
+  //   }
+  // })
 
-  socket.on('elimina-reserva', (reserva: IMenuPersonal) => {
-    const newData = data?.filter((item: UserMenu) => item.id !== reserva.idCalendarioMenu)
-    setData(newData)
-  })
+  // socket.on('elimina-reserva', (reserva: IMenuPersonal) => {
+  //   const newData = data?.filter((item: UserMenu) => item.id !== reserva.idCalendarioMenu)
+  //   setData(newData)
+  // })
 
-  socket.on('pedido-realizado', (param: any) => {
-    const newData = data?.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
-    setData(newData)
-  })
+  // socket.on('pedido-realizado', (param: any) => {
+  //   const newData = data?.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
+  //   setData(newData)
+  // })
 
-  socket.on('pedido-cancelado', (param: any) => {
-    const newData = data?.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
-    setData(newData)
-  })
+  // socket.on('pedido-cancelado', (param: any) => {
+  //   const newData = data?.filter((item: UserMenu) => item.id !== param.calendario_menu.idCalendarioMenu)
+  //   setData(newData)
+  // })
 
   const filteredUsers = data?.filter(user =>
     user.firstName.toLowerCase().includes(filter.toLowerCase()) ||

@@ -1,4 +1,4 @@
-export type Accion = 'pedir' | 'reservar' | 'cancelar' | 'retirar' | 'nada'
+export type Accion = 'pedir' | 'reservar' | 'cancelar' | 'retirar' | 'nada' | 'calificar'
 
 export interface IFormPedido {
     form_menu: string
