@@ -54,6 +54,20 @@ export async function pedidoCancelado({ idCalendarioMenu, idPedido, motivo }) {
   }
 }
 
+export async function pedidoCalificado({ idCalendarioMenu, idPedido, rating, feedback }) {
+  try {
+    const { data } = await api.put('/pedidos/pedido-calificado', {
+      idCalendarioMenu: idCalendarioMenu,
+      idPedido: idPedido,
+      rating: rating,
+      feedback: feedback
+    })
+    return data
+  } catch (error: any) {
+    throw new Error('Error en el servidor al calificar el pedido: ' + error.response.data)
+  }
+}
+
 // async fetchPedidoRealizado
 // deprecated
 async function fetchReservasMonitor(): Promise<UserMenu[]> {

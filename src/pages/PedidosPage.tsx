@@ -10,7 +10,7 @@ import { Turno } from '../components/Turno'
 import { convertDate, formatDate } from '../helpers/data-time'
 import { type IMenuPersonal, type IMenu, UserMenu } from '../hook/types'
 import { userFetchMenu } from '../hook/useMenu'
-import { pedidoReservado, eliminarReserva, pedidoRealizado, userFetchReserva, pedidoCancelado, pedidoRetirado } from '../hook/usePedidos'
+import { pedidoReservado, eliminarReserva, pedidoRealizado, userFetchReserva, pedidoCancelado, pedidoRetirado, pedidoCalificado } from '../hook/usePedidos'
 import { useMenuStore } from '../store/menus'
 import * as yup from 'yup'
 import { type SubmitHandler, useForm } from 'react-hook-form'
@@ -24,6 +24,8 @@ import { Accion, IFormPedido } from '../types/pedidos.type'
 import { DialogCancel } from '../components/Monitor/DialogCancel'
 import { RESPONSE_MESSAGES } from '../helpers/messages-response'
 import { userFetchPreferencia } from '../hook/usePreferenciaMenuUsuario'
+import StarIcon from '@mui/icons-material/Star';
+import { RatingComponent } from '../components/RatingComponent'
 
 const useStyles = makeStyles((theme) => ({
   pulsate: {
@@ -61,6 +63,16 @@ const PedidosPage = () => {
   const [restriccion, setRestriccion] = useState<string>('')
   const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
   const [userMenuToCancel, setUserMenuToCancel] = useState<any>(null);
+  const [open, setOpen] = useState(false);
+
+  const mostrarComponenteDeCalificacion = () => {
+    setOpen(true);
+  };
+  
+  const cerrarComponenteDeCalificacion = () => {
+    setOpen(false);
+  };
+
 
   const profile = useAuthStore(state => state.profile)
 
@@ -73,8 +85,8 @@ const PedidosPage = () => {
   const {
     data: preferencia,
   } = userFetchPreferencia({
-      idUsuario: profile?.idUsuarios || '',
-      legajo: profile?.legajo || '',
+    idUsuario: profile?.idUsuarios || '',
+    legajo: profile?.legajo || '',
   })
 
   const { mutate: ReservarPedido, isLoading: reservarLoading } = useMutation({
@@ -123,6 +135,16 @@ const PedidosPage = () => {
     },
     onError: (error: any) => {
       setError(error.message)
+    }
+  })
+
+  const { mutate: CalificarPedido } = useMutation({
+    mutationFn: pedidoCalificado,
+    onSuccess: (data) => {
+      console.log('onSuccess pedido Calificado: ', data)
+    },
+    onError: (error: any) => {
+      console.log('onError pedido calificado: ', error)
     }
   })
 
@@ -293,6 +315,96 @@ const PedidosPage = () => {
     setOpenConfirmDialog(false);
   };
 
+  const calificarPedido = (rating: number, feedback: string) => {
+    console.log('rating: ', rating)
+    console.log('feedback: ', feedback)
+    console.log('idCalendarioMenu: ', reserva?.idCalendarioMenu)
+    console.log('idPedido: ', reserva?.idPedido)
+
+    CalificarPedido({
+      idCalendarioMenu: reserva?.idCalendarioMenu,
+      idPedido: reserva?.idPedido,
+      rating: rating,
+      feedback: feedback
+    })
+  }
+
+  const renderButtons = (
+    action: string,
+    restriccion: string,
+    cancelarPedido: Function,
+    retirarPedido: Function,
+    realizarPedido: Function,
+    mostrarComponenteDeCalificacion: Function
+  ) => {
+    if (restriccion !== '') {
+      if (action === 'retirar') {
+        return (
+          <>
+            <Button type='button' color='warning' variant='contained' onClick={() => cancelarPedido(
+              { idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido }
+            )}>Cancelar</Button>
+            <Button sx={{ marginLeft: 2 }} type='button' color='primary' variant='contained' onClick={() => retirarPedido(
+              { idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido }
+            )}>Retirar</Button>
+          </>
+        );
+      }
+    } else {
+      switch (action) {
+        case 'reservar':
+          return <ActionButton isDisabled={false} type='submit' name='Reservar' />;
+        case 'retirar':
+          return <Box mt={2} sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'right',
+            backgroundColor: 'transparent',
+            width: '100%',
+
+          }}>
+            <Button type='button' color='warning' variant='contained' onClick={
+              () => reserva && cancelarPedido({ id: reserva.idCalendarioMenu, idPedido: reserva.idPedido })
+            }>Cancelar</Button>
+            <Button sx={{ marginLeft: 2 }} type='button' color='primary' variant='contained' onClick={
+              () => retirarPedido({ idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido })
+            }>Retirar</Button>
+          </Box>
+        case 'pedir':
+          return (
+            <Box mt={2} sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'right',
+              backgroundColor: 'transparent',
+              width: '100%',
+
+            }}><Button
+              type='button'
+              variant="contained"
+              color='error'
+              onClick={() => realizarPedido({ idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido })}
+              className={classes.pulsate}
+            >Realizar Pedido</Button>
+            </Box>
+          );
+        case 'calificar':
+          return (
+            <Button
+              type='button'
+              variant='outlined'
+              color='secondary'
+              startIcon={<StarIcon />}
+              onClick={() => mostrarComponenteDeCalificacion()}>
+              CALIFICA TU PEDIDO
+            </Button>
+          );
+        default:
+          return null;
+      }
+    }
+  }
+
   return (
     <>
       <ContainerApp>
@@ -301,7 +413,7 @@ const PedidosPage = () => {
           <HorizontalLinearStepper />
           <form onSubmit={handleSubmit(onSubmit)}>
             <input type={'hidden'} {...register('form_fecha')} value={fechaSeleccionada} />
-            <input type={'hidden'} {...register('idUsuarios')} value={profile?.idUsuarios || '' } />
+            <input type={'hidden'} {...register('idUsuarios')} value={profile?.idUsuarios || ''} />
 
             <Grid container spacing={2}>
               <Grid item xs={12} sm={12} md={3} >
@@ -340,61 +452,29 @@ const PedidosPage = () => {
                             fechaSeleccionada={fechaSeleccionada}
                             selectedMenu={selectedMenu}
                             errors={errors.form_menu?.message || ''}
+                            reserva={reserva}
                           />
                           <Divider sx={{ marginTop: 5 }} />
                           <Snackbar open={isSubmitting} message="Guardando..." />
                           <Box mt={5} pr={5}>
                             {
-                              restriccion !== ''
-                                ? (
-                                  <>
-                                    <Alert severity="info">
-                                      <AlertTitle>¡Hola!</AlertTitle>
-                                      {restriccion}
-                                    </Alert>
-                                    {(
-                                      actionButton === 'retirar' &&
-                                      <Box mt={2} sx={{
-                                        display: 'flex',
-                                        flexDirection: 'row',
-                                        justifyContent: 'right',
-                                        backgroundColor: 'transparent',
-                                        width: '100%',
-
-                                      }}>
-                                        <Button type='button' color='warning' variant='contained' onClick={
-                                          () => reserva && cancelarPedido({ id: reserva.idCalendarioMenu, idPedido: reserva.idPedido })
-                                        }>Cancelar</Button>
-                                        <Button sx={{ marginLeft: 2 }} type='button' color='primary' variant='contained' onClick={
-                                          () => retirarPedido({ idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido })
-                                        }>Retirar</Button>
-                                      </Box>
-                                    )}
-                                  </>
-                                )
-                                : (
-                                  actionButton === 'reservar'
-                                    ? <ActionButton isDisabled={false} type='submit' name='Reservar' />
-                                    : <Box mt={2} sx={{
-                                      display: 'flex',
-                                      flexDirection: 'row',
-                                      justifyContent: 'right',
-                                      backgroundColor: 'transparent',
-                                      width: '100%',
-
-                                    }}><Button
-                                      type='button'
-                                      variant="contained"
-                                      color='error'
-                                      onClick={() => realizarPedido({ idCalendarioMenu: reserva?.idCalendarioMenu, idPedido: reserva?.idPedido })}
-                                      className={classes.pulsate}
-                                    >Realizar Pedido</Button>
-                                    </Box>
-
-                                )
-
+                              <>
+                                {restriccion !== '' && (
+                                  <Alert severity="info">
+                                    <AlertTitle>¡Hola!</AlertTitle>
+                                    {restriccion}
+                                  </Alert>)}
+                                <Box mt={2} sx={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  justifyContent: 'right',
+                                  backgroundColor: 'transparent',
+                                  width: '100%',
+                                }}>
+                                  {renderButtons(actionButton, restriccion, cancelarPedido, retirarPedido, realizarPedido, mostrarComponenteDeCalificacion)}
+                                </Box>
+                              </>
                             }
-
                           </Box>
                         </Box>
                       </Grid>
@@ -492,7 +572,16 @@ const PedidosPage = () => {
         setOpenConfirmDialog={setOpenConfirmDialog}
         cancelPedido={cancelPedido}
       />
+
+      <RatingComponent 
+        open={open}
+        onClose={cerrarComponenteDeCalificacion} 
+        calificar={calificarPedido}      
+        />
+    
     </>
+
+
   )
 }
 
