@@ -1,6 +1,7 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Rating, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { IMenuPersonal } from '../hook/types';
+import { useEffect } from 'react';
 
 interface IFormInput {
     rating: number;
@@ -15,12 +16,16 @@ interface IProps {
 }
 
 export const RatingComponent = ({ open, onClose, calificar, reserva }: IProps) => {
-    const { handleSubmit, control } = useForm<IFormInput>({
-        defaultValues: {
+    const { handleSubmit, control, reset } = useForm<IFormInput>({
+    });
+
+    useEffect(() => {
+        reset({
             rating: reserva?.rating || 0,
             feedback: reserva?.feedback || ''
-        }
-    });
+        });
+    }, [reserva, reset]);
+
 
     const onSubmit = (data: IFormInput) => {
         calificar(data.rating, data.feedback);

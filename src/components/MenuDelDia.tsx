@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useEffect } from 'react';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
@@ -38,12 +38,12 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
         setSeleccionado(id); // seleccionar la tarjeta que se hace clic
         // }
     };
-    console.log('reserva', reserva, data)
+   
 
-
-    React.useEffect(() => {
+    useEffect(() => {
         setSeleccionado(selectedMenu)
     }, [fechaSeleccionada, selectedMenu])
+
 
     return (
 
@@ -104,7 +104,7 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
                                                         
                                                         <Rating
                                                             name="simple-controlled"
-                                                            defaultValue={reserva?.rating || 0}
+                                                            value={reserva?.rating || 0}
                                                             size="large"
                                                             readOnly
                                                             sx={{

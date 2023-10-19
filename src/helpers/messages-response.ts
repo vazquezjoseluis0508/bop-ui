@@ -50,5 +50,9 @@ export const RESPONSE_MESSAGES: IResponseMessage = {
       message: 'Por favor, selecciona al menos un menú y un turno para poder continuar',
       type: 'error',
     },
+    'MENU_CALIFICADO': {
+      message: '¡Gracias por calificar el menú de comida!',
+      type: 'success',
+    },
   };
   

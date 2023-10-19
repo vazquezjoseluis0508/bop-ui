@@ -23,7 +23,6 @@ import MiReserva from '../components/MiReserva'
 import { Accion, IFormPedido } from '../types/pedidos.type'
 import { DialogCancel } from '../components/Monitor/DialogCancel'
 import { RESPONSE_MESSAGES } from '../helpers/messages-response'
-import { userFetchPreferencia } from '../hook/usePreferenciaMenuUsuario'
 import StarIcon from '@mui/icons-material/Star';
 import { RatingComponent } from '../components/RatingComponent'
 
@@ -54,6 +53,7 @@ const PedidosPage = () => {
   const classes = useStyles();
   const [fechaSeleccionada, setFechaSeleccionada] = useState<string>(convertDate(new Date()))
   const [openSuccess, setOpenSuccess] = useState<boolean>(false)
+  const [openSuccessCalification, setOpenSuccessCalification] = useState<boolean>(false)
   const [openDeleteSuccess, setOpenDeleteSuccess] = useState<boolean>(false)
   const [actionButton, setActionButton] = useState<Accion>('reservar')
   const [selectedMenu, setSelectedMenu] = useState<number>(0)
@@ -82,12 +82,7 @@ const PedidosPage = () => {
     isLoading: lodingReservas
   } = userFetchReserva(profile?.legajo || '')
 
-  const {
-    data: preferencia,
-  } = userFetchPreferencia({
-    idUsuario: profile?.idUsuarios || '',
-    legajo: profile?.legajo || '',
-  })
+
 
   const { mutate: ReservarPedido, isLoading: reservarLoading } = useMutation({
     mutationFn: pedidoReservado,
@@ -142,6 +137,9 @@ const PedidosPage = () => {
     mutationFn: pedidoCalificado,
     onSuccess: (data) => {
       console.log('onSuccess pedido Calificado: ', data)
+      setOpenSuccessCalification(true)
+      // window.location.reload()
+      queryClient.invalidateQueries(['pedidos'])
     },
     onError: (error: any) => {
       console.log('onError pedido calificado: ', error)
@@ -175,7 +173,7 @@ const PedidosPage = () => {
   })
 
   useEffect(() => {
-    // console.log('reservas: ', reservas)
+    console.log('reservas: ', reservas)
     if (reservas != null) {
       const reserva = handleSetReserva(reservas, fechaSeleccionada)
       handleRestriction(reserva)
@@ -284,7 +282,7 @@ const PedidosPage = () => {
   const onSubmit: SubmitHandler<IFormPedido> = (data: IFormPedido) => {
     setTimeout(() => {
       ReservarPedido(data)
-    }, 1000)
+    }, 500)
   }
 
   const realizarPedido = ({ idCalendarioMenu, idPedido }) => {
@@ -316,17 +314,15 @@ const PedidosPage = () => {
   };
 
   const calificarPedido = (rating: number, feedback: string) => {
-    console.log('rating: ', rating)
-    console.log('feedback: ', feedback)
-    console.log('idCalendarioMenu: ', reserva?.idCalendarioMenu)
-    console.log('idPedido: ', reserva?.idPedido)
+    
+    const dataResponse = CalificarPedido({
+      idCalendarioMenu: reserva?.idCalendarioMenu,
+      idPedido: reserva?.idPedido,
+      rating: rating,
+      feedback: feedback
+    })
 
-    // CalificarPedido({
-    //   idCalendarioMenu: reserva?.idCalendarioMenu,
-    //   idPedido: reserva?.idPedido,
-    //   rating: rating,
-    //   feedback: feedback
-    // })
+    setOpen(false);
   }
 
   const renderButtons = (
@@ -527,6 +523,16 @@ const PedidosPage = () => {
                   open={openSuccess}
                   message={RESPONSE_MESSAGES.MENU_RESERVED.message}
                   type={RESPONSE_MESSAGES.MENU_RESERVED.type}
+                  variant='outlined'
+                />
+              )
+            }
+            {
+              openSuccessCalification && (
+                <SnackbarApp
+                  open={openSuccessCalification}
+                  message={RESPONSE_MESSAGES.MENU_CALIFICADO.message}
+                  type={RESPONSE_MESSAGES.MENU_CALIFICADO.type}
                   variant='outlined'
                 />
               )
