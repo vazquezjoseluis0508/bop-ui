@@ -1,31 +1,33 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Rating, TextField } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
+import { IMenuPersonal } from '../hook/types';
 
 interface IFormInput {
     rating: number;
     feedback: string;
-    calificar: (rating: number, feedback: string) => void;
 }
 
 interface IProps {
     open: boolean;
     onClose: () => void;
     calificar: (rating: number, feedback: string) => void;
+    reserva: IMenuPersonal | null;
 }
 
-export const RatingComponent = ({ open, onClose }: IProps) => {
-    const { handleSubmit, control } = useForm<IFormInput>();
+export const RatingComponent = ({ open, onClose, calificar, reserva }: IProps) => {
+    const { handleSubmit, control } = useForm<IFormInput>({
+        defaultValues: {
+            rating: reserva?.rating || 0,
+            feedback: reserva?.feedback || ''
+        }
+    });
 
     const onSubmit = (data: IFormInput) => {
-        console.log(data);
-        // Envía la calificación y el feedback al servidor
+        calificar(data.rating, data.feedback);
     };
 
     return (
-        <Dialog
-            open={open}
-            onClose={onClose}
-        >
+        <Dialog open={open} onClose={onClose}>
             <DialogTitle>Califica tu experiencia</DialogTitle>
             <DialogContent>
                 <DialogContentText>
@@ -34,33 +36,41 @@ export const RatingComponent = ({ open, onClose }: IProps) => {
                 <Controller
                     name="rating"
                     control={control}
-                    defaultValue={0}
                     render={({ field }) => (
                         <Rating
                             name="simple-controlled"
                             value={field.value}
                             onChange={(e, newValue) => field.onChange(newValue)}
-                            size="large" // Hace las estrellas más grandes
+                            size="large"
                             sx={{
                                 '& .MuiRating-icon': {
-                                    marginLeft: '5px',
+                                    marginLeft: '10px',
                                 },
                                 '& .MuiRating-icon:first-child': {
-                                    marginLeft: '0px',
+                                    margin: '7px',
                                 }
                             }}
                         />
                     )}
                 />
-                <TextField
-                    multiline
-                    rows={4}
-                    variant="outlined"
-                    inputProps={{
-                        maxLength: 200,
-                    }}
-                    fullWidth
-                    placeholder="Déjanos un comentario para saber cómo podemos mejorar."
+                <Controller
+                    name="feedback"
+                    control={control}
+                    render={({ field }) => (
+                        <TextField
+                            multiline
+                            name="feedback"
+                            rows={4}
+                            variant="outlined"
+                            inputProps={{
+                                maxLength: 200,
+                            }}
+                            fullWidth
+                            value={field.value}
+                            onChange={field.onChange}
+                            placeholder="Déjanos un comentario para saber cómo podemos mejorar."
+                        />
+                    )}
                 />
             </DialogContent>
             <DialogActions>

@@ -8,6 +8,7 @@ import { Box, Grid, IconButton, Rating } from '@mui/material';
 import FavoriteSharpIcon from '@mui/icons-material/FavoriteSharp';
 import { useMenuStore } from '../store/menus';
 import { Controller } from 'react-hook-form';
+import { IMenuPersonal } from '../hook/types';
 
 type MenuDelDiaProps = {
     register: any;
@@ -17,7 +18,7 @@ type MenuDelDiaProps = {
     fechaSeleccionada: string;
     errors: string;
     selectedMenu: number;
-    reserva: any;
+    reserva: IMenuPersonal | null;
 }
 
 
@@ -28,7 +29,6 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
 
     const [seleccionado, setSeleccionado] = React.useState<number>(selectedMenu);
 
-    console.log('reserva: ', reserva)
 
     const handleSeleccionar = (id) => {
 
@@ -38,6 +38,7 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
         setSeleccionado(id); // seleccionar la tarjeta que se hace clic
         // }
     };
+    console.log('reserva', reserva, data)
 
 
     React.useEffect(() => {
@@ -99,24 +100,18 @@ export const MenuDelDia = ({ name, register, watch, control, fechaSeleccionada, 
                                             </CardContent>
                                             <CardActions>
                                                 {
-                                                    reserva?.rating !== null && reserva?.rating > 0 && (
-                                                        <Controller
-                                                            name="rating"
-                                                            control={control}
-                                                            defaultValue={reserva?.rating}
-                                                            render={({ field }) => (
-                                                                <Rating
-                                                                    name="simple-controlled"
-                                                                    value={field.value}
-                                                                    size="large"
-                                                                    readOnly
-                                                                    sx={{
-                                                                        '& .MuiRating-icon:hover': {
-                                                                            backgroundColor: 'transparent', // Anula el fondo al pasar el cursor sobre las estrellas
-                                                                        }
-                                                                    }}
-                                                                />
-                                                            )}
+                                                    reserva?.idMenu === item.idMenuPersonal &&  (
+                                                        
+                                                        <Rating
+                                                            name="simple-controlled"
+                                                            defaultValue={reserva?.rating || 0}
+                                                            size="large"
+                                                            readOnly
+                                                            sx={{
+                                                                '& .MuiRating-icon:hover': {
+                                                                    backgroundColor: 'transparent', // Anula el fondo al pasar el cursor sobre las estrellas
+                                                                }
+                                                            }}
                                                         />
                                                     )
                                                 }

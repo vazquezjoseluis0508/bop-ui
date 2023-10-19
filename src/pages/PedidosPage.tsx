@@ -214,7 +214,7 @@ const PedidosPage = () => {
               setActionButton('retirar')
               break;
             case 3: // pedido retirado
-              setRestriccion(RESPONSE_MESSAGES.ALREADY_WITHDRAWN.message)
+              setRestriccion('')
               setActionButton('calificar')
               break;
             case 4: // pedido cancelado
@@ -321,12 +321,12 @@ const PedidosPage = () => {
     console.log('idCalendarioMenu: ', reserva?.idCalendarioMenu)
     console.log('idPedido: ', reserva?.idPedido)
 
-    CalificarPedido({
-      idCalendarioMenu: reserva?.idCalendarioMenu,
-      idPedido: reserva?.idPedido,
-      rating: rating,
-      feedback: feedback
-    })
+    // CalificarPedido({
+    //   idCalendarioMenu: reserva?.idCalendarioMenu,
+    //   idPedido: reserva?.idPedido,
+    //   rating: rating,
+    //   feedback: feedback
+    // })
   }
 
   const renderButtons = (
@@ -576,7 +576,8 @@ const PedidosPage = () => {
       <RatingComponent 
         open={open}
         onClose={cerrarComponenteDeCalificacion} 
-        calificar={calificarPedido}      
+        calificar={calificarPedido} 
+        reserva={reserva}     
         />
     
     </>
