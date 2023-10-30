@@ -135,6 +135,21 @@ async function fetchReservas(legajo: string): Promise<IMenuPersonal[]> {
   }
 }
 
+async function fetchPedidoHistory(legajo: string): Promise<IMenuPersonal[]> {
+  try {
+    const { data } = await api.get('/pedidos/get-pedidos-history', {
+      params: {
+        legajo
+      }
+    })
+
+    return data
+  } catch (error) {
+    console.log('get-pedidos-history: ', error)
+    return []
+  }
+}
+
 async function fetchPedidosMonitor(): Promise<UserMenu[]> {
   try {
     const { data } = await api.get('/pedidos/get-pedidos-monitor', {})
@@ -193,6 +208,14 @@ export function userFetchReserva(legajo: string) {
   return useQuery({
     queryKey: ['pedidos', legajo],
     queryFn: async () => await fetchReservas(legajo)
+
+  })
+}
+
+export function userFetchHistory(legajo: string) {
+  return useQuery({
+    queryKey: ['history', legajo],
+    queryFn: async () => await fetchPedidoHistory(legajo)
 
   })
 }
