@@ -33,13 +33,16 @@ export const HistoryTable = ({ reservas }: props) => {
                         </TableHead>
                         <TableBody>
 
-                            {reservas?.map((reserva, index) => (
+                            {reservas?.map((reserva, index) => {
+                                const datePart = reserva.start.split('T')[0];
+                                const formattedDate = dayjs(datePart).format('DD/MM/YYYY');
+                                return (
                                 <TableRow
                                     key={index}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                 >
                                     <TableCell align="center">
-                                        {dayjs(reserva.start).format('DD/MM/YYYY')}
+                                        {formattedDate}
                                     </TableCell>
                                     <TableCell align="center">
                                         {reserva.title}
@@ -54,7 +57,8 @@ export const HistoryTable = ({ reservas }: props) => {
                                         <Rating name="read-only" value={reserva.rating} readOnly />
                                     </TableCell>
                                 </TableRow>
-                            ))}
+                                )
+                            })}
 
                         </TableBody>
                     </Table>
